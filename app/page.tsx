@@ -11,6 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { SiteHeader } from '@/components/site-header';
 const HomePage = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -23,15 +24,13 @@ const HomePage = () => {
   if (!user) return null;
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-secondary/30">
-          <SidebarTrigger className="-ml-1" />
-        </header>
-        <div className="flex flex-1 flex-col">
-          <div className="min-h-[100vh] flex-1 md:min-h-min bg-secondary/30" >
-            <div className="min-h-screen bg-secondary/30 p-4 md:p-8">
+    <div className="[--header-height:calc(--spacing(14))]">
+      <SidebarProvider className="flex flex-col">
+        <SiteHeader />
+        <div className="flex flex-1">
+          <AppSidebar />
+          <SidebarInset>
+            <div className="flex flex-1 flex-col gap-4 p-4 bg-secondary/30">
               <div className="mx-auto max-w-4xl">
                 <div className="mb-8 flex items-center justify-between">
                   <div>
@@ -141,10 +140,10 @@ const HomePage = () => {
                 </Card>
               </div>
             </div>
-          </div>
+          </SidebarInset>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </SidebarProvider>
+    </div>
   );
 };
 
