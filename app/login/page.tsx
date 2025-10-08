@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/lib/auth-context";
+import { Lock, LogIn, Mail } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const { login } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
-      await login(email, password)
+      await login(email, password);
       // The AuthContext will handle the redirect
     } catch (err) {
-      console.error("Login error:", err)
-      setError(err instanceof Error ? err.message : "Une erreur est survenue")
-      setLoading(false)
+      console.error("Login error:", err);
+      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/30 p-4">
@@ -42,9 +42,7 @@ export default function LoginPage() {
             <LogIn className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold">Connexion</CardTitle>
-          <CardDescription>
-            Connectez-vous à votre compte pour continuer
-          </CardDescription>
+          <CardDescription>Connectez-vous à votre compte pour continuer</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -85,18 +83,18 @@ export default function LoginPage() {
                   Connexion en cours...
                 </>
               ) : (
-                'Se connecter'
+                "Se connecter"
               )}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            Pas encore de compte ?{' '}
+            Pas encore de compte ?{" "}
             <Link href="/register" className="font-medium text-primary hover:underline">
-              S'inscrire
+              S&apos;inscrire
             </Link>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
