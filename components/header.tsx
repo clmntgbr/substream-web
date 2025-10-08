@@ -5,9 +5,9 @@ import { SidebarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
-import { NavUser } from "./nav-user";
+import { NavigationUser } from "./navigation/user";
 
-export function SiteHeader() {
+export function Header() {
   const { toggleSidebar } = useSidebar();
   const { user } = useAuth();
 
@@ -17,7 +17,7 @@ export function SiteHeader() {
         <Button className="h-8 w-8" variant="ghost" size="icon" onClick={toggleSidebar}>
           <SidebarIcon />
         </Button>
-        <NavUser user={user} />
+        <NavigationUser user={user} />
       </div>
     </header>
   );

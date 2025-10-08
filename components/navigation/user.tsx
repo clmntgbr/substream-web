@@ -14,7 +14,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui
 import { useAuth, User } from "@/lib/auth-context";
 import { Bell, CreditCard, LogOut, UserCircle } from "lucide-react";
 
-export function NavUser({ user }: { user: User | null }) {
+export function NavigationUser({ user }: { user: User | null }) {
   const { logout } = useAuth();
 
   if (!user) return null;
