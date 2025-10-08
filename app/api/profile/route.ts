@@ -1,37 +1,30 @@
 import { NextResponse } from 'next/server';
 import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware';
-import { supabase, formatUserResponse } from '@/lib/db';
 
 async function handler(req: AuthenticatedRequest) {
   try {
-    const userId = req.user?.userId;
+    const user = req.user;
 
-    if (!userId) {
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
+    // Return the user data from the JWT token
     return NextResponse.json({
-      user: formatUserResponse(user),
+      user: {
+        id: user.userId || user.sub,
+        email: user.email || user.username,
+        roles: user.roles || [],
+        ...user,
+      },
     });
   } catch (error) {
+    console.error('Profile error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to get profile' },
       { status: 500 }
     );
   }

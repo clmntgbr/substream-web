@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth-context"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { login } = useAuth()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,26 +19,11 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await fetch("/api/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      if (!response.ok) {
-        setError("Identifiants invalides")
-        setLoading(false)
-        return
-      }
-
-      const data = await response.json()
-      localStorage.setItem("token", data.token)
-      localStorage.setItem("user", JSON.stringify(data.user))
-      router.push("/")
+      await login(email, password)
+      // The AuthContext will handle the redirect
     } catch (err) {
-      setError("Une erreur est survenue")
+      console.error("Login error:", err)
+      setError(err instanceof Error ? err.message : "Une erreur est survenue")
       setLoading(false)
     }
   }

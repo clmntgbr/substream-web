@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { supabase, formatUserResponse } from '@/lib/db';
 
+// This endpoint would call an external API to register a user
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -14,53 +13,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
-
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists' },
-        { status: 409 }
-      );
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const { data: newUser, error } = await supabase
-      .from('users')
-      .insert([
-        {
-          email,
-          password: hashedPassword,
-          firstname,
-          lastname,
-          roles: ['ROLE_USER'],
-        },
-      ])
-      .select()
-      .single();
-
-    if (error || !newUser) {
-      return NextResponse.json(
-        { error: 'Failed to create user' },
-        { status: 500 }
-      );
-    }
+    // TODO: Call your external API to register a user
+    // const apiResponse = await fetch('YOUR_EXTERNAL_API/register', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ email, password, firstname, lastname }),
+    // });
+    
+    // if (!apiResponse.ok) {
+    //   const error = await apiResponse.json();
+    //   return NextResponse.json(error, { status: apiResponse.status });
+    // }
 
     return NextResponse.json(
-      {
-        message: 'User registered successfully',
-        user: formatUserResponse(newUser),
-      },
-      { status: 201 }
+      { error: 'Registration not yet configured. Please configure your external API endpoint.' },
+      { status: 501 }
     );
   } catch (error) {
+    console.error('Registration error:', error);
     return NextResponse.json(
-      { error: 'Invalid request' },
-      { status: 400 }
+      { error: 'Registration failed' },
+      { status: 500 }
     );
   }
 }

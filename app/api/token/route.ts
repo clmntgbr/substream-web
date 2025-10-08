@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { supabase, formatUserResponse, User } from '@/lib/db';
-import { generateToken } from '@/lib/jwt';
+import { setSessionCookie } from '@/lib/session';
+
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://localhost/api';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,49 +10,60 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
+        { error: 'Email and password are required' },
+        { status: 400 }
       );
     }
 
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .maybeSingle();
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
-    }
-
-    const token = generateToken({
-      username: user.email,
-      roles: user.roles,
-      userId: user.id,
+    // Call the external backend API to authenticate
+    const backendResponse = await fetch(`${BACKEND_API_URL}/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    const userResponse = formatUserResponse(user as User);
+    if (!backendResponse.ok) {
+      const errorData = await backendResponse.json().catch(() => ({}));
+      return NextResponse.json(
+        { error: errorData.error || 'Invalid credentials' },
+        { status: backendResponse.status }
+      );
+    }
 
-    return NextResponse.json({
-      token,
-      user: userResponse,
+    const data = await backendResponse.json();
+    const { token, user } = data;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'No token received from backend' },
+        { status: 500 }
+      );
+    }
+
+    // Create response with user data
+    const response = NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        roles: user.roles || [],
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
+
+    // Set the session cookie
+    setSessionCookie(response, token);
+
+    return response;
   } catch (error) {
+    console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Invalid credentials' },
-      { status: 401 }
+      { error: 'Authentication failed. Please check your backend connection.' },
+      { status: 500 }
     );
   }
 }

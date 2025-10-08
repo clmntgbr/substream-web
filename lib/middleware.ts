@@ -1,32 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, JWTPayload } from './jwt';
+import { getSessionData } from './session';
+import { JWTPayload } from './jwt';
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: JWTPayload;
+  sessionToken?: string;
 }
 
 export function authMiddleware(handler: (req: AuthenticatedRequest) => Promise<NextResponse>) {
   return async (req: AuthenticatedRequest) => {
-    const authHeader = req.headers.get('authorization');
+    const sessionData = getSessionData(req);
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!sessionData) {
       return NextResponse.json(
-        { error: 'Missing or invalid authorization header' },
+        { error: 'Unauthorized - No valid session' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-    const decoded = verifyToken(token);
-
-    if (!decoded) {
-      return NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 403 }
-      );
-    }
-
-    req.user = decoded;
+    req.user = sessionData.user;
+    req.sessionToken = sessionData.token;
+    
     return handler(req);
   };
 }

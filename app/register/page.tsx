@@ -48,6 +48,12 @@ export default function RegisterPage() {
           Inscription
         </h1>
 
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+          <p className="text-sm text-yellow-800">
+            L&apos;inscription n&apos;est pas encore configurée. Veuillez utiliser un token bearer pour vous connecter.
+          </p>
+        </div>
+
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -60,7 +66,8 @@ export default function RegisterPage() {
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled
+                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
                 placeholder="Jean"
               />
             </div>
@@ -75,7 +82,8 @@ export default function RegisterPage() {
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled
+                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
                 placeholder="Dupont"
               />
             </div>
@@ -91,7 +99,8 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              disabled
+              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
               placeholder="votre@email.com"
             />
           </div>
@@ -106,7 +115,8 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              disabled
+              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
               placeholder="••••••••"
             />
           </div>
@@ -119,10 +129,10 @@ export default function RegisterPage() {
 
           <Button
             type="submit"
-            disabled={loading}
+            disabled={true}
             className="w-full"
           >
-            {loading ? "Inscription..." : "S'inscrire"}
+            Inscription désactivée
           </Button>
         </form>
 

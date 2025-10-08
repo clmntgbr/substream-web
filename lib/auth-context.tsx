@@ -4,21 +4,22 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 
 interface User {
-  email: string
-  firstname: string
-  lastname: string
-  roles: string[]
-  id: string
-  createdAt: string
-  updatedAt: string
+  email?: string
+  username?: string
+  firstname?: string
+  lastname?: string
+  roles?: string[]
+  id?: string
+  sub?: string
+  [key: string]: any
 }
 
 interface AuthContextType {
   user: User | null
-  token: string | null
-  login: (token: string, user: User) => void
-  logout: () => void
+  login: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
   isLoading: boolean
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -27,52 +28,98 @@ const PUBLIC_ROUTES = ["/login", "/register"]
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   const pathname = usePathname()
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token")
-    const storedUser = localStorage.getItem("user")
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch("/api/profile", {
+        method: "GET",
+        credentials: "include", // Important for cookies
+      })
 
-    if (storedToken && storedUser) {
-      setToken(storedToken)
-      setUser(JSON.parse(storedUser))
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+        return data.user
+      } else {
+        setUser(null)
+        return null
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error)
+      setUser(null)
+      return null
+    }
+  }
+
+  const refreshUser = async () => {
+    await fetchProfile()
+  }
+
+  useEffect(() => {
+    const initAuth = async () => {
+      await fetchProfile()
+      setIsLoading(false)
     }
 
-    setIsLoading(false)
+    initAuth()
   }, [])
 
   useEffect(() => {
     if (!isLoading) {
       const isPublicRoute = PUBLIC_ROUTES.includes(pathname)
 
-      if (!token && !isPublicRoute) {
+      if (!user && !isPublicRoute) {
         router.push("/login")
-      } else if (token && isPublicRoute) {
+      } else if (user && isPublicRoute) {
         router.push("/")
       }
     }
-  }, [token, pathname, isLoading, router])
+  }, [user, pathname, isLoading, router])
 
-  const login = (newToken: string, newUser: User) => {
-    setToken(newToken)
-    setUser(newUser)
-    localStorage.setItem("token", newToken)
-    localStorage.setItem("user", JSON.stringify(newUser))
+  const login = async (email: string, password: string) => {
+    try {
+      // Send credentials to API to authenticate and set session cookie
+      const response = await fetch("/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for cookies
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+      } else {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to login")
+      }
+    } catch (error) {
+      console.error("Login failed:", error)
+      throw error
+    }
   }
 
-  const logout = () => {
-    setToken(null)
-    setUser(null)
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    router.push("/login")
+  const logout = async () => {
+    try {
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include", // Important for cookies
+      })
+    } catch (error) {
+      console.error("Logout failed:", error)
+    } finally {
+      setUser(null)
+      router.push("/login")
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )
