@@ -1,0 +1,213 @@
+"use client";
+
+import { createContext, useCallback, useContext, useReducer } from "react";
+import { initialState, streamReducer } from "./reducer";
+import { Stream, StreamState } from "./types";
+
+// Context type
+interface StreamContextType {
+  state: StreamState;
+  getStreams: () => Promise<void>;
+  getStream: (id: string) => Promise<void>;
+  createStream: (streamData: Partial<Stream>) => Promise<Stream | null>;
+  updateStream: (id: string, streamData: Partial<Stream>) => Promise<void>;
+  deleteStream: (id: string) => Promise<void>;
+  refreshStreams: () => Promise<void>;
+}
+
+// Create context
+const StreamContext = createContext<StreamContextType | undefined>(undefined);
+
+// Provider component
+export function StreamProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(streamReducer, initialState);
+
+  const getStreams = useCallback(async () => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch("/api/streams", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "SET_STREAMS", payload: data.streams || [] });
+      } else {
+        const errorData = await response.json();
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorData.error || "Failed to fetch streams",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch streams:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to fetch streams",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
+
+  // Get single stream
+  const getStream = useCallback(async (id: string) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch(`/api/streams/${id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "SET_CURRENT_STREAM", payload: data.stream });
+      } else {
+        const errorData = await response.json();
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorData.error || "Failed to fetch stream",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch stream:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to fetch stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
+
+  // Create stream
+  const createStream = useCallback(async (streamData: Partial<Stream>) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch("/api/streams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(streamData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "ADD_STREAM", payload: data.stream });
+        return data.stream;
+      } else {
+        const errorData = await response.json();
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorData.error || "Failed to create stream",
+        });
+        return null;
+      }
+    } catch (error) {
+      console.error("Failed to create stream:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to create stream",
+      });
+      return null;
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
+
+  // Update stream
+  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch(`/api/streams/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(streamData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+      } else {
+        const errorData = await response.json();
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorData.error || "Failed to update stream",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to update stream:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to update stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
+
+  // Delete stream
+  const deleteStream = useCallback(async (id: string) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch(`/api/streams/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        dispatch({ type: "DELETE_STREAM", payload: id });
+      } else {
+        const errorData = await response.json();
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorData.error || "Failed to delete stream",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to delete stream:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to delete stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
+
+  // Refresh streams
+  const refreshStreams = useCallback(async () => {
+    await getStreams();
+  }, [getStreams]);
+
+  return (
+    <StreamContext.Provider
+      value={{
+        state,
+        getStreams,
+        getStream,
+        createStream,
+        updateStream,
+        deleteStream,
+        refreshStreams,
+      }}
+    >
+      {children}
+    </StreamContext.Provider>
+  );
+}
+
+// Custom hook to use the stream context
+export function useStreams() {
+  const context = useContext(StreamContext);
+  if (context === undefined) {
+    throw new Error("useStreams must be used within a StreamProvider");
+  }
+  return context;
+}

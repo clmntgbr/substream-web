@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { CloudUploadIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import { Preview } from "./preview";
 
 export const Upload = () => {
