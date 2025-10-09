@@ -1,10 +1,13 @@
 import { CloudUploadIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { Preview } from "./preview";
 
 export const Upload = () => {
   const [isDragOver] = useState(false);
   const [isProcessing] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -17,18 +20,14 @@ export const Upload = () => {
       const isVideo = videoExtensions.some((ext) => fileName.endsWith(ext)) || file.type.startsWith("video/");
 
       if (isVideo) {
-        console.log("Video uploaded:", {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          lastModified: new Date(file.lastModified),
-        });
+        setSelectedFile(file);
+        setIsPreviewOpen(true);
       }
     });
   };
 
   return (
-    <div className="w-full h-[500px] rounded-xl">
+    <div className="w-full h-[80vh] rounded-xl">
       <div className={`relative h-full flex items-center border-2 border-dashed rounded-xl`}>
         <div className="w-full p-12 text-center">
           <div
@@ -65,6 +64,8 @@ export const Upload = () => {
           </div>
         )}
       </div>
+
+      <Preview open={isPreviewOpen} onOpenChange={setIsPreviewOpen} file={selectedFile} />
     </div>
   );
 };
