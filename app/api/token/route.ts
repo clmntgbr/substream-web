@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { setSessionCookie } from '@/lib/session';
+import { NextRequest, NextResponse } from "next/server";
+import { setSessionCookie } from "@/lib/session";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://localhost/api';
+const BACKEND_API_URL =
+  process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,16 +11,16 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
+        { error: "Email and password are required" },
+        { status: 400 },
       );
     }
 
     // Call the external backend API to authenticate
     const backendResponse = await fetch(`${BACKEND_API_URL}/token`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -27,8 +28,8 @@ export async function POST(request: NextRequest) {
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json().catch(() => ({}));
       return NextResponse.json(
-        { error: errorData.error || 'Invalid credentials' },
-        { status: backendResponse.status }
+        { error: errorData.error || "Invalid credentials" },
+        { status: backendResponse.status },
       );
     }
 
@@ -37,8 +38,8 @@ export async function POST(request: NextRequest) {
 
     if (!token) {
       return NextResponse.json(
-        { error: 'No token received from backend' },
-        { status: 500 }
+        { error: "No token received from backend" },
+        { status: 500 },
       );
     }
 
@@ -60,10 +61,10 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     return NextResponse.json(
-      { error: 'Authentication failed. Please check your backend connection.' },
-      { status: 500 }
+      { error: "Authentication failed. Please check your backend connection." },
+      { status: 500 },
     );
   }
 }

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
 
@@ -119,38 +125,41 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Update stream
-  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    try {
-      const response = await fetch(`/api/streams/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(streamData),
-      });
+  const updateStream = useCallback(
+    async (id: string, streamData: Partial<Stream>) => {
+      dispatch({ type: "SET_LOADING", payload: true });
+      try {
+        const response = await fetch(`/api/streams/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(streamData),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
-      } else {
-        const errorData = await response.json();
+        if (response.ok) {
+          const data = await response.json();
+          dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+        } else {
+          const errorData = await response.json();
+          dispatch({
+            type: "SET_ERROR",
+            payload: errorData.error || "Failed to update stream",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to update stream:", error);
         dispatch({
           type: "SET_ERROR",
-          payload: errorData.error || "Failed to update stream",
+          payload: "Failed to update stream",
         });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
       }
-    } catch (error) {
-      console.error("Failed to update stream:", error);
-      dispatch({
-        type: "SET_ERROR",
-        payload: "Failed to update stream",
-      });
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  }, []);
+    },
+    [],
+  );
 
   // Delete stream
   const deleteStream = useCallback(async (id: string) => {

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/register", {
@@ -25,21 +25,21 @@ export default function RegisterPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password, firstname, lastname }),
-      })
+      });
 
       if (!response.ok) {
-        const data = await response.json()
-        setError(data.error || "Une erreur est survenue")
-        setLoading(false)
-        return
+        const data = await response.json();
+        setError(data.error || "Une erreur est survenue");
+        setLoading(false);
+        return;
       }
 
-      router.push("/login")
+      router.push("/login");
     } catch (err) {
-      setError("Une erreur est survenue")
-      setLoading(false)
+      setError("Une erreur est survenue");
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
@@ -50,14 +50,18 @@ export default function RegisterPage() {
 
         <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
           <p className="text-sm text-yellow-800">
-            L&apos;inscription n&apos;est pas encore configurée. Veuillez utiliser un token bearer pour vous connecter.
+            L&apos;inscription n&apos;est pas encore configurée. Veuillez
+            utiliser un token bearer pour vous connecter.
           </p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="firstname" className="block text-sm font-medium text-slate-700 mb-2">
+              <label
+                htmlFor="firstname"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
                 Prénom
               </label>
               <input
@@ -73,7 +77,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="lastname" className="block text-sm font-medium text-slate-700 mb-2">
+              <label
+                htmlFor="lastname"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
                 Nom
               </label>
               <input
@@ -90,7 +97,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
               Email
             </label>
             <input
@@ -106,7 +116,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
               Mot de passe
             </label>
             <input
@@ -127,11 +140,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <Button
-            type="submit"
-            disabled={true}
-            className="w-full"
-          >
+          <Button type="submit" disabled={true} className="w-full">
             Inscription désactivée
           </Button>
         </form>
@@ -139,12 +148,15 @@ export default function RegisterPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-600">
             Déjà un compte?{" "}
-            <a href="/login" className="font-medium text-slate-900 hover:underline">
+            <a
+              href="/login"
+              className="font-medium text-slate-900 hover:underline"
+            >
               Se connecter
             </a>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

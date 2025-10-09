@@ -1,7 +1,8 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL =
+  process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
 
 async function uploadVideoHandler(req: AuthenticatedRequest) {
   try {
@@ -24,7 +25,10 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
 
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json().catch(() => ({}));
-      return NextResponse.json({ error: errorData.error || "Failed to upload video" }, { status: backendResponse.status });
+      return NextResponse.json(
+        { error: errorData.error || "Failed to upload video" },
+        { status: backendResponse.status },
+      );
     }
 
     const data = await backendResponse.json();
@@ -39,7 +43,10 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
     });
   } catch (error) {
     console.error("Upload video error:", error);
-    return NextResponse.json({ error: "Failed to upload video" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to upload video" },
+      { status: 500 },
+    );
   }
 }
 

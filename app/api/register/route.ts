@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 // This endpoint would call an external API to register a user
 export async function POST(request: NextRequest) {
@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password || !firstname || !lastname) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+        { error: "Missing required fields" },
+        { status: 400 },
       );
     }
 
@@ -19,21 +19,21 @@ export async function POST(request: NextRequest) {
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({ email, password, firstname, lastname }),
     // });
-    
+
     // if (!apiResponse.ok) {
     //   const error = await apiResponse.json();
     //   return NextResponse.json(error, { status: apiResponse.status });
     // }
 
     return NextResponse.json(
-      { error: 'Registration not yet configured. Please configure your external API endpoint.' },
-      { status: 501 }
+      {
+        error:
+          "Registration not yet configured. Please configure your external API endpoint.",
+      },
+      { status: 501 },
     );
   } catch (error) {
-    console.error('Registration error:', error);
-    return NextResponse.json(
-      { error: 'Registration failed' },
-      { status: 500 }
-    );
+    console.error("Registration error:", error);
+    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }
