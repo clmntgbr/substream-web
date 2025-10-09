@@ -27,7 +27,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const { getStreams } = useStreams();
-  const { createOption, isLoading: isCreatingOption } = useOptions();
+  const { createOption } = useOptions();
   const [isUploading, setIsUploading] = useState(false);
 
   const [subtitleFont, setSubtitleFont] = useState("Arial");
