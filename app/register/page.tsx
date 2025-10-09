@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -10,13 +10,11 @@ export default function RegisterPage() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
     try {
       const response = await fetch("/api/register", {
@@ -30,14 +28,12 @@ export default function RegisterPage() {
       if (!response.ok) {
         const data = await response.json();
         setError(data.error || "Une erreur est survenue");
-        setLoading(false);
         return;
       }
 
       router.push("/login");
-    } catch (err) {
+    } catch {
       setError("Une erreur est survenue");
-      setLoading(false);
     }
   };
 

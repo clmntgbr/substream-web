@@ -8,7 +8,7 @@ export interface JWTPayload {
   roles?: string[];
   userId?: string;
   sub?: string;
-  [key: string]: any; // Allow additional fields from external tokens
+  [key: string]: unknown; // Allow additional fields from external tokens
 }
 
 export function decodeToken(token: string): JWTPayload | null {
