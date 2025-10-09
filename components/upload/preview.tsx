@@ -392,7 +392,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="shadow">Ombre: {subtitleShadow}px</Label>
-                <Slider id="shadow" min={0} max={10} step={1} value={[subtitleShadow]} onValueChange={(value) => setSubtitleShadow(value[0])} />
+                <Slider id="shadow" min={0} max={5} step={1} value={[subtitleShadow]} onValueChange={(value) => setSubtitleShadow(value[0])} />
               </div>
             </div>
 
@@ -412,31 +412,6 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               <div className="space-y-2">
                 <Label htmlFor="chunks">Nombre de segments: {chunkNumber}</Label>
                 <Slider id="chunks" min={1} max={20} step={1} value={[chunkNumber]} onValueChange={(value) => setChunkNumber(value[0])} />
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Preview */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold">Aperçu</h3>
-              <div className="bg-slate-900 p-8 rounded-lg flex items-center justify-center min-h-[120px]">
-                <p
-                  className="text-center"
-                  style={{
-                    fontFamily: subtitleFont,
-                    fontSize: `${subtitleSize}px`,
-                    color: subtitleColor,
-                    fontWeight: subtitleBold ? "bold" : "normal",
-                    fontStyle: subtitleItalic ? "italic" : "normal",
-                    textDecoration: subtitleUnderline ? "underline" : "none",
-                    textShadow: `${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleShadow}px ${subtitleShadow}px ${
-                      subtitleShadow * 2
-                    }px ${subtitleShadowColor}`,
-                  }}
-                >
-                  Exemple de sous-titre
-                </p>
               </div>
             </div>
           </div>
