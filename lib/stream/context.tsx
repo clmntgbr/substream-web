@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useReducer } from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
 
@@ -184,6 +184,17 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   // Refresh streams
   const refreshStreams = useCallback(async () => {
     await getStreams();
+  }, [getStreams]);
+
+  // Load streams on mount and refresh every 20 seconds
+  useEffect(() => {
+    getStreams();
+
+    const interval = setInterval(() => {
+      getStreams();
+    }, 20000); // 20 seconds
+
+    return () => clearInterval(interval);
   }, [getStreams]);
 
   return (

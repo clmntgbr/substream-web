@@ -2,8 +2,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Clock, Film, HardDrive, Play, Settings, Sparkles, X } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { useOptions } from "@/lib/option";
+import { useStreams } from "@/lib/stream";
+import { Clock, Film, HardDrive, Loader2, Play, Settings, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -17,6 +24,24 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
   const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const { getStreams } = useStreams();
+  const { createOption, isLoading: isCreatingOption } = useOptions();
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [subtitleFont, setSubtitleFont] = useState("Arial");
+  const [subtitleSize, setSubtitleSize] = useState(24);
+  const [subtitleColor, setSubtitleColor] = useState("#FFFFFF");
+  const [subtitleBold, setSubtitleBold] = useState(true);
+  const [subtitleItalic, setSubtitleItalic] = useState(false);
+  const [subtitleUnderline, setSubtitleUnderline] = useState(false);
+  const [subtitleOutlineColor, setSubtitleOutlineColor] = useState("#000000");
+  const [subtitleOutlineThickness, setSubtitleOutlineThickness] = useState(2);
+  const [subtitleShadow, setSubtitleShadow] = useState(1);
+  const [subtitleShadowColor, setSubtitleShadowColor] = useState("#333333");
+  const [format, setFormat] = useState("original");
+  const [chunkNumber, setChunkNumber] = useState(5);
+  const [yAxisAlignment, setYAxisAlignment] = useState(0.85);
 
   useEffect(() => {
     if (!file) return;
@@ -72,13 +97,73 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
     };
   }, [file]);
 
+  const handleLaunchProcess = async () => {
+    if (!file) return;
+
+    try {
+      const optionData = {
+        subtitleFont,
+        subtitleSize,
+        subtitleColor,
+        subtitleBold,
+        subtitleItalic,
+        subtitleUnderline,
+        subtitleOutlineColor,
+        subtitleOutlineThickness,
+        subtitleShadow,
+        subtitleShadowColor,
+        format,
+        chunkNumber,
+        yAxisAlignment,
+      };
+
+      const option = await createOption(optionData);
+
+      if (!option || !option.id) {
+        return;
+      }
+
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("video", file);
+      formData.append("optionId", option.id);
+
+      const response = await fetch("/api/streams/video", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      if (response.ok) {
+        await response.json();
+        getStreams();
+        onOpenChange(false);
+      } else {
+        await response.json();
+      }
+    } catch (error) {
+      console.error("Process failed:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   if (!file) return null;
 
   const fileSize = (file.size / 1024 / 1024).toFixed(2);
 
+  const isProcessing = isCreatingOption || isUploading;
+
   return (
     <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet
+        open={open}
+        onOpenChange={(newOpen) => {
+          if (!isProcessing) {
+            onOpenChange(newOpen);
+          }
+        }}
+      >
         <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0 bg-black">
           <SheetHeader className="sr-only">
             <SheetTitle>Aperçu vidéo</SheetTitle>
@@ -124,8 +209,9 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onOpenChange(false)}
-                  className="h-11 w-11 rounded-xl bg-white/10 hover:bg-white/20 text-white hover:text-white backdrop-blur-md border border-white/10 transition-all duration-200 hover:scale-105"
+                  onClick={() => !isProcessing && onOpenChange(false)}
+                  disabled={isProcessing}
+                  className="h-11 w-11 rounded-xl bg-white/10 hover:bg-white/20 text-white hover:text-white backdrop-blur-md border border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -150,6 +236,29 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 </div>
               )}
 
+              {/* Subtitle Preview Overlay */}
+              <div
+                className="absolute inset-x-0 flex items-center justify-center pointer-events-none"
+                style={{ bottom: `${(1 - yAxisAlignment) * 100}%` }}
+              >
+                <p
+                  className="text-center px-4 max-w-[90%]"
+                  style={{
+                    fontFamily: subtitleFont,
+                    fontSize: `${subtitleSize * 0.8}px`, // Scale down for preview
+                    color: subtitleColor,
+                    fontWeight: subtitleBold ? "bold" : "normal",
+                    fontStyle: subtitleItalic ? "italic" : "normal",
+                    textDecoration: subtitleUnderline ? "underline" : "none",
+                    textShadow: `${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleShadow}px ${subtitleShadow}px ${
+                      subtitleShadow * 2
+                    }px ${subtitleShadowColor}`,
+                  }}
+                >
+                  Exemple de sous-titre
+                </p>
+              </div>
+
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
               </div>
@@ -162,14 +271,19 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 <Button
                   onClick={() => setIsSettingsOpen(true)}
                   variant="outline"
-                  className="bg-slate-800/50 border-slate-700 text-white hover:bg-slate-700 hover:text-white transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-slate-700/20 cursor-pointer"
+                  disabled={isProcessing}
+                  className="bg-slate-800/50 border-slate-700 text-white hover:bg-slate-700 hover:text-white transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-slate-700/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Settings className="mr-2 h-4 w-4" />
                   Paramètres
                 </Button>
-                <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all duration-200 hover:scale-105 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 cursor-pointer">
-                  <Play className="mr-2 h-4 w-4 fill-white" />
-                  Lancer le process
+                <Button
+                  onClick={handleLaunchProcess}
+                  disabled={isProcessing}
+                  className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all duration-200 hover:scale-105 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
+                  {isCreatingOption ? "Création option..." : isUploading ? "Upload en cours..." : "Lancer le process"}
                 </Button>
               </div>
             </div>
@@ -178,14 +292,154 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
       </Sheet>
 
       <Sheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-y-auto px-2">
+        <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-y-auto px-4">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5 text-primary" />
-              Paramètres de lecture
+              Paramètres des sous-titres
             </SheetTitle>
-            <SheetDescription>Personnalisez votre expérience de visionnage</SheetDescription>
+            <SheetDescription>Configurez l&apos;apparence et le format des sous-titres</SheetDescription>
           </SheetHeader>
+
+          <div className="space-y-6 py-6">
+            {/* Font Settings */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Police et Taille</h3>
+              <div className="space-y-2">
+                <Label htmlFor="font">Police</Label>
+                <Input id="font" value={subtitleFont} onChange={(e) => setSubtitleFont(e.target.value)} placeholder="Arial" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="size">Taille: {subtitleSize}px</Label>
+                <Slider id="size" min={12} max={48} step={1} value={[subtitleSize]} onValueChange={(value) => setSubtitleSize(value[0])} />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Color Settings */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Couleurs</h3>
+              <div className="space-y-2">
+                <Label htmlFor="color">Couleur du texte</Label>
+                <div className="flex gap-2">
+                  <Input id="color" type="color" value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} className="w-20 h-10" />
+                  <Input value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} placeholder="#FFFFFF" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="outlineColor">Couleur du contour</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="outlineColor"
+                    type="color"
+                    value={subtitleOutlineColor}
+                    onChange={(e) => setSubtitleOutlineColor(e.target.value)}
+                    className="w-20 h-10"
+                  />
+                  <Input value={subtitleOutlineColor} onChange={(e) => setSubtitleOutlineColor(e.target.value)} placeholder="#000000" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="shadowColor">Couleur de l&apos;ombre</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="shadowColor"
+                    type="color"
+                    value={subtitleShadowColor}
+                    onChange={(e) => setSubtitleShadowColor(e.target.value)}
+                    className="w-20 h-10"
+                  />
+                  <Input value={subtitleShadowColor} onChange={(e) => setSubtitleShadowColor(e.target.value)} placeholder="#333333" />
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Text Style */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Style du texte</h3>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="bold">Gras</Label>
+                <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="italic">Italique</Label>
+                <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="underline">Souligné</Label>
+                <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Effects */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Effets</h3>
+              <div className="space-y-2">
+                <Label htmlFor="outlineThickness">Épaisseur du contour: {subtitleOutlineThickness}px</Label>
+                <Slider
+                  id="outlineThickness"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={[subtitleOutlineThickness]}
+                  onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="shadow">Ombre: {subtitleShadow}px</Label>
+                <Slider id="shadow" min={0} max={10} step={1} value={[subtitleShadow]} onValueChange={(value) => setSubtitleShadow(value[0])} />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Position & Format */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Position et Format</h3>
+              <div className="space-y-2">
+                <Label htmlFor="yAxis">Position verticale: {(yAxisAlignment * 100).toFixed(0)}%</Label>
+                <Slider id="yAxis" min={0} max={1} step={0.01} value={[yAxisAlignment]} onValueChange={(value) => setYAxisAlignment(value[0])} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="format">Format</Label>
+                <Input id="format" value={format} onChange={(e) => setFormat(e.target.value)} placeholder="original" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="chunks">Nombre de segments: {chunkNumber}</Label>
+                <Slider id="chunks" min={1} max={20} step={1} value={[chunkNumber]} onValueChange={(value) => setChunkNumber(value[0])} />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Preview */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold">Aperçu</h3>
+              <div className="bg-slate-900 p-8 rounded-lg flex items-center justify-center min-h-[120px]">
+                <p
+                  className="text-center"
+                  style={{
+                    fontFamily: subtitleFont,
+                    fontSize: `${subtitleSize}px`,
+                    color: subtitleColor,
+                    fontWeight: subtitleBold ? "bold" : "normal",
+                    fontStyle: subtitleItalic ? "italic" : "normal",
+                    textDecoration: subtitleUnderline ? "underline" : "none",
+                    textShadow: `${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleOutlineThickness}px -${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, -${subtitleOutlineThickness}px ${subtitleOutlineThickness}px 0 ${subtitleOutlineColor}, ${subtitleShadow}px ${subtitleShadow}px ${
+                      subtitleShadow * 2
+                    }px ${subtitleShadowColor}`,
+                  }}
+                >
+                  Exemple de sous-titre
+                </p>
+              </div>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
     </>

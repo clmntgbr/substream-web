@@ -1,6 +1,5 @@
 export interface Option {
-  "@id": string;
-  "@type": string;
+  id: string;
   subtitleFont: string;
   subtitleSize: number;
   subtitleColor: string;

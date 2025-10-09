@@ -2,18 +2,12 @@
 import { Header } from "@/components/header";
 import { SidebarComponent } from "@/components/sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import Queue from "@/components/upload/queue";
 import Upload from "@/components/upload/upload";
 import { useAuth } from "@/lib/auth-context";
-import { useStreams } from "@/lib/stream/context";
-import { useEffect } from "react";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const { state, getStreams } = useStreams();
-
-  useEffect(() => {
-    getStreams();
-  }, [getStreams]);
 
   if (!user) return null;
 
@@ -26,7 +20,7 @@ const HomePage = () => {
           <SidebarInset>
             <div className="flex flex-1 flex-col gap-4 p-4 bg-secondary/30">
               <Upload />
-              {JSON.stringify(state.streams)}
+              <Queue />
             </div>
           </SidebarInset>
         </div>

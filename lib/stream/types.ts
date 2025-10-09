@@ -6,7 +6,7 @@ export interface Stream {
   fileName: string;
   originalFileName: string;
   mimeType: string;
-  size: number;
+  sizeInMegabytes: number;
   audioFiles: string[];
   status: string;
   statuses: string[];
@@ -15,7 +15,9 @@ export interface Stream {
   createdAt: string;
   updatedAt: string;
   processingTime: string;
-  [key: string]: unknown;
+  isProcessing: boolean;
+  isCompleted: boolean;
+  isFailed: boolean;
 }
 
 export interface StreamState {
