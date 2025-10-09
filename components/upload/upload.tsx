@@ -24,6 +24,9 @@ export const Upload = () => {
         setIsPreviewOpen(true);
       }
     });
+
+    // Reset input value to allow selecting the same file again
+    event.target.value = "";
   };
 
   return (
