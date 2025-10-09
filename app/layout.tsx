@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { OptionProvider } from "@/lib/option";
 import { StreamProvider } from "@/lib/stream";
@@ -27,12 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <StreamProvider>
-            <OptionProvider>{children}</OptionProvider>
+            <OptionProvider>
+              {children}
+              <Toaster richColors expand={false} position="top-right" closeButton />
+            </OptionProvider>
           </StreamProvider>
         </AuthProvider>
       </body>

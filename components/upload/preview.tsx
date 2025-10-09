@@ -5,29 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useOptions } from "@/lib/option";
 import { useStreams } from "@/lib/stream";
-import {
-  Clock,
-  Film,
-  HardDrive,
-  Loader2,
-  Play,
-  Settings,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Clock, Film, HardDrive, Loader2, Play, Settings, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface PreviewProps {
   open: boolean;
@@ -115,6 +101,8 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
   const handleLaunchProcess = async () => {
     if (!file) return;
 
+    setIsUploading(true);
+
     try {
       const optionData = {
         subtitleFont,
@@ -138,7 +126,6 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
         return;
       }
 
-      setIsUploading(true);
       const formData = new FormData();
       formData.append("video", file);
       formData.append("optionId", option.id);
@@ -153,11 +140,20 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
         await response.json();
         getStreams();
         onOpenChange(false);
+        toast.success("Video uploaded successfully!", {
+          description: "Your video is now being processed.",
+        });
       } else {
         await response.json();
+        toast.error("Upload failed", {
+          description: "An error occurred while uploading your video.",
+        });
       }
     } catch (error) {
       console.error("Process failed:", error);
+      toast.error("Upload failed", {
+        description: "An error occurred while uploading your video.",
+      });
     } finally {
       setIsUploading(false);
     }
@@ -167,27 +163,20 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
 
   const fileSize = (file.size / 1024 / 1024).toFixed(2);
 
-  const isProcessing = isCreatingOption || isUploading;
-
   return (
     <>
       <Sheet
         open={open}
         onOpenChange={(newOpen) => {
-          if (!isProcessing) {
+          if (!isUploading) {
             onOpenChange(newOpen);
           }
         }}
       >
-        <SheetContent
-          side="top"
-          className="max-w-[100vw] h-screen w-screen p-0 border-0 bg-black"
-        >
+        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0 bg-black">
           <SheetHeader className="sr-only">
             <SheetTitle>Aperçu vidéo</SheetTitle>
-            <SheetDescription>
-              Prévisualisation et paramètres de la vidéo
-            </SheetDescription>
+            <SheetDescription>Prévisualisation et paramètres de la vidéo</SheetDescription>
           </SheetHeader>
 
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.04),transparent_50%)]" />
@@ -200,35 +189,21 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                     <div className="h-16 w-16 rounded-2xl flex items-center justify-center shadow-lg">
                       <Film className="h-8 w-8 text-white" />
                     </div>
-                    <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center ring-2 ring-slate-950">
-                      <Sparkles className="h-3 w-3 text-white" />
-                    </div>
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <h2 className="text-2xl font-bold text-white  mb-1">
-                        {file.name}
-                      </h2>
+                      <h2 className="text-2xl font-bold text-white  mb-1">{file.name}</h2>
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge
-                          variant="secondary"
-                          className="bg-white/10 text-white border-white/20 hover:bg-white/15"
-                        >
+                        <Badge variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/15">
                           <Film className="h-3 w-3 mr-1" />
                           {file.type.split("/")[1].toUpperCase()}
                         </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-white/10 text-white border-white/20 hover:bg-white/15"
-                        >
+                        <Badge variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/15">
                           <Clock className="h-3 w-3 mr-1" />
                           {duration}
                         </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-white/10 text-white border-white/20 hover:bg-white/15"
-                        >
+                        <Badge variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/15">
                           <HardDrive className="h-3 w-3 mr-1" />
                           {fileSize} MB
                         </Badge>
@@ -240,8 +215,8 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => !isProcessing && onOpenChange(false)}
-                  disabled={isProcessing}
+                  onClick={() => !isUploading && onOpenChange(false)}
+                  disabled={isUploading}
                   className="h-11 w-11 rounded-xl bg-white/10 hover:bg-white/20 text-white hover:text-white backdrop-blur-md border border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <X className="h-5 w-5" />
@@ -255,23 +230,14 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 opacity-50" />
 
               {thumbnail ? (
-                <Image
-                  src={thumbnail}
-                  alt="Thumbnail"
-                  className="w-full h-full object-cover"
-                  width={1920}
-                  height={1080}
-                  priority
-                />
+                <Image src={thumbnail} alt="Thumbnail" className="w-full h-full object-cover" width={1920} height={1080} priority />
               ) : (
                 <div className="w-full h-full bg-slate-800/50 backdrop-blur-sm flex items-center justify-center">
                   <div className="text-center space-y-3">
                     <div className="h-16 w-16 rounded-full bg-slate-700/50 flex items-center justify-center mx-auto">
                       <Film className="h-8 w-8 text-slate-400" />
                     </div>
-                    <p className="text-slate-400 text-sm">
-                      Chargement de l&apos;aperçu...
-                    </p>
+                    <p className="text-slate-400 text-sm">Chargement de l&apos;aperçu...</p>
                   </div>
                 </div>
               )}
@@ -300,9 +266,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               </div>
 
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">
-                  HD Ready
-                </Badge>
+                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
               </div>
             </div>
           </div>
@@ -313,7 +277,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 <Button
                   onClick={() => setIsSettingsOpen(true)}
                   variant="outline"
-                  disabled={isProcessing}
+                  disabled={isUploading}
                   className="bg-slate-800/50 border-slate-700 text-white hover:bg-slate-700 hover:text-white transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-slate-700/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Settings className="mr-2 h-4 w-4" />
@@ -321,19 +285,11 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                 </Button>
                 <Button
                   onClick={handleLaunchProcess}
-                  disabled={isProcessing}
+                  disabled={isUploading}
                   className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all duration-200 hover:scale-105 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isProcessing ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Play className="mr-2 h-4 w-4 fill-white" />
-                  )}
-                  {isCreatingOption
-                    ? "Création option..."
-                    : isUploading
-                      ? "Upload en cours..."
-                      : "Lancer le process"}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
+                  {isUploading ? "Upload en cours..." : "Lancer le process"}
                 </Button>
               </div>
             </div>
@@ -342,18 +298,13 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
       </Sheet>
 
       <Sheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <SheetContent
-          side="right"
-          className="w-[400px] sm:w-[480px] overflow-y-auto px-4"
-        >
+        <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-y-auto px-4">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5 text-primary" />
               Paramètres des sous-titres
             </SheetTitle>
-            <SheetDescription>
-              Configurez l&apos;apparence et le format des sous-titres
-            </SheetDescription>
+            <SheetDescription>Configurez l&apos;apparence et le format des sous-titres</SheetDescription>
           </SheetHeader>
 
           <div className="space-y-6 py-6">
@@ -362,23 +313,11 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               <h3 className="text-sm font-semibold">Police et Taille</h3>
               <div className="space-y-2">
                 <Label htmlFor="font">Police</Label>
-                <Input
-                  id="font"
-                  value={subtitleFont}
-                  onChange={(e) => setSubtitleFont(e.target.value)}
-                  placeholder="Arial"
-                />
+                <Input id="font" value={subtitleFont} onChange={(e) => setSubtitleFont(e.target.value)} placeholder="Arial" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="size">Taille: {subtitleSize}px</Label>
-                <Slider
-                  id="size"
-                  min={12}
-                  max={48}
-                  step={1}
-                  value={[subtitleSize]}
-                  onValueChange={(value) => setSubtitleSize(value[0])}
-                />
+                <Slider id="size" min={12} max={48} step={1} value={[subtitleSize]} onValueChange={(value) => setSubtitleSize(value[0])} />
               </div>
             </div>
 
@@ -390,18 +329,8 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               <div className="space-y-2">
                 <Label htmlFor="color">Couleur du texte</Label>
                 <div className="flex gap-2">
-                  <Input
-                    id="color"
-                    type="color"
-                    value={subtitleColor}
-                    onChange={(e) => setSubtitleColor(e.target.value)}
-                    className="w-20 h-10"
-                  />
-                  <Input
-                    value={subtitleColor}
-                    onChange={(e) => setSubtitleColor(e.target.value)}
-                    placeholder="#FFFFFF"
-                  />
+                  <Input id="color" type="color" value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} className="w-20 h-10" />
+                  <Input value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} placeholder="#FFFFFF" />
                 </div>
               </div>
               <div className="space-y-2">
@@ -414,11 +343,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                     onChange={(e) => setSubtitleOutlineColor(e.target.value)}
                     className="w-20 h-10"
                   />
-                  <Input
-                    value={subtitleOutlineColor}
-                    onChange={(e) => setSubtitleOutlineColor(e.target.value)}
-                    placeholder="#000000"
-                  />
+                  <Input value={subtitleOutlineColor} onChange={(e) => setSubtitleOutlineColor(e.target.value)} placeholder="#000000" />
                 </div>
               </div>
               <div className="space-y-2">
@@ -431,11 +356,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
                     onChange={(e) => setSubtitleShadowColor(e.target.value)}
                     className="w-20 h-10"
                   />
-                  <Input
-                    value={subtitleShadowColor}
-                    onChange={(e) => setSubtitleShadowColor(e.target.value)}
-                    placeholder="#333333"
-                  />
+                  <Input value={subtitleShadowColor} onChange={(e) => setSubtitleShadowColor(e.target.value)} placeholder="#333333" />
                 </div>
               </div>
             </div>
@@ -447,27 +368,15 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
               <h3 className="text-sm font-semibold">Style du texte</h3>
               <div className="flex items-center justify-between">
                 <Label htmlFor="bold">Gras</Label>
-                <Switch
-                  id="bold"
-                  checked={subtitleBold}
-                  onCheckedChange={setSubtitleBold}
-                />
+                <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} />
               </div>
               <div className="flex items-center justify-between">
                 <Label htmlFor="italic">Italique</Label>
-                <Switch
-                  id="italic"
-                  checked={subtitleItalic}
-                  onCheckedChange={setSubtitleItalic}
-                />
+                <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} />
               </div>
               <div className="flex items-center justify-between">
                 <Label htmlFor="underline">Souligné</Label>
-                <Switch
-                  id="underline"
-                  checked={subtitleUnderline}
-                  onCheckedChange={setSubtitleUnderline}
-                />
+                <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
               </div>
             </div>
 
@@ -477,30 +386,19 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
             <div className="space-y-4">
               <h3 className="text-sm font-semibold">Effets</h3>
               <div className="space-y-2">
-                <Label htmlFor="outlineThickness">
-                  Épaisseur du contour: {subtitleOutlineThickness}px
-                </Label>
+                <Label htmlFor="outlineThickness">Épaisseur du contour: {subtitleOutlineThickness}px</Label>
                 <Slider
                   id="outlineThickness"
                   min={0}
                   max={10}
                   step={1}
                   value={[subtitleOutlineThickness]}
-                  onValueChange={(value) =>
-                    setSubtitleOutlineThickness(value[0])
-                  }
+                  onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="shadow">Ombre: {subtitleShadow}px</Label>
-                <Slider
-                  id="shadow"
-                  min={0}
-                  max={5}
-                  step={1}
-                  value={[subtitleShadow]}
-                  onValueChange={(value) => setSubtitleShadow(value[0])}
-                />
+                <Slider id="shadow" min={0} max={5} step={1} value={[subtitleShadow]} onValueChange={(value) => setSubtitleShadow(value[0])} />
               </div>
             </div>
 
@@ -510,39 +408,16 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
             <div className="space-y-4">
               <h3 className="text-sm font-semibold">Position et Format</h3>
               <div className="space-y-2">
-                <Label htmlFor="yAxis">
-                  Position verticale: {(yAxisAlignment * 100).toFixed(0)}%
-                </Label>
-                <Slider
-                  id="yAxis"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={[yAxisAlignment]}
-                  onValueChange={(value) => setYAxisAlignment(value[0])}
-                />
+                <Label htmlFor="yAxis">Position verticale: {(yAxisAlignment * 100).toFixed(0)}%</Label>
+                <Slider id="yAxis" min={0} max={1} step={0.01} value={[yAxisAlignment]} onValueChange={(value) => setYAxisAlignment(value[0])} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="format">Format</Label>
-                <Input
-                  id="format"
-                  value={format}
-                  onChange={(e) => setFormat(e.target.value)}
-                  placeholder="original"
-                />
+                <Input id="format" value={format} onChange={(e) => setFormat(e.target.value)} placeholder="original" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="chunks">
-                  Nombre de segments: {chunkNumber}
-                </Label>
-                <Slider
-                  id="chunks"
-                  min={1}
-                  max={20}
-                  step={1}
-                  value={[chunkNumber]}
-                  onValueChange={(value) => setChunkNumber(value[0])}
-                />
+                <Label htmlFor="chunks">Nombre de segments: {chunkNumber}</Label>
+                <Slider id="chunks" min={1} max={20} step={1} value={[chunkNumber]} onValueChange={(value) => setChunkNumber(value[0])} />
               </div>
             </div>
           </div>
