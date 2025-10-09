@@ -1,5 +1,8 @@
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
+import { ArrowRight, Settings, Video } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 interface PreviewProps {
   open: boolean;
@@ -57,21 +60,39 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="top" className="w-full overflow-y-auto h-full">
-        <SheetHeader>
-          <SheetTitle>{file.name}</SheetTitle>
-          <SheetDescription>
-            Size: {(file.size / 1024 / 1024).toFixed(2)} MB | Type: {file.type}
-          </SheetDescription>
-        </SheetHeader>
-        <div className="mt-6 flex justify-center">
-          {thumbnail ? (
-            <img src={thumbnail} alt="Video thumbnail" className="max-w-full h-auto rounded-lg" />
-          ) : (
-            <div className="w-64 h-36 bg-muted rounded-lg flex items-center justify-center">
-              <p className="text-muted-foreground">Loading thumbnail...</p>
+      <SheetContent side="top" className="w-full overflow-y-auto h-full bg-secondary">
+        <SheetHeader></SheetHeader>
+        <div className="bg-card border border-border rounded-lg w-4xl mx-auto my-auto">
+          <div className="p-4 border-b border-border">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Video size={20} className="text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground truncate">{file.name}</h3>
+                  <p className="text-sm text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB </p>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
+          <div className="p-4">
+            <div className="space-y-2">
+              <div className="aspect-video bg-muted rounded-lg overflow-hidden border border-border relative">
+                {thumbnail && <Image src={thumbnail} alt="Thumbnail" className="w-full h-full object-cover" width={100} height={100} />}
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between">
+              <div className="text-xs text-muted-foreground">Preview updates automatically as you change settings</div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <Settings /> Settings
+                </Button>
+                <Button variant="default" size="sm">
+                  Process File <ArrowRight />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
