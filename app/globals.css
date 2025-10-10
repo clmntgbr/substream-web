@@ -119,3 +119,93 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Progress bar animation */
+@keyframes progress-stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 0;
+  }
+}
+
+.progress-stripes {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 40px 40px;
+  animation: progress-stripes 1s linear infinite;
+}
+
+/* Status colors - Global */
+.completed {
+  @apply bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400;
+}
+
+.failed,
+.chunking_video_failed,
+.extracting_sound_failed,
+.generating_subtitle_failed,
+.chunking_video_completed,
+.transforming_subtitle_failed,
+.resizing_video_failed,
+.upload_failed,
+.embedding_video_failed {
+  @apply bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400;
+}
+
+/* Created/Deleted - Gray */
+.created,
+.deleted {
+  @apply bg-gray-100 text-gray-600 dark:bg-gray-900/30 dark:text-gray-400;
+}
+
+/* Upload family - Orange */
+.uploaded,
+.uploading {
+  @apply bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400;
+}
+
+/* Extracting sound - Purple */
+.extracting_sound,
+.extracting_sound_completed {
+  @apply bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400;
+}
+
+/* Generating subtitle - Indigo */
+.generating_subtitle,
+.generating_subtitle_completed {
+  @apply bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400;
+}
+
+/* Transforming subtitle - Cyan */
+.transforming_subtitle,
+.transforming_subtitle_completed {
+  @apply bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400;
+}
+
+/* Resizing video - Yellow */
+.resizing_video,
+.resizing_video_completed {
+  @apply bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400;
+}
+
+/* Embedding video - Pink */
+.embedding_video,
+.embedding_video_completed {
+  @apply bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400;
+}
+
+/* Chunking video - Teal */
+.chunking_video,
+.chunking_video_completed {
+  @apply bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400;
+}

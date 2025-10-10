@@ -18,7 +18,7 @@ const HomePage = () => {
         <div className="flex flex-1">
           <SidebarComponent />
           <SidebarInset>
-            <div className="flex flex-1 flex-col gap-4 p-4 bg-secondary/30">
+            <div className="flex flex-1 flex-col gap-4 p-4">
               <Upload />
               <Queue />
             </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "@/lib/use-translations";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function RegisterPage() {
@@ -11,6 +12,9 @@ export default function RegisterPage() {
   const [lastname, setLastname] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const params = useParams();
+  const lang = (params.lang as string) || "en";
+  const t = useTranslations().register;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,34 +35,26 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/login");
+      router.push(`/${lang}/login`);
     } catch {
       setError("Une erreur est survenue");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-8 text-slate-900">
-          Inscription
-        </h1>
+    <div className="min-h-screen flex items-center justify-center bg-secondary/30">
+      <div className="w-full max-w-md p-8 bg-card rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-center mb-8 text-foreground">{t.title}</h1>
 
-        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-          <p className="text-sm text-yellow-800">
-            L&apos;inscription n&apos;est pas encore configurée. Veuillez
-            utiliser un token bearer pour vous connecter.
-          </p>
+        <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{t.notice}</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label
-                htmlFor="firstname"
-                className="block text-sm font-medium text-slate-700 mb-2"
-              >
-                Prénom
+              <label htmlFor="firstname" className="block text-sm font-medium text-foreground mb-2">
+                {t.firstname}
               </label>
               <input
                 id="firstname"
@@ -67,17 +63,14 @@ export default function RegisterPage() {
                 onChange={(e) => setFirstname(e.target.value)}
                 required
                 disabled
-                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
+                className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-transparent bg-muted"
                 placeholder="Jean"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="lastname"
-                className="block text-sm font-medium text-slate-700 mb-2"
-              >
-                Nom
+              <label htmlFor="lastname" className="block text-sm font-medium text-foreground mb-2">
+                {t.lastname}
               </label>
               <input
                 id="lastname"
@@ -86,18 +79,15 @@ export default function RegisterPage() {
                 onChange={(e) => setLastname(e.target.value)}
                 required
                 disabled
-                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
+                className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-transparent bg-muted"
                 placeholder="Dupont"
               />
             </div>
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-700 mb-2"
-            >
-              Email
+            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+              {t.email}
             </label>
             <input
               id="email"
@@ -106,17 +96,14 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled
-              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
+              className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-transparent bg-muted"
               placeholder="votre@email.com"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-slate-700 mb-2"
-            >
-              Mot de passe
+            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+              {t.password}
             </label>
             <input
               id="password"
@@ -125,30 +112,27 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled
-              className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-slate-500 focus:border-transparent bg-slate-100"
+              className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-transparent bg-muted"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
           <Button type="submit" disabled={true} className="w-full">
-            Inscription désactivée
+            {t.submitDisabled}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-600">
-            Déjà un compte?{" "}
-            <a
-              href="/login"
-              className="font-medium text-slate-900 hover:underline"
-            >
-              Se connecter
+          <p className="text-sm text-muted-foreground">
+            {t.alreadyHaveAccount}{" "}
+            <a href={`/${lang}/login`} className="font-medium text-primary hover:underline">
+              {t.login}
             </a>
           </p>
         </div>

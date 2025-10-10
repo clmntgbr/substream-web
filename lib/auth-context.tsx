@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export interface User {
@@ -24,13 +24,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const PUBLIC_ROUTES = ["/login", "/register"];
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
+  const lang = (params?.lang as string) || 'en';
 
   const fetchProfile = async () => {
     try {
@@ -69,15 +69,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+      const isPublicRoute = pathname.endsWith('/login') || pathname.endsWith('/register');
 
       if (!user && !isPublicRoute) {
-        router.push("/login");
+        router.push(`/${lang}/login`);
       } else if (user && isPublicRoute) {
-        router.push("/");
+        router.push(`/${lang}`);
       }
     }
-  }, [user, pathname, isLoading, router]);
+  }, [user, pathname, isLoading, router, lang]);
 
   const login = async (email: string, password: string) => {
     try {
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Logout failed:", error);
     } finally {
       setUser(null);
-      router.push("/login");
+      router.push(`/${lang}/login`);
     }
   };
 

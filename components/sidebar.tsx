@@ -1,24 +1,10 @@
 "use client";
 
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { BookOpen, Bot, Command, Settings2, SquareTerminal } from "lucide-react";
 import * as React from "react";
 
 import { NavigationMain } from "@/components/navigation/main";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -230,21 +216,16 @@ const data = {
   ],
 };
 
-export function SidebarComponent({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function SidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar
-      className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
-      {...props}
-    >
-      <SidebarHeader className="bg-white">
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...props}>
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-white text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4 text-black" />
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Acme Inc</span>
@@ -255,7 +236,7 @@ export function SidebarComponent({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="bg-white">
+      <SidebarContent>
         <NavigationMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter></SidebarFooter>
