@@ -14,6 +14,7 @@ export interface Stream {
   tasks: Task[];
   createdAt: string;
   updatedAt: string;
+  progress: number;
   processingTime: string;
   isProcessing: boolean;
   isCompleted: boolean;
