@@ -91,6 +91,7 @@ export const Queue = () => {
 
         return (
           <div className="flex items-center gap-1">
+            <div className="size-4 rounded-full"></div>
             {status === "completed" && (
               <Button variant="secondary" className="p-0 cursor-pointer">
                 <Download className="size-4" />

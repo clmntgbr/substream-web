@@ -6,6 +6,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 function Progress({ className, value, ...props }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
+  const isComplete = value === 100;
+
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -14,7 +16,7 @@ function Progress({ className, value, ...props }: React.ComponentProps<typeof Pr
     >
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="bg-primary h-full w-full flex-1 transition-all progress-stripes"
+        className={cn("bg-primary h-full w-full flex-1 transition-all", !isComplete && "progress-stripes")}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>
