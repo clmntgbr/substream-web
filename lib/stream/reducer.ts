@@ -6,13 +6,11 @@ export const initialState: StreamState = {
   currentStream: null,
   isLoading: false,
   error: null,
+  downloadingIds: new Set(),
 };
 
 // Reducer function
-export function streamReducer(
-  state: StreamState,
-  action: StreamAction,
-): StreamState {
+export function streamReducer(state: StreamState, action: StreamAction): StreamState {
   switch (action.type) {
     case "SET_STREAMS":
       return {
@@ -35,23 +33,15 @@ export function streamReducer(
     case "UPDATE_STREAM":
       return {
         ...state,
-        streams: state.streams.map((stream) =>
-          stream.id === action.payload.id ? action.payload : stream,
-        ),
-        currentStream:
-          state.currentStream?.id === action.payload.id
-            ? action.payload
-            : state.currentStream,
+        streams: state.streams.map((stream) => (stream.id === action.payload.id ? action.payload : stream)),
+        currentStream: state.currentStream?.id === action.payload.id ? action.payload : state.currentStream,
         error: null,
       };
     case "DELETE_STREAM":
       return {
         ...state,
         streams: state.streams.filter((stream) => stream.id !== action.payload),
-        currentStream:
-          state.currentStream?.id === action.payload
-            ? null
-            : state.currentStream,
+        currentStream: state.currentStream?.id === action.payload ? null : state.currentStream,
         error: null,
       };
     case "SET_LOADING":
@@ -64,6 +54,18 @@ export function streamReducer(
         ...state,
         error: action.payload,
         isLoading: false,
+      };
+    case "SET_DOWNLOADING_START":
+      return {
+        ...state,
+        downloadingIds: new Set([...state.downloadingIds, action.payload]),
+      };
+    case "SET_DOWNLOADING_END":
+      const newDownloadingIds = new Set(state.downloadingIds);
+      newDownloadingIds.delete(action.payload);
+      return {
+        ...state,
+        downloadingIds: newDownloadingIds,
       };
     case "RESET":
       return initialState;

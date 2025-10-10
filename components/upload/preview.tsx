@@ -40,7 +40,7 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
   const [subtitleOutlineThickness, setSubtitleOutlineThickness] = useState(2);
   const [subtitleShadow, setSubtitleShadow] = useState(1);
   const [subtitleShadowColor, setSubtitleShadowColor] = useState("#333333");
-  const [format, setFormat] = useState("original");
+  const [format, setFormat] = useState("zoomed_916");
   const [chunkNumber, setChunkNumber] = useState(5);
   const [yAxisAlignment, setYAxisAlignment] = useState(0.85);
 

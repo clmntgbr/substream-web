@@ -19,6 +19,7 @@ export interface Stream {
   isProcessing: boolean;
   isCompleted: boolean;
   isFailed: boolean;
+  processingTimeEstimate: number;
 }
 
 export interface StreamState {
@@ -26,6 +27,7 @@ export interface StreamState {
   currentStream: Stream | null;
   isLoading: boolean;
   error: string | null;
+  downloadingIds: Set<string>;
 }
 
 export type StreamAction =
@@ -36,4 +38,6 @@ export type StreamAction =
   | { type: "DELETE_STREAM"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_DOWNLOADING_START"; payload: string }
+  | { type: "SET_DOWNLOADING_END"; payload: string }
   | { type: "RESET" };

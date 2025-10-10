@@ -5,10 +5,44 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Stream, useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { AlertCircle, CheckCircle2, Clock, Download } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, Download, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+
+// Component to display and countdown remaining time
+const RemainingTime = ({ estimateInSeconds }: { estimateInSeconds: number }) => {
+  const [remainingSeconds, setRemainingSeconds] = useState(estimateInSeconds);
+
+  useEffect(() => {
+    // Initialize with the estimate value
+    setRemainingSeconds(estimateInSeconds);
+
+    // Countdown every second
+    const interval = setInterval(() => {
+      setRemainingSeconds((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [estimateInSeconds]);
+
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${secs}s`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    }
+    return `${secs}s`;
+  };
+
+  return <span className="text-xs text-muted-foreground">{formatTime(remainingSeconds)} remaining</span>;
+};
 
 export const Queue = () => {
-  const { state } = useStreams();
+  const { state, downloadStream } = useStreams();
   const t = useTranslations();
 
   const columns: ColumnDef<Stream>[] = [
@@ -63,12 +97,14 @@ export const Queue = () => {
       cell: ({ row }) => {
         const progress = row.getValue("progress") as number;
         const status = row.original.status;
+        const estimate = row.original.processingTimeEstimate || 0;
 
         if (row.original.isProcessing || status === "completed") {
           return (
             <div className="space-y-2 min-w-[250px]">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">{progress}%</span>
+                {row.original.isProcessing && estimate > 0 && <RemainingTime estimateInSeconds={estimate} />}
               </div>
               <Progress value={progress} />
             </div>
@@ -88,13 +124,22 @@ export const Queue = () => {
       header: () => t.stream.table.actions,
       cell: ({ row }) => {
         const status = row.original.status;
+        const streamId = row.original.id;
+        const filename = `${row.original.originalFileName || `stream-${streamId}`}.zip`;
+        const isDownloading = streamId ? state.downloadingIds.has(streamId) : false;
+
+        const handleDownload = () => {
+          if (streamId) {
+            downloadStream(streamId, filename);
+          }
+        };
 
         return (
           <div className="flex items-center gap-1">
             <div className="size-4 rounded-full"></div>
             {status === "completed" && (
-              <Button variant="secondary" className="p-0 cursor-pointer">
-                <Download className="size-4" />
+              <Button variant="secondary" className="p-0 cursor-pointer" onClick={handleDownload} disabled={isDownloading}>
+                {isDownloading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
               </Button>
             )}
           </div>

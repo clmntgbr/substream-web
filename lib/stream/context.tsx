@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
 
@@ -18,6 +12,7 @@ interface StreamContextType {
   createStream: (streamData: Partial<Stream>) => Promise<Stream | null>;
   updateStream: (id: string, streamData: Partial<Stream>) => Promise<void>;
   deleteStream: (id: string) => Promise<void>;
+  downloadStream: (id: string, filename: string) => Promise<void>;
   refreshStreams: () => Promise<void>;
 }
 
@@ -125,41 +120,38 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Update stream
-  const updateStream = useCallback(
-    async (id: string, streamData: Partial<Stream>) => {
-      dispatch({ type: "SET_LOADING", payload: true });
-      try {
-        const response = await fetch(`/api/streams/${id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(streamData),
-        });
+  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch(`/api/streams/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(streamData),
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          dispatch({ type: "UPDATE_STREAM", payload: data.stream });
-        } else {
-          const errorData = await response.json();
-          dispatch({
-            type: "SET_ERROR",
-            payload: errorData.error || "Failed to update stream",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to update stream:", error);
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+      } else {
+        const errorData = await response.json();
         dispatch({
           type: "SET_ERROR",
-          payload: "Failed to update stream",
+          payload: errorData.error || "Failed to update stream",
         });
-      } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
       }
-    },
-    [],
-  );
+    } catch (error) {
+      console.error("Failed to update stream:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to update stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
 
   // Delete stream
   const deleteStream = useCallback(async (id: string) => {
@@ -190,6 +182,61 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Download stream
+  const downloadStream = useCallback(async (id: string, filename: string) => {
+    dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+    try {
+      console.log(`Starting download for stream ${id}`);
+
+      const response = await fetch(`/api/streams/${id}/download`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Download failed" }));
+        const errorMessage = errorData.error || `Download failed with status ${response.status}`;
+        console.error("Download failed:", errorMessage);
+
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorMessage,
+        });
+        return;
+      }
+
+      console.log("Download response received, creating blob...");
+
+      // Get the filename from Content-Disposition header or use provided filename
+      const contentDisposition = response.headers.get("Content-Disposition");
+      const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
+
+      // Create blob and download
+      const blob = await response.blob();
+      console.log(`Blob created (${blob.size} bytes), triggering download...`);
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = downloadFilename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      console.log(`Download completed: ${downloadFilename}`);
+    } catch (error) {
+      console.error("Failed to download stream:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to download stream";
+      dispatch({
+        type: "SET_ERROR",
+        payload: errorMessage,
+      });
+    } finally {
+      dispatch({ type: "SET_DOWNLOADING_END", payload: id });
+    }
+  }, []);
+
   // Refresh streams
   const refreshStreams = useCallback(async () => {
     await getStreams();
@@ -215,6 +262,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         createStream,
         updateStream,
         deleteStream,
+        downloadStream,
         refreshStreams,
       }}
     >
