@@ -5,24 +5,35 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Stream, useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { AlertCircle, CheckCircle2, Clock, Download, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCheck, CheckCircle2, Clock, Timer } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { DataTableRowActions } from "./data-table-row-actions";
 
 // Component to display and countdown remaining time
 const RemainingTime = ({ estimateInSeconds }: { estimateInSeconds: number }) => {
   const [remainingSeconds, setRemainingSeconds] = useState(estimateInSeconds);
 
+  // Initialize with the estimate value on first render
   useEffect(() => {
-    // Initialize with the estimate value
     setRemainingSeconds(estimateInSeconds);
+  }, []); // Only on mount
 
-    // Countdown every second
+  // Update only when countdown reaches 0 and we have a new estimate
+  useEffect(() => {
+    if (remainingSeconds === 0 && estimateInSeconds > 0) {
+      setRemainingSeconds(estimateInSeconds);
+    }
+  }, [estimateInSeconds, remainingSeconds]);
+
+  // Countdown every second
+  useEffect(() => {
     const interval = setInterval(() => {
       setRemainingSeconds((prev) => Math.max(0, prev - 1));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [estimateInSeconds]);
+  }, []); // Independent countdown, never resets
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -57,8 +68,12 @@ export const Queue = () => {
       },
       cell: ({ row }) => {
         const status = row.getValue("status") as Stream["status"];
+        console.log(row.original.status, row.original.isProcessing, row.original.isCompleted, row.original.isFailed);
         return (
-          <Badge variant="secondary" className={`h-8 ${status}`}>
+          <Badge variant="secondary" className={`h-8 ${status} w-30`}>
+            {row.original.isProcessing === true && <Timer className="size-4" />}
+            {row.original.isCompleted === true && <CheckCheck className="size-4" />}
+            {row.original.isFailed === true && <AlertCircle className="size-4" />}
             {t.stream.status[status as keyof typeof t.stream.status] || status}
           </Badge>
         );
@@ -101,7 +116,7 @@ export const Queue = () => {
 
         if (row.original.isProcessing || status === "completed") {
           return (
-            <div className="space-y-2 min-w-[250px]">
+            <div className="space-y-2 w-[200px]">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">{progress}%</span>
                 {row.original.isProcessing && estimate > 0 && <RemainingTime estimateInSeconds={estimate} />}
@@ -123,27 +138,28 @@ export const Queue = () => {
       id: "actions",
       header: () => t.stream.table.actions,
       cell: ({ row }) => {
-        const status = row.original.status;
-        const streamId = row.original.id;
-        const filename = `${row.original.originalFileName || `stream-${streamId}`}.zip`;
-        const isDownloading = streamId ? state.downloadingIds.has(streamId) : false;
+        return <DataTableRowActions row={row} />;
+        // const status = row.original.status;
+        // const streamId = row.original.id;
+        // const filename = `${row.original.originalFileName || `stream-${streamId}`}.zip`;
+        // const isDownloading = streamId ? state.downloadingIds.has(streamId) : false;
 
-        const handleDownload = () => {
-          if (streamId) {
-            downloadStream(streamId, filename);
-          }
-        };
+        // const handleDownload = () => {
+        //   if (streamId) {
+        //     downloadStream(streamId, filename);
+        //   }
+        // };
 
-        return (
-          <div className="flex items-center gap-1">
-            <div className="size-4 rounded-full"></div>
-            {status === "completed" && (
-              <Button variant="secondary" className="p-0 cursor-pointer" onClick={handleDownload} disabled={isDownloading}>
-                {isDownloading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-              </Button>
-            )}
-          </div>
-        );
+        // return (
+        //   <div className="flex items-center gap-1">
+        //     <div className="size-4 rounded-full"></div>
+        //     {status === "completed" && (
+        //       <Button variant="secondary" className="p-0 cursor-pointer" onClick={handleDownload} disabled={isDownloading}>
+        //         {isDownloading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+        //       </Button>
+        //     )}
+        //   </div>
+        // );
       },
     },
   ];
@@ -159,73 +175,77 @@ export const Queue = () => {
   const failedCount = state.streams.filter((s) => s.isFailed).length;
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
-      <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-border">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-card p-4 rounded-xl border border-border shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                  <Clock className="text-purple-600 dark:text-purple-400" size={20} />
+    <>
+      {state.streams.length > 0 && (
+        <div className="w-full max-w-7xl mx-auto p-6 shadow-none">
+          <div className="bg-card border border-border rounded-2xl shadow-none overflow-hidden">
+            <div className="p-6 border-b border-border shadow-none">
+              <div className="grid grid-cols-3 gap-4 shadow-none">
+                <div className="bg-card p-4 rounded-xl border border-border shadow-none">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                      <Clock className="text-purple-600 dark:text-purple-400" size={20} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.processing}</p>
+                      <p className="text-2xl font-bold text-foreground">{processingCount}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.processing}</p>
-                  <p className="text-2xl font-bold text-foreground">{processingCount}</p>
+
+                <div className="bg-card p-4 rounded-xl border border-border shadow-none">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                      <CheckCircle2 className="text-green-600 dark:text-green-400" size={20} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.completed}</p>
+                      <p className="text-2xl font-bold text-foreground">{completedCount}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-card p-4 rounded-xl border border-border shadow-none">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                      <AlertCircle className="text-red-600 dark:text-red-400" size={20} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.failed}</p>
+                      <p className="text-2xl font-bold text-foreground">{failedCount}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-card p-4 rounded-xl border border-border shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                  <CheckCircle2 className="text-green-600 dark:text-green-400" size={20} />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.completed}</p>
-                  <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-card p-4 rounded-xl border border-border shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                  <AlertCircle className="text-red-600 dark:text-red-400" size={20} />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.failed}</p>
-                  <p className="text-2xl font-bold text-foreground">{failedCount}</p>
-                </div>
+            <div className="border-b border-border p-6 shadow-none">
+              <div className="bg-card rounded-lg border border-border overflow-hidden shadow-none">
+                <Table>
+                  <TableBody className="shadow-none">
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="shadow-none">
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          {t.stream.table.noFiles}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="border-b border-border p-6">
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <Table>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                      {t.stream.table.noFiles}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

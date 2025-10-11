@@ -11,7 +11,7 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/streams?include_deleted=false`, {
+    const backendResponse = await fetch(`${BACKEND_API_URL}/streams?include_deleted=false&itemsPerPage=200`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,

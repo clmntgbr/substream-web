@@ -248,7 +248,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
 
     const interval = setInterval(() => {
       getStreams();
-    }, 20000); // 20 seconds
+    }, 10000); // 10 seconds
 
     return () => clearInterval(interval);
   }, [getStreams]);
