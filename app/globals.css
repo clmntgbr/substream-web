@@ -223,14 +223,14 @@
   }
 }
 
-/* .has-\[\[data-slot\=input-group-control\]\:focus-visible\]\:ring-ring\/50 {
+.has-\[\[data-slot\=input-group-control\]\:focus-visible\]\:ring-ring\/50 {
   &:has(*:is([data-slot="input-group-control"]:focus-visible)) {
     --tw-ring-color: none;
     @supports (color: color-mix(in lab, red, red)) {
       --tw-ring-color: none;
     }
   }
-} */
+}
 
 .has-\[\[data-slot\=input-group-control\]\:focus-visible\]\:border-ring {
   &:has(*:is([data-slot="input-group-control"]:focus-visible)) {
