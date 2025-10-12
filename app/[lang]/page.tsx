@@ -1,9 +1,8 @@
 "use client";
 import { Header } from "@/components/header";
+import Upload from "@/components/home/upload";
 import { SidebarComponent } from "@/components/sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import Queue from "@/components/upload/queue";
-import Upload from "@/components/upload/upload";
 import { useAuth } from "@/lib/auth-context";
 
 const HomePage = () => {
@@ -18,9 +17,9 @@ const HomePage = () => {
         <div className="flex flex-1">
           <SidebarComponent />
           <SidebarInset>
-            <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="flex flex-1 flex-col gap-4 p-4 container max-w-4xl mx-auto">
               <Upload />
-              <Queue />
+              {/* <Queue /> */}
             </div>
           </SidebarInset>
         </div>
