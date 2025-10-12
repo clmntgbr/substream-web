@@ -181,6 +181,11 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   // Download stream
   const downloadStream = useCallback(async (id: string, filename: string) => {
     dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+
+    toast.info("Download starting", {
+      description: "Preparing your file for download...",
+    });
+
     try {
       const response = await fetch(`/api/streams/${id}/download`, {
         method: "GET",
@@ -217,7 +222,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       document.body.removeChild(a);
 
       toast.success("Download completed", {
-        description: `${downloadFilename} has been downloaded successfully.`,
+        description: "Your file has been downloaded successfully.",
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to download stream";

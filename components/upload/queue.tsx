@@ -54,7 +54,7 @@ const RemainingTime = ({ estimateInSeconds }: { estimateInSeconds: number }) => 
 };
 
 export const Queue = () => {
-  const { state, downloadStream } = useStreams();
+  const { state } = useStreams();
   const t = useTranslations();
 
   const columns: ColumnDef<Stream>[] = [
@@ -103,6 +103,7 @@ export const Queue = () => {
                   <div className="flex gap-2">
                     <Badge variant="secondary">{row.original.mimeType}</Badge>
                     <Badge variant="secondary">{row.original.sizeInMegabytes} MB</Badge>
+                    <Badge variant="secondary">{row.original.duration}</Badge>
                   </div>
                   <div className="text-muted-foreground text-xs">{row.original.createdAt.toLocaleString()}</div>
                 </div>
