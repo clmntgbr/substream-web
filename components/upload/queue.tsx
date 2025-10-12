@@ -8,6 +8,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { AlertCircle, CheckCheck, CheckCircle2, Clock, Timer } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 // Component to display and countdown remaining time
@@ -68,7 +69,6 @@ export const Queue = () => {
       },
       cell: ({ row }) => {
         const status = row.getValue("status") as Stream["status"];
-        console.log(row.original.status, row.original.isProcessing, row.original.isCompleted, row.original.isFailed);
         return (
           <Badge variant="secondary" className={`h-8 ${status} w-30`}>
             {row.original.isProcessing === true && <Timer className="size-4" />}
@@ -89,7 +89,27 @@ export const Queue = () => {
         );
       },
       cell: ({ row }) => {
-        return <div className="font-medium text-foreground max-w-xs truncate">{row.getValue("originalFileName")}</div>;
+        return (
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button variant="link" className="font-medium text-foreground truncate">
+                {row.original.originalFileName}
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="flex justify-between gap-4">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold">{row.original.originalFileName}</h4>
+                  <div className="flex gap-2">
+                    <Badge variant="secondary">{row.original.mimeType}</Badge>
+                    <Badge variant="secondary">{row.original.sizeInMegabytes} MB</Badge>
+                  </div>
+                  <div className="text-muted-foreground text-xs">{row.original.createdAt.toLocaleString()}</div>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        );
       },
     },
     {

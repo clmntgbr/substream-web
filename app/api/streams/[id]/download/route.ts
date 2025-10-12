@@ -13,13 +13,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const backendToken = request.cookies.get("session_token")?.value;
 
     if (!backendToken) {
-      console.error("Download error: No backend token found");
       return NextResponse.json({ error: "Unauthorized - No token" }, { status: 401 });
     }
 
-    console.log(`Downloading stream ${id} from ${BACKEND_API_URL}/streams/${id}/download`);
-
-    // Call backend API to download the stream with extended timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 600000); // 10 minutes timeout
 
@@ -31,11 +27,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       signal: controller.signal,
     }).finally(() => clearTimeout(timeoutId));
 
-    console.log(`Backend response status: ${response.status}`);
-
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`Backend download error (${response.status}):`, errorText);
 
       try {
         const error = JSON.parse(errorText);
@@ -61,8 +54,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     return downloadResponse;
   } catch (error) {
-    console.error("Download error:", error);
-
     if (error instanceof Error) {
       if (error.name === "AbortError") {
         return NextResponse.json({ error: "Download timeout (exceeded 10 minutes)" }, { status: 504 });

@@ -28,7 +28,6 @@ export default function LoginPage() {
       await login(email, password);
       // The AuthContext will handle the redirect
     } catch (err) {
-      console.error("Login error:", err);
       setIsLoading(false);
     }
   };

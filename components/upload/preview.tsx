@@ -123,6 +123,9 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
       const option = await createOption(optionData);
 
       if (!option || !option.id) {
+        toast.error("Upload failed", {
+          description: "Failed to create options. Please try again.",
+        });
         return;
       }
 
@@ -137,22 +140,25 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
       });
 
       if (response.ok) {
-        await response.json();
+        const data = await response.json();
         getStreams();
         onOpenChange(false);
         toast.success("Video uploaded successfully!", {
-          description: "Your video is now being processed.",
+          description: data.message || "Your video is now being processed.",
         });
       } else {
-        await response.json();
+        const errorData = await response.json().catch(() => ({ message: "Upload failed" }));
+        const errorMessage = errorData.message || errorData.error || "An error occurred while uploading your video.";
+
         toast.error("Upload failed", {
-          description: "An error occurred while uploading your video.",
+          description: errorMessage,
         });
       }
     } catch (error) {
-      console.error("Process failed:", error);
+      const errorMessage = error instanceof Error ? error.message : "An error occurred while uploading your video.";
+
       toast.error("Upload failed", {
-        description: "An error occurred while uploading your video.",
+        description: errorMessage,
       });
     } finally {
       setIsUploading(false);

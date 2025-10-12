@@ -41,7 +41,6 @@ export function OptionProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
     } catch (error) {
-      console.error("Failed to create option:", error);
       setError("Failed to create option");
       return null;
     } finally {

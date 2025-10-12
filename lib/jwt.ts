@@ -16,7 +16,6 @@ export function decodeToken(token: string): JWTPayload | null {
     // Decode without verification since token comes from external API
     return jwt.decode(token) as JWTPayload;
   } catch (error) {
-    console.error("Failed to decode token:", error);
     return null;
   }
 }
@@ -30,7 +29,6 @@ export function verifyToken(token: string, secret?: string): JWTPayload | null {
   try {
     return jwt.verify(token, secret) as JWTPayload;
   } catch (error) {
-    console.error("Failed to verify token:", error);
     return null;
   }
 }

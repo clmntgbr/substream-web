@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export interface User {
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const lang = (params?.lang as string) || 'en';
+  const lang = (params?.lang as string) || "en";
 
   const fetchProfile = async () => {
     try {
@@ -48,7 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
     } catch (error) {
-      console.error("Failed to fetch profile:", error);
       setUser(null);
       return null;
     }
@@ -69,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute = pathname.endsWith('/login') || pathname.endsWith('/register');
+      const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register");
 
       if (!user && !isPublicRoute) {
         router.push(`/${lang}/login`);
@@ -99,7 +98,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error(errorData.error || "Failed to login");
       }
     } catch (error) {
-      console.error("Login failed:", error);
       throw error;
     }
   };
@@ -111,20 +109,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         credentials: "include", // Important for cookies
       });
     } catch (error) {
-      console.error("Logout failed:", error);
     } finally {
       setUser(null);
       router.push(`/${lang}/login`);
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, logout, isLoading, refreshUser }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

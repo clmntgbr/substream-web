@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
     const { email, password, firstname, lastname } = body;
 
     if (!email || !password || !firstname || !lastname) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // TODO: Call your external API to register a user
@@ -27,13 +24,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        error:
-          "Registration not yet configured. Please configure your external API endpoint.",
+        error: "Registration not yet configured. Please configure your external API endpoint.",
       },
-      { status: 501 },
+      { status: 501 }
     );
   } catch (error) {
-    console.error("Registration error:", error);
     return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }

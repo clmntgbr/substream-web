@@ -33,7 +33,6 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
       totalItems: data.totalItems,
     });
   } catch (error) {
-    console.error("Get streams error:", error);
     return NextResponse.json({ error: "Failed to fetch streams" }, { status: 500 });
   }
 }
@@ -73,7 +72,6 @@ async function createStreamHandler(req: AuthenticatedRequest) {
       stream: streamData,
     });
   } catch (error) {
-    console.error("Create stream error:", error);
     return NextResponse.json({ error: "Failed to create stream" }, { status: 500 });
   }
 }

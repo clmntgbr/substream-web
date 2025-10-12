@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
+import { toast } from "sonner";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
 
@@ -42,7 +43,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error("Failed to fetch streams:", error);
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to fetch streams",
@@ -72,7 +72,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error("Failed to fetch stream:", error);
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to fetch stream",
@@ -108,7 +107,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
     } catch (error) {
-      console.error("Failed to create stream:", error);
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to create stream",
@@ -143,7 +141,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error("Failed to update stream:", error);
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to update stream",
@@ -157,8 +154,8 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const deleteStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
-      const response = await fetch(`/api/streams/${id}`, {
-        method: "DELETE",
+      const response = await fetch(`/api/streams/${id}/delete`, {
+        method: "GET",
         credentials: "include",
       });
 
@@ -172,7 +169,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error("Failed to delete stream:", error);
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to delete stream",
@@ -186,17 +182,18 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const downloadStream = useCallback(async (id: string, filename: string) => {
     dispatch({ type: "SET_DOWNLOADING_START", payload: id });
     try {
-      console.log(`Starting download for stream ${id}`);
-
       const response = await fetch(`/api/streams/${id}/download`, {
         method: "GET",
         credentials: "include",
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Download failed" }));
-        const errorMessage = errorData.error || `Download failed with status ${response.status}`;
-        console.error("Download failed:", errorMessage);
+        const errorData = await response.json().catch(() => ({ message: "Download failed" }));
+        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
+
+        toast.error("Download failed", {
+          description: errorMessage,
+        });
 
         dispatch({
           type: "SET_ERROR",
@@ -205,16 +202,11 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      console.log("Download response received, creating blob...");
-
-      // Get the filename from Content-Disposition header or use provided filename
       const contentDisposition = response.headers.get("Content-Disposition");
       const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
 
       // Create blob and download
       const blob = await response.blob();
-      console.log(`Blob created (${blob.size} bytes), triggering download...`);
-
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -224,10 +216,16 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      console.log(`Download completed: ${downloadFilename}`);
+      toast.success("Download completed", {
+        description: `${downloadFilename} has been downloaded successfully.`,
+      });
     } catch (error) {
-      console.error("Failed to download stream:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to download stream";
+
+      toast.error("Download failed", {
+        description: errorMessage,
+      });
+
       dispatch({
         type: "SET_ERROR",
         payload: errorMessage,
