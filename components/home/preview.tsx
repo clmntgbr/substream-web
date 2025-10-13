@@ -1,5 +1,5 @@
 import { useTranslations } from "@/lib/use-translations";
-import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon } from "lucide-react";
+import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
@@ -142,7 +142,16 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
           }
         }}
       >
-        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0">
+        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0" hideCloseButton>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => !isUploading && onOpenChange(false)}
+            disabled={isUploading}
+            className="absolute top-4 right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
+          >
+            <X className="h-5 w-5" />
+          </Button>
           <SheetHeader>
             <SheetTitle>{videoTitle}</SheetTitle>
             <SheetDescription className="flex flex-row gap-2">

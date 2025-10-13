@@ -1,11 +1,8 @@
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from "@/lib/use-translations";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Slider } from "../ui/slider";
-import { Switch } from "../ui/switch";
 
 interface SettingsProps {
   open: boolean;
@@ -70,6 +67,8 @@ export const Settings = ({
 }: SettingsProps) => {
   const t = useTranslations();
 
+  console.log(subtitleFont);
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-hidden px-0 flex flex-col">
@@ -79,111 +78,28 @@ export const Settings = ({
         </SheetHeader>
 
         <div className="space-y-6 py-4 px-4 overflow-y-auto flex-1">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="font">Font</Label>
-              <Input id="font" value={subtitleFont} onChange={(e) => setSubtitleFont(e.target.value)} placeholder="Arial" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="size">Size: {subtitleSize}px</Label>
-              <Slider id="size" min={12} max={48} step={1} value={[subtitleSize]} onValueChange={(value) => setSubtitleSize(value[0])} />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Color Settings */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="color">Text color</Label>
-              <div className="flex gap-2">
-                <Input id="color" type="color" value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} className="w-20 h-10" />
-                <Input value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} placeholder="#FFFFFF" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="outlineColor">Outline color</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="outlineColor"
-                  type="color"
-                  value={subtitleOutlineColor}
-                  onChange={(e) => setSubtitleOutlineColor(e.target.value)}
-                  className="w-20 h-10"
-                />
-                <Input value={subtitleOutlineColor} onChange={(e) => setSubtitleOutlineColor(e.target.value)} placeholder="#000000" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="shadowColor">Shadow color</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="shadowColor"
-                  type="color"
-                  value={subtitleShadowColor}
-                  onChange={(e) => setSubtitleShadowColor(e.target.value)}
-                  className="w-20 h-10"
-                />
-                <Input value={subtitleShadowColor} onChange={(e) => setSubtitleShadowColor(e.target.value)} placeholder="#333333" />
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Text Style */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="bold">Bold</Label>
-              <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="italic">Italic</Label>
-              <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="underline">Underline</Label>
-              <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Effects */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="outlineThickness">Outline thickness: {subtitleOutlineThickness}px</Label>
-              <Slider
-                id="outlineThickness"
-                min={0}
-                max={10}
-                step={1}
-                value={[subtitleOutlineThickness]}
-                onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="shadow">Shadow: {subtitleShadow}px</Label>
-              <Slider id="shadow" min={0} max={5} step={1} value={[subtitleShadow]} onValueChange={(value) => setSubtitleShadow(value[0])} />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Position & Format */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="yAxis">Vertical position: {(yAxisAlignment * 100).toFixed(0)}%</Label>
-              <Slider id="yAxis" min={0} max={1} step={0.01} value={[yAxisAlignment]} onValueChange={(value) => setYAxisAlignment(value[0])} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="format">Format:</Label>
-              <Input id="format" value={format} onChange={(e) => setFormat(e.target.value)} placeholder="original" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="chunks">Number of segments: {chunkNumber}</Label>
-              <Slider id="chunks" min={1} max={20} step={1} value={[chunkNumber]} onValueChange={(value) => setChunkNumber(value[0])} />
-            </div>
+          <div className="w-full max-w-md">
+            <form>
+              <FieldGroup>
+                <FieldSet>
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor="checkout-7j9-card-name-43j">Font</FieldLabel>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a font" />
+                        </SelectTrigger>
+                        <SelectContent defaultValue={subtitleFont.toLowerCase()}>
+                          <SelectItem value="arial">Arial</SelectItem>
+                          <SelectItem value="times-new-roman">Times New Roman</SelectItem>
+                          <SelectItem value="courier-new">Courier New</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </FieldGroup>
+            </form>
           </div>
         </div>
 
