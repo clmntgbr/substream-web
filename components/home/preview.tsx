@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Kbd, KbdGroup } from "../ui/kbd";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
 import Settings from "./settings";
 
@@ -217,10 +218,16 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
               <div className="flex justify-center gap-3 mx-auto">
                 <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
                   <SettingsIcon className="h-3 w-3 mr-1" />
-                  {t.home.upload.settings.settings}
+                  {t.home.preview.settings.settings}
+                  <KbdGroup>
+                    <Kbd>Ctrl + s</Kbd>
+                  </KbdGroup>
                 </Button>
                 <Button onClick={handleLaunchProcess} disabled={isUploading} className="cursor-pointer">
-                  {t.home.upload.settings.process}
+                  <KbdGroup>
+                    <Kbd>Ctrl + p</Kbd>
+                  </KbdGroup>
+                  {t.home.preview.settings.process}
                   {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
                 </Button>
               </div>

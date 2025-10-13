@@ -5,14 +5,31 @@
       "tab": {
         "right": "Upload file",
         "left": "Import from URL"
-      },
+      }
+    },
+    "preview": {
       "settings": {
-        "title": "Subtitle settings",
+        "title": "Video & subtitle settings",
         "settings": "Settings",
         "process": "Process",
         "description": "Configure the appearance and format of the subtitles",
-        "save": "Save changes",
-        "close": "Close"
+        "close": "Close",
+        "font": "Font",
+        "size": "Size",
+        "color": "Color",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "outlineColor": "Outline Color",
+        "outlineThickness": "Outline Thickness",
+        "shadow": "Shadow",
+        "shadowColor": "Shadow Color",
+        "format": "Format",
+        "chunkNumber": "Chunk Number",
+        "yAxisAlignment": "Y Axis Alignment",
+        "arial": "Arial",
+        "timesNewRoman": "Times New Roman",
+        "courierNew": "Courier New"
       }
     }
   },
