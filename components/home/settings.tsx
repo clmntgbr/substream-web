@@ -88,14 +88,14 @@ export const Settings = ({
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.font}</FieldTitle>
-                      <Select value={subtitleFont.toLowerCase()} onValueChange={(value) => setSubtitleFont(value)}>
+                      <Select value={subtitleFont} onValueChange={(value) => setSubtitleFont(value)}>
                         <SelectTrigger>
                           <SelectValue placeholder={t.home.preview.settings.font} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="arial">{t.home.preview.settings.arial}</SelectItem>
-                          <SelectItem value="times-new-roman">{t.home.preview.settings.timesNewRoman}</SelectItem>
-                          <SelectItem value="courier-new">{t.home.preview.settings.courierNew}</SelectItem>
+                          <SelectItem value="Arial">{t.home.preview.settings.arial}</SelectItem>
+                          <SelectItem value="Times New Roman">{t.home.preview.settings.timesNewRoman}</SelectItem>
+                          <SelectItem value="Courier New">{t.home.preview.settings.courierNew}</SelectItem>
                         </SelectContent>
                       </Select>
                     </Field>
@@ -178,7 +178,7 @@ export const Settings = ({
                     <Field>
                       <FieldTitle>{t.home.preview.settings.outlineThickness}</FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleOutlineThickness} px</span>
+                        <span className="font-medium tabular-nums">{subtitleOutlineThickness}px</span>
                       </FieldDescription>
                       <Slider
                         value={[subtitleOutlineThickness]}
@@ -192,7 +192,7 @@ export const Settings = ({
                     <Field>
                       <FieldTitle>{t.home.preview.settings.shadow}</FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleShadow} px</span>
+                        <span className="font-medium tabular-nums">{subtitleShadow}px</span>
                       </FieldDescription>
                       <Slider
                         value={[subtitleShadow]}
@@ -244,16 +244,14 @@ export const Settings = ({
                     <Field>
                       <FieldTitle>{t.home.preview.settings.yAxisAlignment}</FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">
-                          {yAxisAlignment} {t.home.preview.settings.yAxisAlignmentDescription}
-                        </span>
+                        <span className="font-medium tabular-nums">{yAxisAlignment}px</span>
                       </FieldDescription>
                       <Slider
                         value={[yAxisAlignment]}
                         onValueChange={(value) => setYAxisAlignment(value[0])}
-                        max={100}
-                        min={1}
-                        step={1}
+                        max={200}
+                        min={0}
+                        step={5}
                         className="mt-2 w-full"
                       />
                     </Field>

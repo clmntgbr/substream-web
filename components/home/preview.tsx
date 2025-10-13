@@ -197,7 +197,7 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
               </div>
-              <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none" style={{ bottom: `${yAxisAlignment * 100}%` }}>
+              <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none" style={{ bottom: `${yAxisAlignment}px` }}>
                 <p
                   className="text-center px-4 max-w-[90%]"
                   style={{
