@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
+import { Spinner } from "../ui/spinner";
 import Preview from "./preview";
 
 const youtubeUrlSchema = z
@@ -23,8 +24,8 @@ const youtubeUrlSchema = z
 export const Upload = () => {
   const t = useTranslations();
 
-  const [url, setUrl] = useState<string | null>(null);
-  const [urlInput, setUrlInput] = useState("");
+  const [url, setUrl] = useState<string | null>("https://www.youtube.com/watch?v=uC0RFwhrWLE");
+  const [urlInput, setUrlInput] = useState("https://www.youtube.com/watch?v=uC0RFwhrWLE");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -54,14 +55,14 @@ export const Upload = () => {
     setIsPreviewOpen(open);
     if (!open) {
       setSelectedFile(null);
-      setUrl(null);
+      // Ne pas réinitialiser l'URL pour qu'elle reste disponible
     }
   };
 
   return (
     <>
       <div className="flex w-full flex-col gap-6">
-        <Tabs defaultValue="file">
+        <Tabs defaultValue="url">
           <TabsList className="w-full">
             <TabsTrigger value="file" className="cursor-pointer">
               <UploadIcon className="w-4 h-4" />
@@ -115,6 +116,7 @@ export const Upload = () => {
                           variant="default"
                           className="cursor-pointer hover:bg-primary/70 w-[90px]"
                           onClick={() => {
+                            setIsProcessing(true);
                             try {
                               youtubeUrlSchema.parse(urlInput);
                               setUrl(urlInput);
@@ -124,10 +126,12 @@ export const Upload = () => {
                               toast.error("Invalid YouTube URL", {
                                 description: "Please enter a valid YouTube URL",
                               });
+                            } finally {
+                              setIsProcessing(false);
                             }
                           }}
                         >
-                          Import URL
+                          {isProcessing ? <Spinner className="w-4 h-4 animate-spin" /> : "Import URL"}
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>

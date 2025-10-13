@@ -1,11 +1,29 @@
 {
   "home": {
     "upload": {
+      "subtitle": "This is an example of subtitle",
       "tab": {
         "right": "Upload file",
         "left": "Import from URL"
+      },
+      "settings": {
+        "title": "Video & subtitle settings",
+        "settings": "Settings",
+        "process": "Process",
+        "description": "Configure the appearance and format of the subtitles",
+        "close": "Close"
       }
     }
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "forgotPassword": "Forgot password?",
+    "register": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login"
   },
   "register": {
     "title": "Register",

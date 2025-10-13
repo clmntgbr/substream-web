@@ -39,19 +39,19 @@ export default function LoginPage() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <LogIn className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold">{t.auth.loginTitle}</CardTitle>
-          <CardDescription>{t.auth.loginTitle}</CardDescription>
+          <CardTitle className="text-2xl font-bold">{t.login.title}</CardTitle>
+          <CardDescription>{t.login.title}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t.common.email}</Label>
+              <Label htmlFor="email">{t.login.email}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t.auth.emailPlaceholder}
+                  placeholder={t.login.email}
                   className="pl-10"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -60,13 +60,13 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{t.common.password}</Label>
+              <Label htmlFor="password">{t.login.password}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
-                  placeholder={t.auth.passwordPlaceholder}
+                  placeholder={t.login.password}
                   className="pl-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -78,17 +78,25 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-                  {t.common.loading}
+                  {t.login.submit}
                 </>
               ) : (
-                t.auth.loginButton
+                t.login.submit
               )}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            {t.auth.dontHaveAccount}{" "}
+            {t.login.alreadyHaveAccount}{" "}
             <Link href={`/${lang}/register`} className="font-medium text-primary hover:underline">
-              {t.auth.registerButton}
+              {t.login.register}
+            </Link>
+            {t.login.alreadyHaveAccount}{" "}
+            <Link href={`/${lang}/login`} className="font-medium text-primary hover:underline">
+              {t.login.register}
+            </Link>
+            {t.login.forgotPassword}{" "}
+            <Link href={`/${lang}/forgot-password`} className="font-medium text-primary hover:underline">
+              {t.login.forgotPassword}
             </Link>
           </div>
         </CardContent>
