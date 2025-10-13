@@ -1,10 +1,10 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
-import { Option } from "@/lib/option";
+import { Stream } from "@/lib/stream";
 import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-async function createOptionHandler(req: AuthenticatedRequest) {
+async function uploadUrlHandler(req: AuthenticatedRequest) {
   try {
     const sessionToken = req.sessionToken;
 
@@ -14,7 +14,7 @@ async function createOptionHandler(req: AuthenticatedRequest) {
 
     const body = await req.json();
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/options`, {
+    const backendResponse = await fetch(`${BACKEND_API_URL}/streams/url`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
@@ -25,19 +25,17 @@ async function createOptionHandler(req: AuthenticatedRequest) {
 
     if (!backendResponse.ok) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
-      return NextResponse.json({ error: errorData.error || "Failed to create option" }, { status: backendResponse.status });
+      return NextResponse.json({ error: errorData.error || "Failed to create stream from URL" }, { status: backendResponse.status });
     }
 
-    const data = (await backendResponse.json()) as Option;
+    const data = (await backendResponse.json()) as Stream;
 
     return NextResponse.json({
-      option: {
-        id: data.id,
-      },
+      stream: data,
     });
   } catch {
-    return NextResponse.json({ error: "Failed to create option" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to create stream from URL" }, { status: 500 });
   }
 }
 
-export const POST = authMiddleware(createOptionHandler);
+export const POST = authMiddleware(uploadUrlHandler);

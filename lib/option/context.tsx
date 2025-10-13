@@ -20,13 +20,15 @@ export function OptionProvider({ children }: { children: React.ReactNode }) {
 
   // Create option
   const createOption = useCallback(async (optionData: Partial<Option>) => {
+    console.log("createOption");
+    console.log(optionData);
     setIsLoading(true);
     setError(null);
     try {
       const response = await fetch("/api/options", {
         method: "POST",
         headers: {
-          "Content-Type": "application/ld+json",
+          "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify(optionData),

@@ -24,8 +24,8 @@ const youtubeUrlSchema = z
 export const Upload = () => {
   const t = useTranslations();
 
-  const [url, setUrl] = useState<string | null>("https://www.youtube.com/watch?v=uC0RFwhrWLE");
-  const [urlInput, setUrlInput] = useState("https://www.youtube.com/watch?v=uC0RFwhrWLE");
+  const [url, setUrl] = useState<string | null>(null);
+  const [urlInput, setUrlInput] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -55,8 +55,14 @@ export const Upload = () => {
     setIsPreviewOpen(open);
     if (!open) {
       setSelectedFile(null);
-      // Ne pas réinitialiser l'URL pour qu'elle reste disponible
+      setUrl(null);
     }
+  };
+
+  const handleUploadSuccess = () => {
+    setSelectedFile(null);
+    setUrl(null);
+    setUrlInput("");
   };
 
   return (
@@ -142,7 +148,7 @@ export const Upload = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <Preview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} />
+      <Preview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} onUploadSuccess={handleUploadSuccess} />
     </>
   );
 };

@@ -85,10 +85,10 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const createStream = useCallback(async (streamData: Partial<Stream>) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
-      const response = await fetch("/api/streams", {
+      const response = await fetch("/api/streams/video", {
         method: "POST",
         headers: {
-          "Content-Type": "application/ld+json",
+          "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify(streamData),

@@ -38,40 +38,4 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
   }
 }
 
-async function createStreamHandler(req: AuthenticatedRequest) {
-  try {
-    const sessionToken = req.sessionToken;
-
-    if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-
-    const backendResponse = await fetch(`${BACKEND_API_URL}/streams`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/ld+json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
-      return NextResponse.json({ error: errorData.error || "Failed to create stream" }, { status: backendResponse.status });
-    }
-
-    const data = (await backendResponse.json()) as HydraResponse<Stream>;
-
-    return NextResponse.json({
-      stream: data.member,
-      totalItems: data.totalItems,
-    });
-  } catch {
-    return NextResponse.json({ error: "Failed to create stream" }, { status: 500 });
-  }
-}
-
 export const GET = authMiddleware(getStreamsHandler);
-export const POST = authMiddleware(createStreamHandler);

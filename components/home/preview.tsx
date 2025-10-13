@@ -1,7 +1,10 @@
+import { Option, useOptions } from "@/lib/option";
+import { useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Kbd, KbdGroup } from "../ui/kbd";
@@ -13,10 +16,13 @@ interface PreviewProps {
   onOpenChange: (open: boolean) => void;
   file: File | null;
   url: string | null;
+  onUploadSuccess?: () => void;
 }
 
-export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
+export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
   const t = useTranslations();
+  const { createOption } = useOptions();
+  const { getStreams } = useStreams();
 
   const [isUploading, setIsUploading] = useState(false);
   const [duration, setDuration] = useState<string>("--:--");
@@ -51,8 +57,6 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
       handleFile(file);
     }
   }, [file, url]);
-
-  const handleLaunchProcess = async () => {};
 
   const handleFile = (file: File) => {
     const fileUrl = URL.createObjectURL(file);
@@ -137,6 +141,98 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
     }
   };
 
+  const handleProcess = async () => {
+    if (!file && !url) {
+      toast.error("Please upload a file or enter a URL");
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+
+      const optionData = {
+        subtitleFont,
+        subtitleSize,
+        subtitleColor,
+        subtitleBold,
+        subtitleItalic,
+        subtitleUnderline,
+        subtitleOutlineColor,
+        subtitleOutlineThickness,
+        subtitleShadow,
+        subtitleShadowColor,
+        format,
+        chunkNumber,
+        yAxisAlignment,
+      };
+
+      const option = (await createOption(optionData)) as Option;
+
+      if (!option || !option.id) {
+        toast.error("Failed to create options. Please try again.");
+        return;
+      }
+
+      let response;
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("video", file as Blob);
+        formData.append("optionId", option.id);
+
+        response = await fetch("/api/streams/video", {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        });
+      } else if (url) {
+        response = await fetch("/api/streams/url", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url: url,
+            optionId: option.id,
+          }),
+        });
+      } else {
+        toast.error("No file or URL provided");
+        return;
+      }
+
+      if (response.ok) {
+        const data = (await response.json()) as { message?: string };
+        getStreams();
+
+        // Clean up states
+        if (onUploadSuccess) {
+          onUploadSuccess();
+        }
+
+        onOpenChange(false);
+
+        toast.success("Video uploaded successfully!", {
+          description: data.message || "Your video is now being processed.",
+        });
+      } else {
+        const errorData = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
+        const errorMessage = errorData.message || errorData.error || "An error occurred while uploading your video.";
+        toast.error("Upload failed", {
+          description: errorMessage,
+        });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An error occurred while uploading your video.";
+      toast.error("Upload failed", {
+        description: errorMessage,
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <>
       <Sheet
@@ -188,11 +284,11 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
                   priority
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "/default.png";
+                    target.src = "/default.jpg";
                   }}
                 />
               ) : (
-                <Image src="/default.png" alt="Default thumbnail" width={1920} height={1080} className="w-full h-full object-cover" />
+                <Image src="/default.jpg" alt="Default thumbnail" width={1920} height={1080} className="w-full h-full object-cover" />
               )}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
@@ -227,7 +323,7 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
                     <Kbd>Ctrl + s</Kbd>
                   </KbdGroup>
                 </Button>
-                <Button onClick={handleLaunchProcess} disabled={isUploading} className="cursor-pointer">
+                <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup>
                     <Kbd>Ctrl + p</Kbd>
                   </KbdGroup>
