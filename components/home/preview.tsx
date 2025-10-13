@@ -1,10 +1,11 @@
 import { useTranslations } from "@/lib/use-translations";
-import { Clock, Film, HardDrive, Loader2, Play, Settings } from "lucide-react";
+import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
+import Settings from "./settings";
 
 interface PreviewProps {
   open: boolean;
@@ -187,7 +188,7 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
                   className="text-center px-4 max-w-[90%]"
                   style={{
                     fontFamily: subtitleFont,
-                    fontSize: `${subtitleSize * 0.8}px`, // Scale down for preview
+                    fontSize: `${subtitleSize * 0.8}px`,
                     color: subtitleColor,
                     fontWeight: subtitleBold ? "bold" : "normal",
                     fontStyle: subtitleItalic ? "italic" : "normal",
@@ -206,7 +207,7 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
             <div className="backdrop-blur-xl px-6 py-4">
               <div className="flex justify-center gap-3 mx-auto">
                 <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
-                  <Settings className="h-3 w-3 mr-1" />
+                  <SettingsIcon className="h-3 w-3 mr-1" />
                   {t.home.upload.settings.settings}
                 </Button>
                 <Button onClick={handleLaunchProcess} disabled={isUploading} className="cursor-pointer">
@@ -219,22 +220,36 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
         </SheetContent>
       </Sheet>
 
-      <Sheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-y-auto px-4">
-          <SheetHeader>
-            <SheetTitle>{t.home.upload.settings.title}</SheetTitle>
-            <SheetDescription>{t.home.upload.settings.description}</SheetDescription>
-          </SheetHeader>
-
-          <div className="space-y-6 py-6"></div>
-
-          <SheetFooter className="flex justify-center gap-3">
-            <Button variant="default" onClick={() => setIsSettingsOpen(false)} className="cursor-pointer">
-              {t.home.upload.settings.close}
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+      <Settings
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
+        subtitleFont={subtitleFont}
+        setSubtitleFont={setSubtitleFont}
+        subtitleSize={subtitleSize}
+        setSubtitleSize={setSubtitleSize}
+        subtitleColor={subtitleColor}
+        setSubtitleColor={setSubtitleColor}
+        subtitleBold={subtitleBold}
+        setSubtitleBold={setSubtitleBold}
+        subtitleItalic={subtitleItalic}
+        setSubtitleItalic={setSubtitleItalic}
+        subtitleUnderline={subtitleUnderline}
+        setSubtitleUnderline={setSubtitleUnderline}
+        subtitleOutlineColor={subtitleOutlineColor}
+        setSubtitleOutlineColor={setSubtitleOutlineColor}
+        subtitleOutlineThickness={subtitleOutlineThickness}
+        setSubtitleOutlineThickness={setSubtitleOutlineThickness}
+        subtitleShadow={subtitleShadow}
+        setSubtitleShadow={setSubtitleShadow}
+        subtitleShadowColor={subtitleShadowColor}
+        setSubtitleShadowColor={setSubtitleShadowColor}
+        format={format}
+        setFormat={setFormat}
+        chunkNumber={chunkNumber}
+        setChunkNumber={setChunkNumber}
+        yAxisAlignment={yAxisAlignment}
+        setYAxisAlignment={setYAxisAlignment}
+      />
     </>
   );
 };
