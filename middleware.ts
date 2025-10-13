@@ -14,7 +14,10 @@ function getLocale(request: NextRequest): string {
   // Check Accept-Language header
   const acceptLanguage = request.headers.get("accept-language");
   if (acceptLanguage) {
-    const preferredLocale = acceptLanguage.split(",")[0].split("-")[0].toLowerCase();
+    const preferredLocale = acceptLanguage
+      .split(",")[0]
+      .split("-")[0]
+      .toLowerCase();
 
     if (locales.includes(preferredLocale)) {
       return preferredLocale;
@@ -37,7 +40,9 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if pathname already has a locale
-  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
+  );
 
   if (pathnameHasLocale) {
     return NextResponse.next();

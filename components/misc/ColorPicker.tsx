@@ -2,7 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Paintbrush } from "lucide-react";
 
@@ -103,15 +107,24 @@ export function ColorPicker({
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
-          className={cn("w-[220px] justify-start text-left font-normal", !background && "text-muted-foreground", className)}
+          className={cn(
+            "w-[220px] justify-start text-left font-normal",
+            !background && "text-muted-foreground",
+            className,
+          )}
         >
           <div className="w-full flex items-center gap-2">
             {background ? (
-              <div className="h-4 w-4 rounded !bg-center !bg-cover transition-all border" style={{ background }}></div>
+              <div
+                className="h-4 w-4 rounded !bg-center !bg-cover transition-all border"
+                style={{ background }}
+              ></div>
             ) : (
               <Paintbrush className="h-4 w-4" />
             )}
-            <div className="truncate flex-1">{background ? background.toUpperCase() : "Pick a color"}</div>
+            <div className="truncate flex-1">
+              {background ? background.toUpperCase() : "Pick a color"}
+            </div>
           </div>
         </Button>
       </PopoverTrigger>
@@ -127,7 +140,12 @@ export function ColorPicker({
           ))}
         </div>
 
-        <Input id="custom" value={background} className="h-8 mt-4" onChange={(e) => setBackground(e.currentTarget.value)} />
+        <Input
+          id="custom"
+          value={background}
+          className="h-8 mt-4"
+          onChange={(e) => setBackground(e.currentTarget.value)}
+        />
       </PopoverContent>
     </Popover>
   );

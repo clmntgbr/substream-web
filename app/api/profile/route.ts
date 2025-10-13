@@ -19,7 +19,10 @@ async function handler(req: AuthenticatedRequest) {
       },
     });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to get profile" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to get profile" },
+      { status: 500 },
+    );
   }
 }
 

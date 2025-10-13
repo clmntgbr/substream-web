@@ -10,7 +10,10 @@ export async function POST(request: NextRequest) {
     const { email, password } = body;
 
     if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 },
+      );
     }
 
     // Call the external backend API to authenticate
@@ -23,15 +26,26 @@ export async function POST(request: NextRequest) {
     });
 
     if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
-      return NextResponse.json({ error: errorData.error || "Invalid credentials" }, { status: backendResponse.status });
+      const errorData = (await backendResponse.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      return NextResponse.json(
+        { error: errorData.error || "Invalid credentials" },
+        { status: backendResponse.status },
+      );
     }
 
-    const data = (await backendResponse.json()) as { token: string; user: User };
+    const data = (await backendResponse.json()) as {
+      token: string;
+      user: User;
+    };
     const { token, user } = data;
 
     if (!token) {
-      return NextResponse.json({ error: "No token received from backend" }, { status: 500 });
+      return NextResponse.json(
+        { error: "No token received from backend" },
+        { status: 500 },
+      );
     }
 
     // Create response with user data
@@ -52,6 +66,9 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch {
-    return NextResponse.json({ error: "Authentication failed. Please check your backend connection." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Authentication failed. Please check your backend connection." },
+      { status: 500 },
+    );
   }
 }

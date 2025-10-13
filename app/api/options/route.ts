@@ -24,8 +24,13 @@ async function createOptionHandler(req: AuthenticatedRequest) {
     });
 
     if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
-      return NextResponse.json({ error: errorData.error || "Failed to create option" }, { status: backendResponse.status });
+      const errorData = (await backendResponse.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      return NextResponse.json(
+        { error: errorData.error || "Failed to create option" },
+        { status: backendResponse.status },
+      );
     }
 
     const data = (await backendResponse.json()) as Option;
@@ -36,7 +41,10 @@ async function createOptionHandler(req: AuthenticatedRequest) {
       },
     });
   } catch {
-    return NextResponse.json({ error: "Failed to create option" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create option" },
+      { status: 500 },
+    );
   }
 }
 

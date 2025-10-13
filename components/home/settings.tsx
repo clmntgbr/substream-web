@@ -1,10 +1,32 @@
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+} from "@/components/ui/field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "../ui/sheet";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 
@@ -73,10 +95,15 @@ export const Settings = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[400px] sm:w-[480px] overflow-hidden px-0 flex flex-col">
+      <SheetContent
+        side="right"
+        className="w-[400px] sm:w-[480px] overflow-hidden px-0 flex flex-col"
+      >
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <SheetTitle>{t.home.preview.settings.title}</SheetTitle>
-          <SheetDescription>{t.home.preview.settings.description}</SheetDescription>
+          <SheetDescription>
+            {t.home.preview.settings.description}
+          </SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
@@ -84,25 +111,40 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.fontAndSize}</FieldLegend>
+                  <FieldLegend>
+                    {t.home.preview.settings.fontAndSize}
+                  </FieldLegend>
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.font}</FieldTitle>
-                      <Select value={subtitleFont} onValueChange={(value) => setSubtitleFont(value)}>
+                      <Select
+                        value={subtitleFont}
+                        onValueChange={(value) => setSubtitleFont(value)}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder={t.home.preview.settings.font} />
+                          <SelectValue
+                            placeholder={t.home.preview.settings.font}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Arial">{t.home.preview.settings.arial}</SelectItem>
-                          <SelectItem value="Times New Roman">{t.home.preview.settings.timesNewRoman}</SelectItem>
-                          <SelectItem value="Courier New">{t.home.preview.settings.courierNew}</SelectItem>
+                          <SelectItem value="Arial">
+                            {t.home.preview.settings.arial}
+                          </SelectItem>
+                          <SelectItem value="Times New Roman">
+                            {t.home.preview.settings.timesNewRoman}
+                          </SelectItem>
+                          <SelectItem value="Courier New">
+                            {t.home.preview.settings.courierNew}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </Field>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.size}</FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleSize} px</span>
+                        <span className="font-medium tabular-nums">
+                          {subtitleSize} px
+                        </span>
                       </FieldDescription>
                       <Slider
                         value={[subtitleSize]}
@@ -125,15 +167,28 @@ export const Settings = ({
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
-                      <ColorPicker background={subtitleColor} setBackground={setSubtitleColor} />
+                      <ColorPicker
+                        background={subtitleColor}
+                        setBackground={setSubtitleColor}
+                      />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.outlineColor}</FieldTitle>
-                      <ColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} />
+                      <FieldTitle>
+                        {t.home.preview.settings.outlineColor}
+                      </FieldTitle>
+                      <ColorPicker
+                        background={subtitleOutlineColor}
+                        setBackground={setSubtitleOutlineColor}
+                      />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.shadowColor}</FieldTitle>
-                      <ColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} />
+                      <FieldTitle>
+                        {t.home.preview.settings.shadowColor}
+                      </FieldTitle>
+                      <ColorPicker
+                        background={subtitleShadowColor}
+                        setBackground={setSubtitleShadowColor}
+                      />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -147,24 +202,48 @@ export const Settings = ({
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.boldDescription}</FieldDescription>
+                        <FieldLabel htmlFor="bold">
+                          {t.home.preview.settings.bold}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t.home.preview.settings.boldDescription}
+                        </FieldDescription>
                       </FieldContent>
-                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} />
+                      <Switch
+                        id="bold"
+                        checked={subtitleBold}
+                        onCheckedChange={setSubtitleBold}
+                      />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="italic">{t.home.preview.settings.italic}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.italicDescription}</FieldDescription>
+                        <FieldLabel htmlFor="italic">
+                          {t.home.preview.settings.italic}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t.home.preview.settings.italicDescription}
+                        </FieldDescription>
                       </FieldContent>
-                      <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} />
+                      <Switch
+                        id="italic"
+                        checked={subtitleItalic}
+                        onCheckedChange={setSubtitleItalic}
+                      />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="underline">{t.home.preview.settings.underline}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.underlineDescription}</FieldDescription>
+                        <FieldLabel htmlFor="underline">
+                          {t.home.preview.settings.underline}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t.home.preview.settings.underlineDescription}
+                        </FieldDescription>
                       </FieldContent>
-                      <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
+                      <Switch
+                        id="underline"
+                        checked={subtitleUnderline}
+                        onCheckedChange={setSubtitleUnderline}
+                      />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -176,13 +255,19 @@ export const Settings = ({
                   <FieldLegend>{t.home.preview.settings.effects}</FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.outlineThickness}</FieldTitle>
+                      <FieldTitle>
+                        {t.home.preview.settings.outlineThickness}
+                      </FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleOutlineThickness}px</span>
+                        <span className="font-medium tabular-nums">
+                          {subtitleOutlineThickness}px
+                        </span>
                       </FieldDescription>
                       <Slider
                         value={[subtitleOutlineThickness]}
-                        onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
+                        onValueChange={(value) =>
+                          setSubtitleOutlineThickness(value[0])
+                        }
                         max={4}
                         min={0}
                         step={1}
@@ -192,7 +277,9 @@ export const Settings = ({
                     <Field>
                       <FieldTitle>{t.home.preview.settings.shadow}</FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleShadow}px</span>
+                        <span className="font-medium tabular-nums">
+                          {subtitleShadow}px
+                        </span>
                       </FieldDescription>
                       <Slider
                         value={[subtitleShadow]}
@@ -210,26 +297,42 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.videoSettings}</FieldLegend>
+                  <FieldLegend>
+                    {t.home.preview.settings.videoSettings}
+                  </FieldLegend>
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.format}</FieldTitle>
-                      <Select value={format} onValueChange={(value) => setFormat(value)}>
+                      <Select
+                        value={format}
+                        onValueChange={(value) => setFormat(value)}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder={t.home.preview.settings.format} />
+                          <SelectValue
+                            placeholder={t.home.preview.settings.format}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="zoomed_916">{t.home.preview.settings.zoomed_916}</SelectItem>
-                          <SelectItem value="normal_916_with_borders">{t.home.preview.settings.normal_916_with_borders}</SelectItem>
-                          <SelectItem value="original">{t.home.preview.settings.original}</SelectItem>
+                          <SelectItem value="zoomed_916">
+                            {t.home.preview.settings.zoomed_916}
+                          </SelectItem>
+                          <SelectItem value="normal_916_with_borders">
+                            {t.home.preview.settings.normal_916_with_borders}
+                          </SelectItem>
+                          <SelectItem value="original">
+                            {t.home.preview.settings.original}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.chunkNumber}</FieldTitle>
+                      <FieldTitle>
+                        {t.home.preview.settings.chunkNumber}
+                      </FieldTitle>
                       <FieldDescription>
                         <span className="font-medium tabular-nums">
-                          {chunkNumber} {t.home.preview.settings.chunkNumberDescription}
+                          {chunkNumber}{" "}
+                          {t.home.preview.settings.chunkNumberDescription}
                         </span>
                       </FieldDescription>
                       <Slider
@@ -242,9 +345,13 @@ export const Settings = ({
                       />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.yAxisAlignment}</FieldTitle>
+                      <FieldTitle>
+                        {t.home.preview.settings.yAxisAlignment}
+                      </FieldTitle>
                       <FieldDescription>
-                        <span className="font-medium tabular-nums">{yAxisAlignment}px</span>
+                        <span className="font-medium tabular-nums">
+                          {yAxisAlignment}px
+                        </span>
                       </FieldDescription>
                       <Slider
                         value={[yAxisAlignment]}

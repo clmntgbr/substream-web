@@ -4,15 +4,34 @@ import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Stream, useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { AlertCircle, CheckCheck, CheckCircle2, Clock, Timer } from "lucide-react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  AlertCircle,
+  CheckCheck,
+  CheckCircle2,
+  Clock,
+  Timer,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 // Component to display and countdown remaining time
-const RemainingTime = ({ estimateInSeconds }: { estimateInSeconds: number }) => {
+const RemainingTime = ({
+  estimateInSeconds,
+}: {
+  estimateInSeconds: number;
+}) => {
   const [remainingSeconds, setRemainingSeconds] = useState(estimateInSeconds);
 
   // Initialize with the estimate value on first render
@@ -50,7 +69,11 @@ const RemainingTime = ({ estimateInSeconds }: { estimateInSeconds: number }) => 
     return `${secs}s`;
   };
 
-  return <span className="text-xs text-muted-foreground">{formatTime(remainingSeconds)} remaining</span>;
+  return (
+    <span className="text-xs text-muted-foreground">
+      {formatTime(remainingSeconds)} remaining
+    </span>
+  );
 };
 
 export const Queue = () => {
@@ -72,8 +95,12 @@ export const Queue = () => {
         return (
           <Badge variant="secondary" className={`h-8 ${status} w-30`}>
             {row.original.isProcessing === true && <Timer className="size-4" />}
-            {row.original.isCompleted === true && <CheckCheck className="size-4" />}
-            {row.original.isFailed === true && <AlertCircle className="size-4" />}
+            {row.original.isCompleted === true && (
+              <CheckCheck className="size-4" />
+            )}
+            {row.original.isFailed === true && (
+              <AlertCircle className="size-4" />
+            )}
             {t.stream.status[status as keyof typeof t.stream.status] || status}
           </Badge>
         );
@@ -92,20 +119,29 @@ export const Queue = () => {
         return (
           <HoverCard>
             <HoverCardTrigger asChild>
-              <Button variant="link" className="font-medium text-foreground truncate">
+              <Button
+                variant="link"
+                className="font-medium text-foreground truncate"
+              >
                 {row.original.originalFileName}
               </Button>
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
               <div className="flex justify-between gap-4">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">{row.original.originalFileName}</h4>
+                  <h4 className="text-sm font-semibold">
+                    {row.original.originalFileName}
+                  </h4>
                   <div className="flex gap-2">
                     <Badge variant="secondary">{row.original.mimeType}</Badge>
-                    <Badge variant="secondary">{row.original.sizeInMegabytes} MB</Badge>
+                    <Badge variant="secondary">
+                      {row.original.sizeInMegabytes} MB
+                    </Badge>
                     <Badge variant="secondary">{row.original.duration}</Badge>
                   </div>
-                  <div className="text-muted-foreground text-xs">{row.original.createdAt.toLocaleString()}</div>
+                  <div className="text-muted-foreground text-xs">
+                    {row.original.createdAt.toLocaleString()}
+                  </div>
                 </div>
               </div>
             </HoverCardContent>
@@ -124,7 +160,9 @@ export const Queue = () => {
       },
       cell: ({ row }) => {
         const size = parseFloat(row.getValue("sizeInMegabytes"));
-        return <div className="text-muted-foreground">{size.toFixed(1)} MB</div>;
+        return (
+          <div className="text-muted-foreground">{size.toFixed(1)} MB</div>
+        );
       },
     },
     {
@@ -140,7 +178,9 @@ export const Queue = () => {
             <div className="space-y-2 w-[200px]">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">{progress}%</span>
-                {row.original.isProcessing && estimate > 0 && <RemainingTime estimateInSeconds={estimate} />}
+                {row.original.isProcessing && estimate > 0 && (
+                  <RemainingTime estimateInSeconds={estimate} />
+                )}
               </div>
               <Progress value={progress} />
             </div>
@@ -205,11 +245,18 @@ export const Queue = () => {
                 <div className="bg-card p-4 rounded-xl border border-border shadow-none">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                      <Clock className="text-purple-600 dark:text-purple-400" size={20} />
+                      <Clock
+                        className="text-purple-600 dark:text-purple-400"
+                        size={20}
+                      />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.processing}</p>
-                      <p className="text-2xl font-bold text-foreground">{processingCount}</p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {t.stream.stats.processing}
+                      </p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {processingCount}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -217,11 +264,18 @@ export const Queue = () => {
                 <div className="bg-card p-4 rounded-xl border border-border shadow-none">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                      <CheckCircle2 className="text-green-600 dark:text-green-400" size={20} />
+                      <CheckCircle2
+                        className="text-green-600 dark:text-green-400"
+                        size={20}
+                      />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.completed}</p>
-                      <p className="text-2xl font-bold text-foreground">{completedCount}</p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {t.stream.stats.completed}
+                      </p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {completedCount}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -229,11 +283,18 @@ export const Queue = () => {
                 <div className="bg-card p-4 rounded-xl border border-border shadow-none">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                      <AlertCircle className="text-red-600 dark:text-red-400" size={20} />
+                      <AlertCircle
+                        className="text-red-600 dark:text-red-400"
+                        size={20}
+                      />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground font-medium">{t.stream.stats.failed}</p>
-                      <p className="text-2xl font-bold text-foreground">{failedCount}</p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {t.stream.stats.failed}
+                      </p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {failedCount}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -246,15 +307,27 @@ export const Queue = () => {
                   <TableBody className="shadow-none">
                     {table.getRowModel().rows?.length ? (
                       table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="shadow-none">
+                        <TableRow
+                          key={row.id}
+                          data-state={row.getIsSelected() && "selected"}
+                          className="shadow-none"
+                        >
                           {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
                           ))}
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                        <TableCell
+                          colSpan={columns.length}
+                          className="h-24 text-center"
+                        >
                           {t.stream.table.noFiles}
                         </TableCell>
                       </TableRow>

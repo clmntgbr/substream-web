@@ -37,13 +37,25 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <AuthProvider>
             <StreamProvider>
               <OptionProvider>
                 {children}
-                <Toaster richColors expand={false} position="top-right" closeButton />
+                <Toaster
+                  richColors
+                  expand={false}
+                  position="top-right"
+                  closeButton
+                />
               </OptionProvider>
             </StreamProvider>
           </AuthProvider>

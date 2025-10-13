@@ -23,8 +23,13 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
     });
 
     if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
-      return NextResponse.json({ error: errorData.error || "Failed to upload video" }, { status: backendResponse.status });
+      const errorData = (await backendResponse.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      return NextResponse.json(
+        { error: errorData.error || "Failed to upload video" },
+        { status: backendResponse.status },
+      );
     }
 
     const data = (await backendResponse.json()) as Stream;
@@ -35,7 +40,10 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
       stream: streamData,
     });
   } catch {
-    return NextResponse.json({ error: "Failed to upload video" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to upload video" },
+      { status: 500 },
+    );
   }
 }
 

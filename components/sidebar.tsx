@@ -1,10 +1,24 @@
 "use client";
 
-import { BookOpen, Bot, Command, Settings2, SquareTerminal } from "lucide-react";
+import {
+  BookOpen,
+  Bot,
+  Command,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react";
 import * as React from "react";
 
 import { NavigationMain } from "@/components/navigation/main";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -216,9 +230,14 @@ const data = {
   ],
 };
 
-export function SidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function SidebarComponent({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...props}>
+    <Sidebar
+      className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+      {...props}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

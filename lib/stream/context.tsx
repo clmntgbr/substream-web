@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { toast } from "sonner";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
@@ -118,37 +124,40 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Update stream
-  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    try {
-      const response = await fetch(`/api/streams/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/ld+json",
-        },
-        credentials: "include",
-        body: JSON.stringify(streamData),
-      });
+  const updateStream = useCallback(
+    async (id: string, streamData: Partial<Stream>) => {
+      dispatch({ type: "SET_LOADING", payload: true });
+      try {
+        const response = await fetch(`/api/streams/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/ld+json",
+          },
+          credentials: "include",
+          body: JSON.stringify(streamData),
+        });
 
-      if (response.ok) {
-        const data = (await response.json()) as { stream: Stream };
-        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
-      } else {
-        const errorData = (await response.json()) as { error?: string };
+        if (response.ok) {
+          const data = (await response.json()) as { stream: Stream };
+          dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+        } else {
+          const errorData = (await response.json()) as { error?: string };
+          dispatch({
+            type: "SET_ERROR",
+            payload: errorData.error || "Failed to update stream",
+          });
+        }
+      } catch {
         dispatch({
           type: "SET_ERROR",
-          payload: errorData.error || "Failed to update stream",
+          payload: "Failed to update stream",
         });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
       }
-    } catch {
-      dispatch({
-        type: "SET_ERROR",
-        payload: "Failed to update stream",
-      });
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  }, []);
+    },
+    [],
+  );
 
   // Delete stream
   const deleteStream = useCallback(async (id: string) => {
@@ -193,8 +202,14 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        const errorData = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
-        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
+        const errorData = (await response.json().catch(() => ({}))) as {
+          message?: string;
+          error?: string;
+        };
+        const errorMessage =
+          errorData.message ||
+          errorData.error ||
+          `Download failed with status ${response.status}`;
 
         toast.error("Download failed", {
           description: errorMessage,
@@ -208,7 +223,9 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       }
 
       const contentDisposition = response.headers.get("Content-Disposition");
-      const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
+      const downloadFilename = contentDisposition
+        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+        : filename;
 
       // Create blob and download
       const blob = await response.blob();
@@ -225,7 +242,8 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         description: "Your file has been downloaded successfully.",
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to download stream";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to download stream";
 
       toast.error("Download failed", {
         description: errorMessage,

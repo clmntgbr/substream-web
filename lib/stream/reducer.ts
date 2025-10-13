@@ -10,7 +10,10 @@ export const initialState: StreamState = {
 };
 
 // Reducer function
-export function streamReducer(state: StreamState, action: StreamAction): StreamState {
+export function streamReducer(
+  state: StreamState,
+  action: StreamAction,
+): StreamState {
   switch (action.type) {
     case "SET_STREAMS":
       return {
@@ -33,15 +36,23 @@ export function streamReducer(state: StreamState, action: StreamAction): StreamS
     case "UPDATE_STREAM":
       return {
         ...state,
-        streams: state.streams.map((stream) => (stream.id === action.payload.id ? action.payload : stream)),
-        currentStream: state.currentStream?.id === action.payload.id ? action.payload : state.currentStream,
+        streams: state.streams.map((stream) =>
+          stream.id === action.payload.id ? action.payload : stream,
+        ),
+        currentStream:
+          state.currentStream?.id === action.payload.id
+            ? action.payload
+            : state.currentStream,
         error: null,
       };
     case "DELETE_STREAM":
       return {
         ...state,
         streams: state.streams.filter((stream) => stream.id !== action.payload),
-        currentStream: state.currentStream?.id === action.payload ? null : state.currentStream,
+        currentStream:
+          state.currentStream?.id === action.payload
+            ? null
+            : state.currentStream,
         error: null,
       };
     case "SET_LOADING":

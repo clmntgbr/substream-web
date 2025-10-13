@@ -44,16 +44,23 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary/30">
       <div className="w-full max-w-md p-8 bg-card rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-8 text-foreground">{t.register.title}</h1>
+        <h1 className="text-3xl font-bold text-center mb-8 text-foreground">
+          {t.register.title}
+        </h1>
 
         <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200">{t.register.notice}</p>
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">
+            {t.register.notice}
+          </p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="firstname" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="firstname"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 {t.register.firstname}
               </label>
               <input
@@ -69,7 +76,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="lastname" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="lastname"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 {t.register.lastname}
               </label>
               <input
@@ -86,7 +96,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
               {t.register.email}
             </label>
             <input
@@ -102,7 +115,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
               {t.register.password}
             </label>
             <input
@@ -131,7 +147,10 @@ export default function RegisterPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             {t.register.alreadyHaveAccount}{" "}
-            <a href={`/${lang}/login`} className="font-medium text-primary hover:underline">
+            <a
+              href={`/${lang}/login`}
+              className="font-medium text-primary hover:underline"
+            >
               {t.register.login}
             </a>
           </p>

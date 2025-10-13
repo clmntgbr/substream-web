@@ -18,7 +18,9 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+export function DataTableRowActions<TData>({
+  row,
+}: DataTableRowActionsProps<TData>) {
   const { deleteStream, downloadStream, state } = useStreams();
   const stream = row.original as Stream;
   const streamId = stream.id;
@@ -42,7 +44,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="data-[state=open]:bg-muted size-8" onClick={(e) => e.stopPropagation()}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="data-[state=open]:bg-muted size-8"
+          onClick={(e) => e.stopPropagation()}
+        >
           <MoreHorizontal />
           <span className="sr-only">Open menu</span>
         </Button>
@@ -51,7 +58,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         {stream.status === "completed" && (
           <>
             <DropdownMenuItem onClick={handleDownload} disabled={isDownloading}>
-              {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+              {isDownloading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="mr-2 h-4 w-4" />
+              )}
               Download
             </DropdownMenuItem>
             <DropdownMenuSeparator />

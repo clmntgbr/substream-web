@@ -68,7 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register");
+      const isPublicRoute =
+        pathname.endsWith("/login") || pathname.endsWith("/register");
 
       if (!user && !isPublicRoute) {
         router.push(`/${lang}/login`);
@@ -115,7 +116,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, refreshUser }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

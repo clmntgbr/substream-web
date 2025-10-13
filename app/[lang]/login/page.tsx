@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth-context";
@@ -87,15 +93,24 @@ export default function LoginPage() {
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
             {t.login.alreadyHaveAccount}{" "}
-            <Link href={`/${lang}/register`} className="font-medium text-primary hover:underline">
+            <Link
+              href={`/${lang}/register`}
+              className="font-medium text-primary hover:underline"
+            >
               {t.login.register}
             </Link>
             {t.login.alreadyHaveAccount}{" "}
-            <Link href={`/${lang}/login`} className="font-medium text-primary hover:underline">
+            <Link
+              href={`/${lang}/login`}
+              className="font-medium text-primary hover:underline"
+            >
               {t.login.register}
             </Link>
             {t.login.forgotPassword}{" "}
-            <Link href={`/${lang}/forgot-password`} className="font-medium text-primary hover:underline">
+            <Link
+              href={`/${lang}/forgot-password`}
+              className="font-medium text-primary hover:underline"
+            >
               {t.login.forgotPassword}
             </Link>
           </div>
