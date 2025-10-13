@@ -4,16 +4,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslations } from "@/lib/use-translations";
 import { LinkIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
-import { Spinner } from "../ui/spinner";
 import Preview from "./preview";
+
+const youtubeUrlSchema = z
+  .string()
+  .url()
+  .refine(
+    (url) => {
+      const youtubeRegex = /^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/).+/i;
+      return youtubeRegex.test(url);
+    },
+    { message: "Invalid YouTube URL" }
+  );
 
 export const Upload = () => {
   const t = useTranslations();
 
   const [url, setUrl] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState("");
-  const [isImportingUrl, setIsImportingUrl] = useState(false);
+  const [isImportingUrl] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -81,28 +93,38 @@ export const Upload = () => {
 
                   <h3 className="text-xl font-semibold">Import from URL</h3>
                   <p className="text-muted-foreground mb-6">Paste a link to import content directly</p>
-                  <InputGroup className="w-[450px] focus:outline-none focus:ring-0 mx-auto h-10">
-                    <InputGroupInput
-                      placeholder="https://www.youtube.com/watch?v=B2pUrE_Ge1E"
-                      className="focus:outline-none focus:ring-0"
-                      value={urlInput}
-                      onChange={(e) => setUrlInput(e.target.value)}
-                    />
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        variant="secondary"
-                        className="cursor-pointer hover:bg-primary/10 w-[90px]"
-                        disabled={isImportingUrl || urlInput === ""}
-                        onClick={() => {
-                          setUrl(urlInput);
-                          setIsPreviewOpen(true);
-                          setUrlInput("");
+                  <div className="flex flex-col items-center gap-2">
+                    <InputGroup className="w-[450px] focus:outline-none focus:ring-0 h-10">
+                      <InputGroupInput
+                        placeholder="https://www.youtube.com/watch?v=B2pUrE_Ge1E"
+                        className="focus:outline-none focus:ring-0"
+                        value={urlInput}
+                        onChange={(e) => {
+                          setUrlInput(e.target.value);
                         }}
-                      >
-                        {isImportingUrl ? <Spinner className="w-4 h-4" /> : "Import URL"}
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          variant="default"
+                          className="cursor-pointer hover:bg-primary/70 w-[90px]"
+                          onClick={() => {
+                            try {
+                              youtubeUrlSchema.parse(urlInput);
+                              setUrl(urlInput);
+                              setIsPreviewOpen(true);
+                              setUrlInput("");
+                            } catch {
+                              toast.error("Invalid YouTube URL", {
+                                description: "Please enter a valid YouTube URL",
+                              });
+                            }
+                          }}
+                        >
+                          Import URL
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
                 </div>
               </CardContent>
             </Card>
