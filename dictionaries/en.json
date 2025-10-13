@@ -1,13 +1,21 @@
 {
   "home": {
     "upload": {
-      "subtitle": "This is an example of subtitle",
       "tab": {
         "right": "Upload file",
         "left": "Import from URL"
+      },
+      "upload_url": {
+        "title": "Import from URL",
+        "description": "Paste a link to import content directly"
+      },
+      "upload_file": {
+        "title": "Drag and drop your files",
+        "description": "or click the button below to browse"
       }
     },
     "preview": {
+      "subtitle": "This is an example of subtitle",
       "settings": {
         "title": "Video & subtitle settings",
         "settings": "Settings",

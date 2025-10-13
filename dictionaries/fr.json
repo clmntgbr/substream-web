@@ -1,69 +1,77 @@
 {
   "home": {
     "upload": {
-      "subtitle": "This is an example of subtitle",
       "tab": {
-        "right": "Upload file",
-        "left": "Import from URL"
+        "right": "Télécharger un fichier",
+        "left": "Importer depuis une URL"
+      },
+      "upload_url": {
+        "title": "Importer depuis une URL",
+        "description": "Collez un lien pour importer du contenu directement"
+      },
+      "upload_file": {
+        "title": "Glissez et déposez vos fichiers",
+        "description": "ou cliquez sur le bouton ci-dessous pour parcourir"
       }
     },
     "preview": {
+      "subtitle": "Ceci est un exemple de sous-titre",
       "settings": {
-        "title": "Video & subtitle settings",
-        "settings": "Settings",
-        "process": "Process",
-        "description": "Configure the appearance and format of the subtitles",
-        "close": "Close",
-        "font": "Font family",
-        "size": "Font size",
-        "color": "Font color",
-        "bold": "Bold",
-        "boldDescription": "Enable bold font style",
-        "italic": "Italic",
-        "italicDescription": "Enable italic font style",
-        "underline": "Underline",
-        "underlineDescription": "Enable underline font style",
-        "outlineColor": "Outline Color",
-        "outlineThickness": "Outline Thickness",
-        "shadow": "Shadow",
-        "shadowColor": "Shadow Color",
+        "title": "Paramètres vidéo et sous-titres",
+        "settings": "Paramètres",
+        "process": "Traiter",
+        "description": "Configurer l'apparence et le format des sous-titres",
+        "close": "Fermer",
+        "font": "Police de caractères",
+        "size": "Taille de la police",
+        "color": "Couleur de la police",
+        "bold": "Gras",
+        "boldDescription": "Activer le style de police gras",
+        "italic": "Italique",
+        "italicDescription": "Activer le style de police italique",
+        "underline": "Souligné",
+        "underlineDescription": "Activer le style de police souligné",
+        "outlineColor": "Couleur du contour",
+        "outlineThickness": "Épaisseur du contour",
+        "shadow": "Ombre",
+        "shadowColor": "Couleur de l'ombre",
         "format": "Format",
-        "chunkNumber": "Chunk Number",
-        "yAxisAlignment": "Y Axis Alignment",
+        "chunkNumber": "Nombre de parties",
+        "yAxisAlignment": "Alignement axe Y",
         "arial": "Arial",
         "timesNewRoman": "Times New Roman",
         "courierNew": "Courier New",
         "original": "Original",
-        "zoomed_916": "Zoomed 9:16",
-        "normal_916_with_borders": "Normal 9:16 with borders",
-        "chunkNumberDescription": "parts",
-        "fontAndSize": "Font & Size",
-        "colors": "Colors",
-        "textStyle": "Text Style",
-        "effects": "Effects",
-        "videoSettings": "Video Settings"
+        "zoomed_916": "Zoomé 9:16",
+        "normal_916_with_borders": "Normal 9:16 avec bordures",
+        "chunkNumberDescription": "parties",
+        "fontAndSize": "Police et taille",
+        "colors": "Couleurs",
+        "textStyle": "Style de texte",
+        "effects": "Effets",
+        "videoSettings": "Paramètres vidéo"
       }
     }
   },
   "login": {
-    "title": "Login",
+    "title": "Connexion",
     "email": "Email",
-    "password": "Password",
-    "submit": "Login",
-    "forgotPassword": "Forgot password?",
-    "register": "Register",
-    "alreadyHaveAccount": "Already have an account?",
-    "login": "Login"
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ?",
+    "register": "S'inscrire",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "login": "Se connecter"
   },
   "register": {
-    "title": "Register",
-    "notice": "Please note that the registration is currently disabled.",
-    "firstname": "Firstname",
-    "lastname": "Lastname",
+    "title": "Inscription",
+    "notice": "Veuillez noter que l'inscription est actuellement désactivée.",
+    "firstname": "Prénom",
+    "lastname": "Nom",
     "email": "Email",
-    "password": "Password",
-    "submitDisabled": "Submit",
-    "alreadyHaveAccount": "Already have an account?",
-    "login": "Login"
+    "password": "Mot de passe",
+    "submitDisabled": "Soumettre",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "login": "Se connecter"
   }
 }
