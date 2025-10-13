@@ -1,11 +1,11 @@
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
+import { NumberInput } from "../misc/NumberInput";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 
 interface SettingsProps {
@@ -118,21 +118,19 @@ export const Settings = ({
                           </FieldLabel>
                         </RadioGroup>
                       </FieldSet>
+                      <Field>
+                        <NumberInput
+                          value={subtitleSize}
+                          onChange={setSubtitleSize}
+                          min={0}
+                          max={100}
+                          step={1}
+                          description={t.home.preview.settings.sizeDescription}
+                          label={t.home.preview.settings.size}
+                          unit="px"
+                        />
+                      </Field>
                     </FieldGroup>
-                    <Field>
-                      <FieldTitle>{t.home.preview.settings.size}</FieldTitle>
-                      <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleSize} px</span>
-                      </FieldDescription>
-                      <Slider
-                        value={[subtitleSize]}
-                        onValueChange={(value) => setSubtitleSize(value[0])}
-                        max={100}
-                        min={1}
-                        step={1}
-                        className="mt-2 w-full"
-                      />
-                    </Field>
                   </FieldGroup>
                 </FieldSet>
               </CardContent>
@@ -196,31 +194,27 @@ export const Settings = ({
                   <FieldLegend>{t.home.preview.settings.effects}</FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.outlineThickness}</FieldTitle>
-                      <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleOutlineThickness}px</span>
-                      </FieldDescription>
-                      <Slider
-                        value={[subtitleOutlineThickness]}
-                        onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
-                        max={4}
+                      <NumberInput
+                        value={subtitleOutlineThickness}
+                        onChange={setSubtitleOutlineThickness}
                         min={0}
+                        max={4}
                         step={1}
-                        className="mt-2 w-full"
+                        label={t.home.preview.settings.outlineThickness}
+                        description={t.home.preview.settings.outlineThicknessDescription}
+                        unit="px"
                       />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.shadow}</FieldTitle>
-                      <FieldDescription>
-                        <span className="font-medium tabular-nums">{subtitleShadow}px</span>
-                      </FieldDescription>
-                      <Slider
-                        value={[subtitleShadow]}
-                        onValueChange={(value) => setSubtitleShadow(value[0])}
+                      <NumberInput
+                        value={subtitleShadow}
+                        onChange={setSubtitleShadow}
                         max={4}
                         min={0}
                         step={1}
-                        className="mt-2 w-full"
+                        description={t.home.preview.settings.shadowDescription}
+                        label={t.home.preview.settings.shadow}
+                        unit="px"
                       />
                     </Field>
                   </FieldGroup>
@@ -266,33 +260,27 @@ export const Settings = ({
                       </FieldSet>
                     </FieldGroup>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.chunkNumber}</FieldTitle>
-                      <FieldDescription>
-                        <span className="font-medium tabular-nums">
-                          {chunkNumber} {t.home.preview.settings.chunkNumberDescription}
-                        </span>
-                      </FieldDescription>
-                      <Slider
-                        value={[chunkNumber]}
-                        onValueChange={(value) => setChunkNumber(value[0])}
+                      <NumberInput
+                        value={chunkNumber}
+                        onChange={setChunkNumber}
                         max={100}
-                        min={1}
+                        min={0}
                         step={1}
-                        className="mt-2 w-full"
+                        description={t.home.preview.settings.chunkNumberDescription}
+                        label={t.home.preview.settings.chunkNumber}
+                        unit="  parts"
                       />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.yAxisAlignment}</FieldTitle>
-                      <FieldDescription>
-                        <span className="font-medium tabular-nums">{yAxisAlignment}px</span>
-                      </FieldDescription>
-                      <Slider
-                        value={[yAxisAlignment]}
-                        onValueChange={(value) => setYAxisAlignment(value[0])}
+                      <NumberInput
+                        value={yAxisAlignment}
+                        onChange={setYAxisAlignment}
                         max={200}
                         min={0}
-                        step={5}
-                        className="mt-2 w-full"
+                        step={1}
+                        description={t.home.preview.settings.yAxisAlignmentDescription}
+                        label={t.home.preview.settings.yAxisAlignment}
+                        unit="px"
                       />
                     </Field>
                   </FieldGroup>
