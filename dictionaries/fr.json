@@ -14,12 +14,15 @@
         "process": "Process",
         "description": "Configure the appearance and format of the subtitles",
         "close": "Close",
-        "font": "Font",
-        "size": "Size",
-        "color": "Color",
+        "font": "Font family",
+        "size": "Font size",
+        "color": "Font color",
         "bold": "Bold",
+        "boldDescription": "Enable bold font style",
         "italic": "Italic",
+        "italicDescription": "Enable italic font style",
         "underline": "Underline",
+        "underlineDescription": "Enable underline font style",
         "outlineColor": "Outline Color",
         "outlineThickness": "Outline Thickness",
         "shadow": "Shadow",
@@ -29,7 +32,12 @@
         "yAxisAlignment": "Y Axis Alignment",
         "arial": "Arial",
         "timesNewRoman": "Times New Roman",
-        "courierNew": "Courier New"
+        "courierNew": "Courier New",
+        "original": "Original",
+        "zoomed_916": "Zoomed 9:16",
+        "normal_916_with_borders": "Normal 9:16 with borders",
+        "chunkNumberDescription": "parts",
+        "yAxisAlignmentDescription": "px"
       }
     }
   },

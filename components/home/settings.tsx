@@ -1,10 +1,11 @@
-import { Field, FieldDescription, FieldGroup, FieldSet, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldSet, FieldTitle } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from "@/lib/use-translations";
+import { ColorPicker } from "../misc/ColorPicker";
 import { Button } from "../ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
 import { Slider } from "../ui/slider";
+import { Switch } from "../ui/switch";
 
 interface SettingsProps {
   open: boolean;
@@ -112,56 +113,109 @@ export const Settings = ({
                     </Field>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
-                      <InputGroup>
-                        <InputGroupInput
-                          id="color"
-                          type="color"
-                          className="w-full"
-                          value={subtitleColor}
-                          onChange={(e) => setSubtitleColor(e.target.value)}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupInput value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} placeholder="#FFFFFF" />
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <ColorPicker background={subtitleColor} setBackground={setSubtitleColor} />
                     </Field>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.outlineColor}</FieldTitle>
-                      <InputGroup>
-                        <InputGroupInput
-                          id="outlineColor"
-                          type="color"
-                          className="w-full"
-                          value={subtitleOutlineColor}
-                          onChange={(e) => setSubtitleOutlineColor(e.target.value)}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupInput
-                            value={subtitleOutlineColor}
-                            onChange={(e) => setSubtitleOutlineColor(e.target.value)}
-                            placeholder="#000000"
-                          />
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <ColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} />
                     </Field>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.shadowColor}</FieldTitle>
-                      <InputGroup>
-                        <InputGroupInput
-                          id="shadowColor"
-                          type="color"
-                          className="w-full"
-                          value={subtitleShadowColor}
-                          onChange={(e) => setSubtitleShadowColor(e.target.value)}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupInput
-                            value={subtitleShadowColor}
-                            onChange={(e) => setSubtitleShadowColor(e.target.value)}
-                            placeholder="#333333"
-                          />
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <ColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <FieldContent>
+                        <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.boldDescription}</FieldDescription>
+                      </FieldContent>
+                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <FieldContent>
+                        <FieldLabel htmlFor="italic">{t.home.preview.settings.italic}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.italicDescription}</FieldDescription>
+                      </FieldContent>
+                      <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <FieldContent>
+                        <FieldLabel htmlFor="underline">{t.home.preview.settings.underline}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.underlineDescription}</FieldDescription>
+                      </FieldContent>
+                      <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
+                    </Field>
+                    <Field>
+                      <FieldTitle>{t.home.preview.settings.outlineThickness}</FieldTitle>
+                      <FieldDescription>
+                        <span className="font-medium tabular-nums">{subtitleOutlineThickness} px</span>
+                      </FieldDescription>
+                      <Slider
+                        value={[subtitleOutlineThickness]}
+                        onValueChange={(value) => setSubtitleOutlineThickness(value[0])}
+                        max={4}
+                        min={0}
+                        step={1}
+                        className="mt-2 w-full"
+                      />
+                    </Field>
+                    <Field>
+                      <FieldTitle>{t.home.preview.settings.shadow}</FieldTitle>
+                      <FieldDescription>
+                        <span className="font-medium tabular-nums">{subtitleShadow} px</span>
+                      </FieldDescription>
+                      <Slider
+                        value={[subtitleShadow]}
+                        onValueChange={(value) => setSubtitleShadow(value[0])}
+                        max={4}
+                        min={0}
+                        step={1}
+                        className="mt-2 w-full"
+                      />
+                    </Field>
+                    <Field>
+                      <FieldTitle>{t.home.preview.settings.format}</FieldTitle>
+                      <Select value={format} onValueChange={(value) => setFormat(value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t.home.preview.settings.format} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="zoomed_916">{t.home.preview.settings.zoomed_916}</SelectItem>
+                          <SelectItem value="normal_916_with_borders">{t.home.preview.settings.normal_916_with_borders}</SelectItem>
+                          <SelectItem value="original">{t.home.preview.settings.original}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldTitle>{t.home.preview.settings.chunkNumber}</FieldTitle>
+                      <FieldDescription>
+                        <span className="font-medium tabular-nums">
+                          {chunkNumber} {t.home.preview.settings.chunkNumberDescription}
+                        </span>
+                      </FieldDescription>
+                      <Slider
+                        value={[chunkNumber]}
+                        onValueChange={(value) => setChunkNumber(value[0])}
+                        max={100}
+                        min={1}
+                        step={1}
+                        className="mt-2 w-full"
+                      />
+                    </Field>
+                    <Field>
+                      <FieldTitle>{t.home.preview.settings.yAxisAlignment}</FieldTitle>
+                      <FieldDescription>
+                        <span className="font-medium tabular-nums">
+                          {yAxisAlignment} {t.home.preview.settings.yAxisAlignmentDescription}
+                        </span>
+                      </FieldDescription>
+                      <Slider
+                        value={[yAxisAlignment]}
+                        onValueChange={(value) => setYAxisAlignment(value[0])}
+                        max={100}
+                        min={1}
+                        step={1}
+                        className="mt-2 w-full"
+                      />
                     </Field>
                   </FieldGroup>
                 </FieldSet>

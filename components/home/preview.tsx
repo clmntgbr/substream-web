@@ -26,17 +26,21 @@ export const Preview = ({ open, onOpenChange, file, url }: PreviewProps) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [subtitleFont, setSubtitleFont] = useState("Arial");
-  const [subtitleSize, setSubtitleSize] = useState(24);
+  const [subtitleSize, setSubtitleSize] = useState(15);
+
   const [subtitleColor, setSubtitleColor] = useState("#FFFFFF");
-  const [subtitleBold, setSubtitleBold] = useState(true);
+  const [subtitleOutlineColor, setSubtitleOutlineColor] = useState("#000000");
+  const [subtitleShadowColor, setSubtitleShadowColor] = useState("#333333");
+
+  const [subtitleBold, setSubtitleBold] = useState(false);
   const [subtitleItalic, setSubtitleItalic] = useState(false);
   const [subtitleUnderline, setSubtitleUnderline] = useState(false);
-  const [subtitleOutlineColor, setSubtitleOutlineColor] = useState("#000000");
-  const [subtitleOutlineThickness, setSubtitleOutlineThickness] = useState(2);
-  const [subtitleShadow, setSubtitleShadow] = useState(1);
-  const [subtitleShadowColor, setSubtitleShadowColor] = useState("#333333");
-  const [format, setFormat] = useState("zoomed_916");
-  const [chunkNumber, setChunkNumber] = useState(5);
+
+  const [subtitleOutlineThickness, setSubtitleOutlineThickness] = useState(0);
+  const [subtitleShadow, setSubtitleShadow] = useState(0);
+
+  const [format, setFormat] = useState("original");
+  const [chunkNumber, setChunkNumber] = useState(2);
   const [yAxisAlignment, setYAxisAlignment] = useState(0);
 
   useEffect(() => {
