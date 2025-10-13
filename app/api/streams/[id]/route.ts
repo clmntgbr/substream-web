@@ -1,7 +1,8 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
+import { Stream } from "@/lib/stream";
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 async function getStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -16,26 +17,23 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/ld+json",
       },
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Failed to fetch stream" }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
+    const data = (await backendResponse.json()) as Stream;
 
-    const streamData = data.stream || data;
-    delete streamData["@context"];
-    delete streamData["@id"];
-    delete streamData["@type"];
+    const streamData = data;
 
     return NextResponse.json({
       stream: streamData,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch stream" }, { status: 500 });
   }
 }
@@ -55,27 +53,24 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/ld+json",
       },
       body: JSON.stringify(body),
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Failed to update stream" }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
+    const data = (await backendResponse.json()) as Stream;
 
-    const streamData = data.stream || data;
-    delete streamData["@context"];
-    delete streamData["@id"];
-    delete streamData["@type"];
+    const streamData = data;
 
     return NextResponse.json({
       stream: streamData,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update stream" }, { status: 500 });
   }
 }
@@ -93,19 +88,19 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/ld+json",
       },
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Failed to delete stream" }, { status: backendResponse.status });
     }
 
     return NextResponse.json({
       success: true,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete stream" }, { status: 500 });
   }
 }

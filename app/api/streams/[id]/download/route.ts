@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-// Configure route to handle long downloads (10 minutes)
-export const maxDuration = 600; // 600 seconds = 10 minutes
+export const maxDuration = 600;
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
-    // Get the backend token from cookie
     const backendToken = request.cookies.get("session_token")?.value;
 
     if (!backendToken) {
@@ -38,12 +36,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
-    // Get the file data
     const blob = await response.blob();
     const contentDisposition = response.headers.get("Content-Disposition");
     const contentType = response.headers.get("Content-Type") || "application/octet-stream";
 
-    // Create response with file
     const downloadResponse = new NextResponse(blob, {
       status: 200,
       headers: {

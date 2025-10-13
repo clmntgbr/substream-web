@@ -40,14 +40,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { user: User };
         setUser(data.user);
         return data.user;
       } else {
         setUser(null);
         return null;
       }
-    } catch (error) {
+    } catch {
       setUser(null);
       return null;
     }
@@ -84,17 +84,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch("/api/token", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/ld+json",
         },
         credentials: "include", // Important for cookies
         body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { user: User };
         setUser(data.user);
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         throw new Error(errorData.error || "Failed to login");
       }
     } catch (error) {
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         credentials: "include", // Important for cookies
       });
-    } catch (error) {
+    } catch {
     } finally {
       setUser(null);
       router.push(`/${lang}/login`);

@@ -1,7 +1,8 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
+import { Option } from "@/lib/option";
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 async function createOptionHandler(req: AuthenticatedRequest) {
   try {
@@ -17,27 +18,24 @@ async function createOptionHandler(req: AuthenticatedRequest) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/ld+json",
       },
       body: JSON.stringify(body),
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Failed to create option" }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
+    const data = (await backendResponse.json()) as Option;
 
-    const optionData = data.option || data;
-    delete optionData["@context"];
-    delete optionData["@id"];
-    delete optionData["@type"];
+    const optionData = data;
 
     return NextResponse.json({
       option: optionData,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create option" }, { status: 500 });
   }
 }

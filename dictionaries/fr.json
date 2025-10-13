@@ -6,5 +6,16 @@
         "left": "Import from URL"
       }
     }
+  },
+  "register": {
+    "title": "Register",
+    "notice": "Please note that the registration is currently disabled.",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "email": "Email",
+    "password": "Password",
+    "submitDisabled": "Submit",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login"
   }
 }

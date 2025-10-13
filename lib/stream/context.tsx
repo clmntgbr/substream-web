@@ -33,16 +33,16 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { streams: Stream[] };
         dispatch({ type: "SET_STREAMS", payload: data.streams || [] });
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
           payload: errorData.error || "Failed to fetch streams",
         });
       }
-    } catch (error) {
+    } catch {
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to fetch streams",
@@ -62,16 +62,16 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { stream: Stream };
         dispatch({ type: "SET_CURRENT_STREAM", payload: data.stream });
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
           payload: errorData.error || "Failed to fetch stream",
         });
       }
-    } catch (error) {
+    } catch {
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to fetch stream",
@@ -88,25 +88,25 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch("/api/streams", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/ld+json",
         },
         credentials: "include",
         body: JSON.stringify(streamData),
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { stream: Stream };
         dispatch({ type: "ADD_STREAM", payload: data.stream });
         return data.stream;
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
           payload: errorData.error || "Failed to create stream",
         });
         return null;
       }
-    } catch (error) {
+    } catch {
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to create stream",
@@ -124,23 +124,23 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch(`/api/streams/${id}`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/ld+json",
         },
         credentials: "include",
         body: JSON.stringify(streamData),
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { stream: Stream };
         dispatch({ type: "UPDATE_STREAM", payload: data.stream });
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
           payload: errorData.error || "Failed to update stream",
         });
       }
-    } catch (error) {
+    } catch {
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to update stream",
@@ -162,13 +162,13 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         dispatch({ type: "DELETE_STREAM", payload: id });
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
           payload: errorData.error || "Failed to delete stream",
         });
       }
-    } catch (error) {
+    } catch {
       dispatch({
         type: "SET_ERROR",
         payload: "Failed to delete stream",
@@ -193,7 +193,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: "Download failed" }));
+        const errorData = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
         const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
         toast.error("Download failed", {

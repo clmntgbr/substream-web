@@ -26,21 +26,21 @@ export function OptionProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch("/api/options", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/ld+json",
         },
         credentials: "include",
         body: JSON.stringify(optionData),
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { option: Option };
         return data.option;
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error?: string };
         setError(errorData.error || "Failed to create option");
         return null;
       }
-    } catch (error) {
+    } catch {
       setError("Failed to create option");
       return null;
     } finally {

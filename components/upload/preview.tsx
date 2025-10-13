@@ -140,14 +140,14 @@ export const Preview = ({ open, onOpenChange, file }: PreviewProps) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { message?: string };
         getStreams();
         onOpenChange(false);
         toast.success("Video uploaded successfully!", {
           description: data.message || "Your video is now being processed.",
         });
       } else {
-        const errorData = await response.json().catch(() => ({ message: "Upload failed" }));
+        const errorData = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
         const errorMessage = errorData.message || errorData.error || "An error occurred while uploading your video.";
 
         toast.error("Upload failed", {

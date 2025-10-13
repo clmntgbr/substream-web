@@ -1,7 +1,8 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
+import { Stream } from "@/lib/stream";
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 async function uploadVideoHandler(req: AuthenticatedRequest) {
   try {
@@ -13,7 +14,6 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
 
     const formData = await req.formData();
 
-    // Forward the FormData to the backend with the authorization header
     const backendResponse = await fetch(`${BACKEND_API_URL}/streams/video`, {
       method: "POST",
       headers: {
@@ -23,21 +23,18 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Failed to upload video" }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
+    const data = (await backendResponse.json()) as Stream;
 
-    const streamData = data.stream || data;
-    delete streamData["@context"];
-    delete streamData["@id"];
-    delete streamData["@type"];
+    const streamData = data;
 
     return NextResponse.json({
       stream: streamData,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to upload video" }, { status: 500 });
   }
 }

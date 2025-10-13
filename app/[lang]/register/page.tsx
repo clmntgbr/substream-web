@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const params = useParams();
   const lang = (params.lang as string) || "en";
-  const t = useTranslations().register;
+  const t = useTranslations();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +24,13 @@ export default function RegisterPage() {
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/ld+json",
         },
         body: JSON.stringify({ email, password, firstname, lastname }),
       });
 
       if (!response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { error?: string };
         setError(data.error || "Une erreur est survenue");
         return;
       }
@@ -44,17 +44,17 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary/30">
       <div className="w-full max-w-md p-8 bg-card rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-8 text-foreground">{t.title}</h1>
+        <h1 className="text-3xl font-bold text-center mb-8 text-foreground">{t.register.title}</h1>
 
         <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200">{t.notice}</p>
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{t.register.notice}</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstname" className="block text-sm font-medium text-foreground mb-2">
-                {t.firstname}
+                {t.register.firstname}
               </label>
               <input
                 id="firstname"
@@ -70,7 +70,7 @@ export default function RegisterPage() {
 
             <div>
               <label htmlFor="lastname" className="block text-sm font-medium text-foreground mb-2">
-                {t.lastname}
+                {t.register.lastname}
               </label>
               <input
                 id="lastname"
@@ -87,7 +87,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-              {t.email}
+              {t.register.email}
             </label>
             <input
               id="email"
@@ -103,7 +103,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
-              {t.password}
+              {t.register.password}
             </label>
             <input
               id="password"
@@ -124,15 +124,15 @@ export default function RegisterPage() {
           )}
 
           <Button type="submit" disabled={true} className="w-full">
-            {t.submitDisabled}
+            {t.register.submitDisabled}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            {t.alreadyHaveAccount}{" "}
+            {t.register.alreadyHaveAccount}{" "}
             <a href={`/${lang}/login`} className="font-medium text-primary hover:underline">
-              {t.login}
+              {t.register.login}
             </a>
           </p>
         </div>

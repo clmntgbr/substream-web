@@ -25,7 +25,6 @@ export const Upload = () => {
 
   const [url, setUrl] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState("");
-  const [isImportingUrl] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -51,6 +50,14 @@ export const Upload = () => {
     setIsProcessing(false);
   };
 
+  const handlePreviewClose = (open: boolean) => {
+    setIsPreviewOpen(open);
+    if (!open) {
+      setSelectedFile(null);
+      setUrl(null);
+    }
+  };
+
   return (
     <>
       <div className="flex w-full flex-col gap-6">
@@ -67,7 +74,7 @@ export const Upload = () => {
           </TabsList>
           <TabsContent value="file" className="shadow-none">
             <Card className="shadow-none">
-              <CardContent className="grid gap-6 shadow-none py-[12vh]">
+              <CardContent className="grid gap-6 shadow-none py-[13vh]">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                     <UploadIcon size={28} className="text-muted-foreground" />
@@ -85,7 +92,7 @@ export const Upload = () => {
           </TabsContent>
           <TabsContent value="url" className="shadow-none">
             <Card className="shadow-none">
-              <CardContent className="grid gap-6 shadow-none py-[12vh]">
+              <CardContent className="grid gap-6 shadow-none py-[13vh]">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                     <LinkIcon size={28} className="text-muted-foreground" />
@@ -131,7 +138,7 @@ export const Upload = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <Preview open={isPreviewOpen} onOpenChange={setIsPreviewOpen} file={selectedFile} url={url} />
+      <Preview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} />
     </>
   );
 };

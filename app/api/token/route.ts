@@ -1,7 +1,8 @@
+import { User } from "@/lib/auth-context";
 import { setSessionCookie } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://localhost/api";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,17 +17,17 @@ export async function POST(request: NextRequest) {
     const backendResponse = await fetch(`${BACKEND_API_URL}/token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/ld+json",
       },
       body: JSON.stringify({ email, password }),
     });
 
     if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
+      const errorData = (await backendResponse.json().catch(() => ({}))) as { error?: string };
       return NextResponse.json({ error: errorData.error || "Invalid credentials" }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
+    const data = (await backendResponse.json()) as { token: string; user: User };
     const { token, user } = data;
 
     if (!token) {
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
     setSessionCookie(response, token);
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Authentication failed. Please check your backend connection." }, { status: 500 });
   }
 }
