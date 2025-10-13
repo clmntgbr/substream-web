@@ -2,76 +2,82 @@
   "home": {
     "upload": {
       "tab": {
-        "right": "Télécharger un fichier",
-        "left": "Importer depuis une URL"
+        "right": "Upload file",
+        "left": "Import from URL"
       },
       "upload_url": {
-        "title": "Importer depuis une URL",
-        "description": "Collez un lien pour importer du contenu directement"
+        "title": "Import from URL",
+        "description": "Paste a link to import content directly"
       },
       "upload_file": {
-        "title": "Glissez et déposez vos fichiers",
-        "description": "ou cliquez sur le bouton ci-dessous pour parcourir"
+        "title": "Drag and drop your files",
+        "description": "or click the button below to browse"
       }
     },
     "preview": {
-      "subtitle": "Ceci est un exemple de sous-titre",
+      "subtitle": "This is an example of subtitle",
       "settings": {
-        "title": "Paramètres vidéo et sous-titres",
-        "settings": "Paramètres",
-        "process": "Traiter",
-        "description": "Configurer l'apparence et le format des sous-titres",
-        "close": "Fermer",
-        "font": "Police de caractères",
-        "size": "Taille de la police",
-        "color": "Couleur de la police",
-        "bold": "Gras",
-        "boldDescription": "Activer le style de police gras",
-        "italic": "Italique",
-        "italicDescription": "Activer le style de police italique",
-        "underline": "Souligné",
-        "underlineDescription": "Activer le style de police souligné",
-        "outlineColor": "Couleur du contour",
-        "outlineThickness": "Épaisseur du contour",
-        "shadow": "Ombre",
-        "shadowColor": "Couleur de l'ombre",
+        "title": "Video & subtitle settings",
+        "settings": "Settings",
+        "process": "Process",
+        "description": "Configure the appearance and format of the subtitles",
+        "close": "Close",
+        "font": "Font family",
+        "size": "Font size",
+        "color": "Font color",
+        "bold": "Bold",
+        "boldDescription": "Enable bold font style",
+        "italic": "Italic",
+        "italicDescription": "Enable italic font style",
+        "underline": "Underline",
+        "underlineDescription": "Enable underline font style",
+        "outlineColor": "Outline Color",
+        "outlineThickness": "Outline Thickness",
+        "shadow": "Shadow",
+        "shadowColor": "Shadow Color",
         "format": "Format",
-        "chunkNumber": "Nombre de parties",
-        "yAxisAlignment": "Alignement axe Y",
+        "chunkNumber": "Chunk Number",
+        "yAxisAlignment": "Y Axis Alignment",
         "arial": "Arial",
+        "arialDescription": "Build your subtitles for the arial font family.",
         "timesNewRoman": "Times New Roman",
+        "timesNewRomanDescription": "Build your subtitles for the times new roman font family.",
         "courierNew": "Courier New",
+        "courierNewDescription": "Build your subtitles for the courier new font family.",
         "original": "Original",
-        "zoomed_916": "Zoomé 9:16",
-        "normal_916_with_borders": "Normal 9:16 avec bordures",
-        "chunkNumberDescription": "parties",
-        "fontAndSize": "Police et taille",
-        "colors": "Couleurs",
-        "textStyle": "Style de texte",
-        "effects": "Effets",
-        "videoSettings": "Paramètres vidéo"
+        "originalDescription": "Build your subtitles for the original aspect ratio.",
+        "zoomed_916": "Zoomed 9:16",
+        "zoomed_916Description": "Build your subtitles for the zoomed 9:16 aspect ratio.",
+        "normal_916_with_borders": "Normal 9:16 with borders",
+        "normal_916_with_bordersDescription": "Build your subtitles for the normal 9:16 aspect ratio with borders.",
+        "chunkNumberDescription": "parts",
+        "fontAndSize": "Font & Size",
+        "colors": "Colors",
+        "textStyle": "Text Style",
+        "effects": "Effects",
+        "videoSettings": "Video Settings"
       }
     }
   },
   "login": {
-    "title": "Connexion",
+    "title": "Login",
     "email": "Email",
-    "password": "Mot de passe",
-    "submit": "Se connecter",
-    "forgotPassword": "Mot de passe oublié ?",
-    "register": "S'inscrire",
-    "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "login": "Se connecter"
+    "password": "Password",
+    "submit": "Login",
+    "forgotPassword": "Forgot password?",
+    "register": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login"
   },
   "register": {
-    "title": "Inscription",
-    "notice": "Veuillez noter que l'inscription est actuellement désactivée.",
-    "firstname": "Prénom",
-    "lastname": "Nom",
+    "title": "Register",
+    "notice": "Please note that the registration is currently disabled.",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
     "email": "Email",
-    "password": "Mot de passe",
-    "submitDisabled": "Soumettre",
-    "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "login": "Se connecter"
+    "password": "Password",
+    "submitDisabled": "Submit",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login"
   }
 }

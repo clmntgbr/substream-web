@@ -317,7 +317,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                 <p
                   className="text-center px-4 max-w-[90%]"
                   style={{
-                    fontFamily: subtitleFont,
+                    fontFamily: `"${subtitleFont}"`,
                     fontSize: `${subtitleSize * 0.8}px`,
                     color: subtitleColor,
                     fontWeight: subtitleBold ? "bold" : "normal",

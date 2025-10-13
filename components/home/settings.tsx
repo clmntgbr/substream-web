@@ -1,9 +1,9 @@
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
@@ -86,19 +86,39 @@ export const Settings = ({
                 <FieldSet>
                   <FieldLegend>{t.home.preview.settings.fontAndSize}</FieldLegend>
                   <FieldGroup>
-                    <Field>
-                      <FieldTitle>{t.home.preview.settings.font}</FieldTitle>
-                      <Select value={subtitleFont} onValueChange={(value) => setSubtitleFont(value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t.home.preview.settings.font} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Arial">{t.home.preview.settings.arial}</SelectItem>
-                          <SelectItem value="Times New Roman">{t.home.preview.settings.timesNewRoman}</SelectItem>
-                          <SelectItem value="Courier New">{t.home.preview.settings.courierNew}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
+                    <FieldGroup>
+                      <FieldSet>
+                        <RadioGroup defaultValue="Arial" onValueChange={(value) => setSubtitleFont(value)}>
+                          <FieldLabel htmlFor="arial">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.arial}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.arialDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="Arial" id="arial" />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="timesNewRoman">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.timesNewRoman}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.timesNewRomanDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="Times New Roman" id="timesNewRoman" />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="courierNew">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.courierNew}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.courierNewDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="Courier New" id="courierNew" />
+                            </Field>
+                          </FieldLabel>
+                        </RadioGroup>
+                      </FieldSet>
+                    </FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.size}</FieldTitle>
                       <FieldDescription>
@@ -212,19 +232,39 @@ export const Settings = ({
                 <FieldSet>
                   <FieldLegend>{t.home.preview.settings.videoSettings}</FieldLegend>
                   <FieldGroup>
-                    <Field>
-                      <FieldTitle>{t.home.preview.settings.format}</FieldTitle>
-                      <Select value={format} onValueChange={(value) => setFormat(value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t.home.preview.settings.format} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="zoomed_916">{t.home.preview.settings.zoomed_916}</SelectItem>
-                          <SelectItem value="normal_916_with_borders">{t.home.preview.settings.normal_916_with_borders}</SelectItem>
-                          <SelectItem value="original">{t.home.preview.settings.original}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
+                    <FieldGroup>
+                      <FieldSet>
+                        <RadioGroup defaultValue="original" onValueChange={(value) => setFormat(value)}>
+                          <FieldLabel htmlFor="original">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.original}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.originalDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="original" id="original" />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="zoomed_916">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.zoomed_916}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.zoomed_916Description}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="zoomed_916" id="zoomed_916" />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="normal_916_with_borders">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.normal_916_with_borders}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" />
+                            </Field>
+                          </FieldLabel>
+                        </RadioGroup>
+                      </FieldSet>
+                    </FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.chunkNumber}</FieldTitle>
                       <FieldDescription>
