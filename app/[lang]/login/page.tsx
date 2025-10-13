@@ -42,7 +42,7 @@ export default function LoginPage() {
           <CardTitle className="text-2xl font-bold">{t.login.title}</CardTitle>
           <CardDescription>{t.login.title}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shadow-none">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">{t.login.email}</Label>

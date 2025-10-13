@@ -1,8 +1,9 @@
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldSet, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
 import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
@@ -78,11 +79,12 @@ export const Settings = ({
           <SheetDescription>{t.home.preview.settings.description}</SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-6 py-4 px-4 overflow-y-auto flex-1">
-          <div className="w-full max-w-md">
-            <form>
-              <FieldGroup>
+        <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
+          <div className="w-full max-w-md space-y-4">
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
                 <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.fontAndSize}</FieldLegend>
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.font}</FieldTitle>
@@ -111,6 +113,16 @@ export const Settings = ({
                         className="mt-2 w-full"
                       />
                     </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.colors}</FieldLegend>
+                  <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
                       <ColorPicker background={subtitleColor} setBackground={setSubtitleColor} />
@@ -123,6 +135,16 @@ export const Settings = ({
                       <FieldTitle>{t.home.preview.settings.shadowColor}</FieldTitle>
                       <ColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} />
                     </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.textStyle}</FieldLegend>
+                  <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
@@ -144,6 +166,15 @@ export const Settings = ({
                       </FieldContent>
                       <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} />
                     </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.effects}</FieldLegend>
+                  <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.outlineThickness}</FieldTitle>
                       <FieldDescription>
@@ -172,6 +203,15 @@ export const Settings = ({
                         className="mt-2 w-full"
                       />
                     </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.videoSettings}</FieldLegend>
+                  <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.format}</FieldTitle>
                       <Select value={format} onValueChange={(value) => setFormat(value)}>
@@ -219,8 +259,8 @@ export const Settings = ({
                     </Field>
                   </FieldGroup>
                 </FieldSet>
-              </FieldGroup>
-            </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
