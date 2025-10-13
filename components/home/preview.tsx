@@ -4,6 +4,7 @@ import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -48,6 +49,22 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const [format, setFormat] = useState("original");
   const [chunkNumber, setChunkNumber] = useState(2);
   const [yAxisAlignment, setYAxisAlignment] = useState(0);
+
+  useHotkeys("meta+e", () => {
+    if (url || file) {
+      handleProcess();
+    }
+  });
+
+  useHotkeys("meta+j", () => {
+    if (url || file) {
+      if (isSettingsOpen) {
+        setIsSettingsOpen(false);
+      } else {
+        setIsSettingsOpen(true);
+      }
+    }
+  });
 
   useEffect(() => {
     if (url) {
@@ -323,12 +340,12 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                   <SettingsIcon className="h-3 w-3 mr-1" />
                   {t.home.preview.settings.settings}
                   <KbdGroup>
-                    <Kbd>Ctrl + s</Kbd>
+                    <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
                 </Button>
                 <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup>
-                    <Kbd>Ctrl + p</Kbd>
+                    <Kbd>⌘ + e</Kbd>
                   </KbdGroup>
                   {t.home.preview.settings.process}
                   {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
