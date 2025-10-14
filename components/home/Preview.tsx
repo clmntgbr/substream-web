@@ -27,7 +27,6 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
 
   const [isUploading, setIsUploading] = useState(false);
   const [duration, setDuration] = useState<string>("--:--");
-  const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [fileSize, setFileSize] = useState<string>("-- MB");
   const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState<string>("");
@@ -97,7 +96,6 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           ? `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
           : `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
-      setDurationSeconds(totalSeconds);
       setDuration(formattedDuration);
 
       const randomTime = video.duration * (0.1 + Math.random() * 0.8);
