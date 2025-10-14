@@ -3,24 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "@/lib/use-translations";
 import { cn } from "@/lib/utils";
 import { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
-import * as React from "react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
   title?: string;
   options: {
-    label: string;
     value: string;
-    icon?: React.ComponentType<{ className?: string }>;
   }[];
 }
 
 export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const t = useTranslations();
 
   return (
     <Popover>
@@ -44,7 +42,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
-                        {option.label}
+                        {t.stream.status[option.value as keyof typeof t.stream.status]}
                       </Badge>
                     ))
                 )}
@@ -82,13 +80,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                     >
                       <Check className="text-primary-foreground size-3.5" />
                     </div>
-                    {option.icon && <option.icon className="text-muted-foreground size-4" />}
-                    <span>{option.label}</span>
-                    {facets?.get(option.value) && (
-                      <span className="text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs">
-                        {facets.get(option.value)}
-                      </span>
-                    )}
+                    <span>{t.stream.status[option.value as keyof typeof t.stream.status]}</span>
                   </CommandItem>
                 );
               })}

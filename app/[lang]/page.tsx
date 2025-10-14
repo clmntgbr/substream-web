@@ -1,6 +1,6 @@
 "use client";
 import { Header } from "@/components/header";
-import { Columns } from "@/components/home/queue/Columns";
+import { getColumns } from "@/components/home/queue/Columns";
 import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/upload";
@@ -8,13 +8,17 @@ import { SidebarComponent } from "@/components/sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
+import { useTranslations } from "@/lib/use-translations";
 import { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 const HomePage = () => {
   const { user } = useAuth();
   const { state, getStreams, pageCount } = useStreams();
+  const t = useTranslations();
   const currentParamsRef = useRef<StreamQueryParams>({});
+
+  const columns = useMemo(() => getColumns(t), [t]);
 
   const handlePaginationChange = useCallback(
     (pagination: PaginationState) => {
@@ -87,13 +91,12 @@ const HomePage = () => {
               <Upload />
               <DataTable
                 data={state.streams}
-                columns={Columns}
+                columns={columns}
                 serverSide
                 pageCount={pageCount}
                 onPaginationChange={handlePaginationChange}
                 onSortingChange={handleSortingChange}
                 onColumnFiltersChange={handleColumnFiltersChange}
-                isLoading={state.isLoading}
                 ToolbarComponent={DataTableToolbar}
               />
             </div>

@@ -9,7 +9,13 @@ import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { DataTableRowActions } from "./DataTableRowActions";
 
-export const Columns: ColumnDef<Stream>[] = [
+type Translations = {
+  stream: {
+    status: Record<string, string>;
+  };
+};
+
+export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
   {
     id: "select",
     header: () => <></>,
@@ -37,16 +43,19 @@ export const Columns: ColumnDef<Stream>[] = [
 
       let icon = null;
       let variant: "default" | "secondary" | "destructive" | "outline" = "default";
+      let className = "";
 
       if (stream.isCompleted) {
-        icon = <CheckCircle2 className="size-4 text-green-500" />;
-        variant = "outline";
+        icon = <CheckCircle2 className="size-4 text-emerald-400" />;
+        variant = "secondary";
+        className = "bg-emerald-400";
       } else if (stream.isFailed) {
         icon = <XCircle className="size-4 text-red-500" />;
         variant = "destructive";
       } else if (stream.isProcessing) {
-        icon = <Loader2 className="size-4 animate-spin text-blue-500" />;
+        icon = <Loader2 className="size-4 animate-spin text-orange-400" />;
         variant = "secondary";
+        className = "bg-orange-300";
       } else {
         icon = <Clock className="size-4 text-gray-500" />;
         variant = "outline";
@@ -55,7 +64,9 @@ export const Columns: ColumnDef<Stream>[] = [
       return (
         <div className="flex items-center gap-2">
           {icon}
-          <Badge variant={variant}>{status}</Badge>
+          <Badge variant={variant} className={className}>
+            {t.stream.status[status as keyof typeof t.stream.status] || status}
+          </Badge>
         </div>
       );
     },

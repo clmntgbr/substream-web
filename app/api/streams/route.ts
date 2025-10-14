@@ -13,7 +13,6 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get query parameters from URL
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || "1";
     const sortBy = searchParams.get("sortBy") || "";
@@ -21,22 +20,14 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
     const status = searchParams.get("status") || "";
     const search = searchParams.get("search") || "";
 
-    // Build query parameters for backend API
-    const queryParams = new URLSearchParams({
-      include_deleted: "false",
-      page,
-    });
+    const queryParams = new URLSearchParams({ page });
 
     if (sortBy) {
       queryParams.append(`order[${sortBy}]`, sortOrder);
     }
 
-    // Add status filter if specified
-    if (status) {
-      queryParams.append("status", status);
-    }
+    queryParams.append("search[status]", status || "!deleted");
 
-    // Add search filter if specified
     if (search) {
       queryParams.append("search[originalFileName]", search);
     }
@@ -58,18 +49,14 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
 
     const data = (await backendResponse.json()) as HydraResponse<Stream>;
 
-    // Extract last page number from view if available, otherwise calculate it
     let calculatedPageCount = 1;
 
     if (data.view?.last) {
-      // Try to extract page number from last URL
       const lastPageMatch = data.view.last.match(/page=(\d+)/);
       if (lastPageMatch) {
         calculatedPageCount = parseInt(lastPageMatch[1]);
       }
     } else if (data.totalItems > 0) {
-      // Fallback: estimate based on current page data
-      // Default backend page size is 20
       const defaultPageSize = 20;
       calculatedPageCount = Math.ceil(data.totalItems / defaultPageSize);
     }

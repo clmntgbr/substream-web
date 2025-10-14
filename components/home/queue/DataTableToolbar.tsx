@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
+import { Statuses } from "./Statuses";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -34,6 +36,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           onChange={(event) => handleSearchChange(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
+        {table.getColumn("status") && <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={Statuses} />}
         {isFiltered && (
           <Button
             variant="ghost"
