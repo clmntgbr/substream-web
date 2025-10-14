@@ -6,10 +6,10 @@ import { Stream } from "@/lib/stream/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableColumnHeader } from "./DataTableColumnHeader";
+import { DataTableRowActions } from "./DataTableRowActions";
 
-export const columns: ColumnDef<Stream>[] = [
+export const Columns: ColumnDef<Stream>[] = [
   {
     id: "select",
     header: () => <></>,

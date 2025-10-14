@@ -1,8 +1,8 @@
 "use client";
 import { Header } from "@/components/header";
-import { columns } from "@/components/home/queue/columns";
-import { DataTable } from "@/components/home/queue/data-table";
-import { DataTableToolbar } from "@/components/home/queue/data-table-toolbar";
+import { Columns } from "@/components/home/queue/ddd";
+import { DataTable } from "@/components/home/queue/DataTable";
+import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/upload";
 import { SidebarComponent } from "@/components/sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -92,7 +92,7 @@ const HomePage = () => {
               <Upload />
               <DataTable
                 data={state.streams}
-                columns={columns}
+                columns={Columns}
                 serverSide
                 pageCount={pageCount}
                 totalItems={totalItems}

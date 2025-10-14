@@ -20,8 +20,8 @@ import * as React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Table as TableType } from "@tanstack/react-table";
 
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTablePagination } from "./DataTablePagination";
+import { DataTableToolbar } from "./DataTableToolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
