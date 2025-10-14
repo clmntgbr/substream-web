@@ -6,7 +6,7 @@ export interface Stream {
   fileName: string;
   originalFileName: string;
   mimeType: string;
-  sizeInMegabytes: number;
+  sizeInMegabytes: number | null;
   duration: string;
   audioFiles: string[];
   status: string;
