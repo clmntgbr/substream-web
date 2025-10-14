@@ -5,6 +5,7 @@ export const initialState: StreamState = {
   streams: [],
   currentStream: null,
   isLoading: false,
+  isRefreshing: false,
   error: null,
   downloadingIds: new Set(),
 };
@@ -60,11 +61,17 @@ export function streamReducer(
         ...state,
         isLoading: action.payload,
       };
+    case "SET_REFRESHING":
+      return {
+        ...state,
+        isRefreshing: action.payload,
+      };
     case "SET_ERROR":
       return {
         ...state,
         error: action.payload,
         isLoading: false,
+        isRefreshing: false,
       };
     case "SET_DOWNLOADING_START":
       return {
