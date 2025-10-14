@@ -26,15 +26,12 @@ import { DataTableToolbar } from "./DataTableToolbar";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  // Server-side pagination props
   serverSide?: boolean;
   pageCount?: number;
-  totalItems?: number;
   onPaginationChange?: (pagination: PaginationState) => void;
   onSortingChange?: (sorting: SortingState) => void;
   onColumnFiltersChange?: (filters: ColumnFiltersState) => void;
   isLoading?: boolean;
-  // Custom toolbar component
   ToolbarComponent?: React.ComponentType<{ table: TableType<TData> }>;
 }
 
@@ -43,7 +40,6 @@ export function DataTable<TData, TValue>({
   data,
   serverSide = false,
   pageCount = 0,
-  totalItems = 0,
   onPaginationChange,
   onSortingChange: onSortingChangeProp,
   onColumnFiltersChange: onColumnFiltersChangeProp,
@@ -59,7 +55,6 @@ export function DataTable<TData, TValue>({
     pageSize: 20,
   });
 
-  // Handle sorting changes
   const handleSortingChange = React.useCallback(
     (updaterOrValue: SortingState | ((old: SortingState) => SortingState)) => {
       const newSorting = typeof updaterOrValue === "function" ? updaterOrValue(sorting) : updaterOrValue;
@@ -71,21 +66,18 @@ export function DataTable<TData, TValue>({
     [sorting, serverSide, onSortingChangeProp]
   );
 
-  // Handle column filters changes
   const handleColumnFiltersChange = React.useCallback(
     (updaterOrValue: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
       const newFilters = typeof updaterOrValue === "function" ? updaterOrValue(columnFilters) : updaterOrValue;
       setColumnFilters(newFilters);
       if (serverSide && onColumnFiltersChangeProp) {
         onColumnFiltersChangeProp(newFilters);
-        // Reset to first page when filters change
         setPagination((old) => ({ ...old, pageIndex: 0 }));
       }
     },
     [columnFilters, serverSide, onColumnFiltersChangeProp]
   );
 
-  // Handle pagination changes
   const handlePaginationChange = React.useCallback(
     (updaterOrValue: PaginationState | ((old: PaginationState) => PaginationState)) => {
       const newPagination = typeof updaterOrValue === "function" ? updaterOrValue(pagination) : updaterOrValue;
@@ -171,7 +163,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} totalItems={serverSide ? totalItems : undefined} />
+      <DataTablePagination table={table} />
     </div>
   );
 }

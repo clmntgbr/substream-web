@@ -18,11 +18,9 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
 
-    // Only trigger search if 3+ characters or empty (to clear)
     if (value.length >= 3 || value.length === 0) {
       table.getColumn("originalFileName")?.setFilterValue(value);
     } else if (value.length < 3 && table.getColumn("originalFileName")?.getFilterValue()) {
-      // Clear filter if user deletes to less than 3 chars
       table.getColumn("originalFileName")?.setFilterValue("");
     }
   };

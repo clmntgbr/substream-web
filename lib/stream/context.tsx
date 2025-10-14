@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
 
-// Pagination and filtering parameters
 export interface StreamQueryParams {
   page?: number;
   sortBy?: string;
@@ -15,7 +14,6 @@ export interface StreamQueryParams {
   search?: string;
 }
 
-// Context type
 interface StreamContextType {
   state: StreamState;
   getStreams: (params?: StreamQueryParams, isBackgroundRefresh?: boolean) => Promise<void>;
@@ -30,10 +28,8 @@ interface StreamContextType {
   pageCount: number;
 }
 
-// Create context
 const StreamContext = createContext<StreamContextType | undefined>(undefined);
 
-// Provider component
 export function StreamProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(streamReducer, initialState);
   const [totalItems, setTotalItems] = React.useState(0);
@@ -47,7 +43,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "SET_LOADING", payload: true });
     }
     try {
-      // Build query parameters
       const queryParams = new URLSearchParams();
       if (params?.page) {
         queryParams.append("page", params.page.toString());
@@ -104,7 +99,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Get single stream
   const getStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
@@ -133,7 +127,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Create stream
   const createStream = useCallback(async (streamData: Partial<Stream>) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
@@ -169,7 +162,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Update stream
   const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
@@ -202,7 +194,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Delete stream
   const deleteStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
@@ -230,7 +221,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Download stream
   const downloadStream = useCallback(async (id: string, filename: string) => {
     dispatch({ type: "SET_DOWNLOADING_START", payload: id });
 
@@ -265,7 +255,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const contentDisposition = response.headers.get("Content-Disposition");
       const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
 
-      // Create blob and download
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -295,7 +284,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Refresh streams
   const refreshStreams = useCallback(
     async (params?: StreamQueryParams) => {
       await getStreams(params);
@@ -303,9 +291,8 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     [getStreams]
   );
 
-  // Load streams on mount
   useEffect(() => {
-    getStreams(); // Initial load
+    getStreams();
   }, [getStreams]);
 
   return (
@@ -329,7 +316,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Custom hook to use the stream context
 export function useStreams() {
   const context = useContext(StreamContext);
   if (context === undefined) {

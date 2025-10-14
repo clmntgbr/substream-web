@@ -27,10 +27,8 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
       page,
     });
 
-    // Add sorting if specified
     if (sortBy) {
-      const orderParam = sortOrder === "asc" ? sortBy : `-${sortBy}`;
-      queryParams.append("order[createdAt]", orderParam);
+      queryParams.append(`order[${sortBy}]`, sortOrder);
     }
 
     // Add status filter if specified

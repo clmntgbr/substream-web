@@ -13,10 +13,9 @@ import { useCallback, useEffect, useRef } from "react";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const { state, getStreams, totalItems, pageCount } = useStreams();
+  const { state, getStreams, pageCount } = useStreams();
   const currentParamsRef = useRef<StreamQueryParams>({});
 
-  // Handle pagination changes
   const handlePaginationChange = useCallback(
     (pagination: PaginationState) => {
       const params = {
@@ -29,7 +28,6 @@ const HomePage = () => {
     [getStreams]
   );
 
-  // Handle sorting changes
   const handleSortingChange = useCallback(
     (sorting: SortingState) => {
       const params = { ...currentParamsRef.current };
@@ -47,12 +45,10 @@ const HomePage = () => {
     [getStreams]
   );
 
-  // Handle filter changes
   const handleColumnFiltersChange = useCallback(
     (filters: ColumnFiltersState) => {
       const params = { ...currentParamsRef.current };
 
-      // Reset search and status first
       delete params.search;
       delete params.status;
 
@@ -70,10 +66,9 @@ const HomePage = () => {
     [getStreams]
   );
 
-  // Auto-refresh every 10 seconds with current params
   useEffect(() => {
     const interval = setInterval(() => {
-      getStreams(currentParamsRef.current, true); // Background refresh with current params
+      getStreams(currentParamsRef.current, true);
     }, 10000);
 
     return () => clearInterval(interval);
@@ -95,7 +90,6 @@ const HomePage = () => {
                 columns={Columns}
                 serverSide
                 pageCount={pageCount}
-                totalItems={totalItems}
                 onPaginationChange={handlePaginationChange}
                 onSortingChange={handleSortingChange}
                 onColumnFiltersChange={handleColumnFiltersChange}
