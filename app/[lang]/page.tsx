@@ -1,6 +1,6 @@
 "use client";
 import { Header } from "@/components/header";
-import { Columns } from "@/components/home/queue/ddd";
+import { Columns } from "@/components/home/queue/Columns";
 import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/upload";
