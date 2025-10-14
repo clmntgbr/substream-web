@@ -2,11 +2,11 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLeg
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
 import { NumberInput } from "../misc/NumberInput";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Switch } from "../ui/switch";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 
 interface SettingsProps {
   open: boolean;
@@ -88,7 +88,7 @@ export const Settings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup defaultValue="Arial" onValueChange={(value) => setSubtitleFont(value)}>
+                        <RadioGroup defaultValue={subtitleFont} onValueChange={(value) => setSubtitleFont(value)}>
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
@@ -228,7 +228,7 @@ export const Settings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup defaultValue="original" onValueChange={(value) => setFormat(value)}>
+                        <RadioGroup defaultValue={format} onValueChange={(value) => setFormat(value)}>
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>

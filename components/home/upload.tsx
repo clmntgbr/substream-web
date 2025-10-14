@@ -1,25 +1,14 @@
+import { Preview } from "@/components/home/Preview";
+import { YoutubeUrlSchema } from "@/components/misc/YoutubeUrlSchema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslations } from "@/lib/use-translations";
 import { LinkIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
-import { Spinner } from "../ui/spinner";
-import Preview from "./preview";
-
-const youtubeUrlSchema = z
-  .string()
-  .url()
-  .refine(
-    (url) => {
-      const youtubeRegex = /^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/).+/i;
-      return youtubeRegex.test(url);
-    },
-    { message: "Invalid YouTube URL" }
-  );
 
 export const Upload = () => {
   const t = useTranslations();
@@ -124,7 +113,7 @@ export const Upload = () => {
                           onClick={() => {
                             setIsProcessing(true);
                             try {
-                              youtubeUrlSchema.parse(urlInput);
+                              YoutubeUrlSchema.parse(urlInput);
                               setUrl(urlInput);
                               setIsPreviewOpen(true);
                               setUrlInput("");

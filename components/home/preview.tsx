@@ -1,3 +1,8 @@
+import { Settings } from "@/components/home/Settings";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Option, useOptions } from "@/lib/option";
 import { useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
@@ -6,11 +11,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Kbd, KbdGroup } from "../ui/kbd";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
-import Settings from "./settings";
 
 interface PreviewProps {
   open: boolean;

@@ -1,10 +1,10 @@
 "use client";
-import { Header } from "@/components/header";
+import { Header } from "@/components/Header";
 import { getColumns } from "@/components/home/queue/Columns";
 import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
-import Upload from "@/components/home/upload";
-import { SidebarComponent } from "@/components/sidebar";
+import Upload from "@/components/home/Upload";
+import { SidebarComponent } from "@/components/Sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
