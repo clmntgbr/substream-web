@@ -20,7 +20,6 @@ export interface Stream {
   isProcessing: boolean;
   isCompleted: boolean;
   isFailed: boolean;
-  processingTimeEstimate: number;
 }
 
 export interface StreamState {
