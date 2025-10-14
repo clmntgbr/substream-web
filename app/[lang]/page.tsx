@@ -9,16 +9,22 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
 import { useTranslations } from "@/lib/use-translations";
-import { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 const HomePage = () => {
   const { user } = useAuth();
   const { state, getStreams, pageCount } = useStreams();
+  const { lang } = useParams();
   const t = useTranslations();
   const currentParamsRef = useRef<StreamQueryParams>({});
 
-  const columns = useMemo(() => getColumns(t), [t]);
+  const columns = useMemo(() => getColumns(t, lang as string), [t, lang]);
 
   const handlePaginationChange = useCallback(
     (pagination: PaginationState) => {
@@ -29,7 +35,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams]
+    [getStreams],
   );
 
   const handleSortingChange = useCallback(
@@ -46,7 +52,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams]
+    [getStreams],
   );
 
   const handleColumnFiltersChange = useCallback(
@@ -67,7 +73,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams]
+    [getStreams],
   );
 
   useEffect(() => {

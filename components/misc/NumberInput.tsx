@@ -15,7 +15,16 @@ interface NumberInputProps {
   unit?: string;
 }
 
-export const NumberInput = ({ value, onChange, min = 1, max = 100, step = 1, label, description, unit = "px" }: NumberInputProps) => {
+export const NumberInput = ({
+  value,
+  onChange,
+  min = 1,
+  max = 100,
+  step = 1,
+  label,
+  description,
+  unit = "px",
+}: NumberInputProps) => {
   const [inputValue, setInputValue] = useState(value.toString());
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,8 +65,14 @@ export const NumberInput = ({ value, onChange, min = 1, max = 100, step = 1, lab
     <div className="rounded-xl border border-border bg-card p-4 transition-all shadow-none">
       <div className="flex items-center justify-between gap-4 shadow-none">
         <div className="flex-1">
-          {label && <label className="text-sm font-semibold text-foreground">{label}</label>}
-          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+          {label && (
+            <label className="text-sm font-semibold text-foreground">
+              {label}
+            </label>
+          )}
+          {description && (
+            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -83,7 +98,9 @@ export const NumberInput = ({ value, onChange, min = 1, max = 100, step = 1, lab
               step={step}
               className="h-8 w-24 rounded-lg border-2 text-center font-semibold tabular-nums transition-all focus:scale-105 focus:border-primary cursor-pointer"
             />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">{unit}</span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
+              {unit}
+            </span>
           </div>
 
           <Button
@@ -99,7 +116,14 @@ export const NumberInput = ({ value, onChange, min = 1, max = 100, step = 1, lab
       </div>
 
       <div className="relative pt-4">
-        <Slider value={[value]} onValueChange={handleSliderChange} max={max} min={min} step={step} className="w-full cursor-pointer" />
+        <Slider
+          value={[value]}
+          onValueChange={handleSliderChange}
+          max={max}
+          min={min}
+          step={step}
+          className="w-full cursor-pointer"
+        />
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>
             {min}

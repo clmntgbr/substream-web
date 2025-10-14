@@ -1,7 +1,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "@/lib/use-translations";
 import { cn } from "@/lib/utils";
@@ -16,7 +28,11 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[];
 }
 
-export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
+export function DataTableFacetedFilter<TData, TValue>({
+  column,
+  title,
+  options,
+}: DataTableFacetedFilterProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[]);
   const t = useTranslations();
 
@@ -29,20 +45,34 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal lg:hidden"
+              >
                 {selectedValues.size}
               </Badge>
               <div className="hidden gap-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-normal"
+                  >
                     {selectedValues.size} selected
                   </Badge>
                 ) : (
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
-                        {t.stream.status[option.value as keyof typeof t.stream.status]}
+                      <Badge
+                        variant="secondary"
+                        key={option.value}
+                        className="rounded-sm px-1 font-normal"
+                      >
+                        {
+                          t.stream.status[
+                            option.value as keyof typeof t.stream.status
+                          ]
+                        }
                       </Badge>
                     ))
                 )}
@@ -69,18 +99,28 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                         selectedValues.add(option.value);
                       }
                       const filterValues = Array.from(selectedValues);
-                      column?.setFilterValue(filterValues.length ? filterValues : undefined);
+                      column?.setFilterValue(
+                        filterValues.length ? filterValues : undefined,
+                      );
                     }}
                   >
                     <div
                       className={cn(
                         "flex size-4 items-center justify-center rounded-[4px] border",
-                        isSelected ? "bg-primary border-primary text-primary-foreground" : "border-input [&_svg]:invisible"
+                        isSelected
+                          ? "bg-primary border-primary text-primary-foreground"
+                          : "border-input [&_svg]:invisible",
                       )}
                     >
                       <Check className="text-primary-foreground size-3.5" />
                     </div>
-                    <span>{t.stream.status[option.value as keyof typeof t.stream.status]}</span>
+                    <span>
+                      {
+                        t.stream.status[
+                          option.value as keyof typeof t.stream.status
+                        ]
+                      }
+                    </span>
                   </CommandItem>
                 );
               })}
@@ -89,7 +129,10 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
               <>
                 <CommandSeparator />
                 <CommandGroup>
-                  <CommandItem onSelect={() => column?.setFilterValue(undefined)} className="justify-center text-center">
+                  <CommandItem
+                    onSelect={() => column?.setFilterValue(undefined)}
+                    className="justify-center text-center"
+                  >
                     Clear filters
                   </CommandItem>
                 </CommandGroup>

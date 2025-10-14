@@ -13,9 +13,8 @@ export interface JWTPayload {
 
 export function decodeToken(token: string): JWTPayload | null {
   try {
-    // Decode without verification since token comes from external API
     return jwt.decode(token) as JWTPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -28,7 +27,7 @@ export function verifyToken(token: string, secret?: string): JWTPayload | null {
 
   try {
     return jwt.verify(token, secret) as JWTPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

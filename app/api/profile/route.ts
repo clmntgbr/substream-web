@@ -1,5 +1,5 @@
+import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
 import { NextResponse } from "next/server";
-import { authMiddleware, AuthenticatedRequest } from "@/lib/middleware";
 
 async function handler(req: AuthenticatedRequest) {
   try {
@@ -9,7 +9,6 @@ async function handler(req: AuthenticatedRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Return the user data from the JWT token
     return NextResponse.json({
       user: {
         id: user.userId || user.sub,
@@ -18,7 +17,7 @@ async function handler(req: AuthenticatedRequest) {
         ...user,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to get profile" },
       { status: 500 },

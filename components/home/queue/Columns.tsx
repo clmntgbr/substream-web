@@ -1,10 +1,16 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Progress } from "@/components/ui/progress";
 import { Stream } from "@/lib/stream/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
+import { enUS, fr } from "date-fns/locale";
 import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { DataTableRowActions } from "./DataTableRowActions";
@@ -15,7 +21,14 @@ type Translations = {
   };
 };
 
-export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
+const getLocale = (lang?: string) => {
+  return lang === "fr" ? fr : enUS;
+};
+
+export const getColumns = (
+  t: Translations,
+  lang?: string,
+): ColumnDef<Stream>[] => [
   {
     id: "select",
     header: () => <></>,
@@ -25,24 +38,58 @@ export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
   },
   {
     accessorKey: "originalFileName",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
     cell: ({ row }) => {
       return (
-        <div className="flex gap-2 items-center">
-          <span className="max-w-[300px] truncate font-medium">{row.getValue("originalFileName")}</span>
-        </div>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <span className="max-w-[300px] truncate font-medium hover:underline cursor-pointer">
+              {row.getValue("originalFileName")}
+            </span>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80">
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">
+                {row.getValue("originalFileName")}
+              </h4>
+              <div className="flex gap-2">
+                {row.original.mimeType && (
+                  <Badge variant="outline">{row.original.mimeType}</Badge>
+                )}
+                {row.original.sizeInMegabytes && (
+                  <Badge variant="outline">
+                    {row.original.sizeInMegabytes.toFixed(2)} MB
+                  </Badge>
+                )}
+                {row.original.duration && (
+                  <Badge variant="outline">{row.original.duration}</Badge>
+                )}
+              </div>
+              <div className="text-muted-foreground text-xs">
+                {format(new Date(row.original.createdAt), "PPp", {
+                  locale: getLocale(lang),
+                })}
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
       );
     },
   },
   {
     accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => {
       const stream = row.original;
       const status = stream.status;
 
       let icon = null;
-      let variant: "default" | "secondary" | "destructive" | "outline" = "default";
+      let variant: "default" | "secondary" | "destructive" | "outline" =
+        "default";
       let className = "";
 
       if (stream.isCompleted) {
@@ -76,7 +123,9 @@ export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
   },
   {
     accessorKey: "progress",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Progress" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Progress" />
+    ),
     cell: ({ row }) => {
       const stream = row.original;
       const progress = stream.progress || 0;
@@ -84,7 +133,9 @@ export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
       return (
         <div className="flex items-center gap-2 w-[150px]">
           <Progress value={progress} className="h-2" />
-          <span className="text-xs text-muted-foreground w-[40px]">{Math.round(progress)}%</span>
+          <span className="text-xs text-muted-foreground w-[40px]">
+            {Math.round(progress)}%
+          </span>
         </div>
       );
     },
@@ -92,7 +143,9 @@ export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
   },
   {
     accessorKey: "sizeInMegabytes",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Size" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Size" />
+    ),
     cell: ({ row }) => {
       const size = row.getValue("sizeInMegabytes") as number;
       return <div className="w-[80px]">{size.toFixed(2)} MB</div>;
@@ -100,10 +153,16 @@ export const getColumns = (t: Translations): ColumnDef<Stream>[] => [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created" />
+    ),
     cell: ({ row }) => {
       const createdAt = row.getValue("createdAt") as string;
-      return <div className="w-[120px] text-sm text-muted-foreground">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</div>;
+      return (
+        <div className="w-[140px] text-sm text-muted-foreground">
+          {format(new Date(createdAt), "PP p", { locale: getLocale(lang) })}
+        </div>
+      );
     },
   },
   {
