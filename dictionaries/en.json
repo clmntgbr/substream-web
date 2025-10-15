@@ -6,32 +6,44 @@
       "uploading": "Uploading",
       "extracting_sound": "Extracting",
       "extracting_sound_completed": "Extracted",
-      "extracting_sound_failed": "Extract Failed",
-      "generating_subtitle": "Generating",
-      "generating_subtitle_completed": "Generated",
-      "generating_subtitle_failed": "Generate Failed",
-      "transforming_subtitle": "Transforming",
-      "transforming_subtitle_completed": "Transformed",
-      "transforming_subtitle_failed": "Transform Failed",
+      "extracting_sound_failed": "Failed",
+      "generating_subtitle": "Generating SRT",
+      "generating_subtitle_completed": "SRT generated",
+      "generating_subtitle_failed": "Failed",
+      "transforming_subtitle": "Transforming SRT",
+      "transforming_subtitle_completed": "SRT transformed",
+      "transforming_subtitle_failed": "Failed",
       "resizing_video": "Resizing",
       "resizing_video_completed": "Resized",
-      "resizing_video_failed": "Resize Failed",
+      "resizing_video_failed": "Failed",
       "uploading_video": "Uploading",
       "uploading_video_completed": "Uploaded",
-      "uploading_video_failed": "Upload Failed",
+      "uploading_video_failed": "Failed",
       "embedding_video": "Embedding",
       "embedding_video_completed": "Embedded",
-      "embedding_video_failed": "Embed Failed",
+      "embedding_video_failed": "Failed",
       "chunking_video": "Chunking",
       "chunking_video_completed": "Chunked",
-      "chunking_video_failed": "Chunk Failed",
+      "chunking_video_failed": "Failed",
       "completed": "Finished",
       "failed": "Failed",
       "deleted": "Deleted",
-      "upload_failed": "Upload Failed"
+      "upload_failed": "Failed"
     }
   },
   "home": {
+    "queue": {
+      "options": {
+        "customizeColumns": "Customize Columns"
+      },
+      "columns": {
+        "originalFileName": "Name",
+        "status": "Status",
+        "progress": "Progress",
+        "sizeInMegabytes": "Size",
+        "createdAt": "Created At"
+      }
+    },
     "upload": {
       "tab": {
         "right": "Upload file",

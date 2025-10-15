@@ -9,11 +9,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
 import { useTranslations } from "@/lib/use-translations";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
+import { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -35,7 +31,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   const handleSortingChange = useCallback(
@@ -52,7 +48,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   const handleColumnFiltersChange = useCallback(
@@ -73,7 +69,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   useEffect(() => {

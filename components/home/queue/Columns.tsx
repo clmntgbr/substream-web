@@ -12,6 +12,11 @@ import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { DataTableRowActions } from "./DataTableRowActions";
 
 type Translations = {
+  home: {
+    queue: {
+      columns: Record<string, string>;
+    };
+  };
   stream: {
     status: Record<string, string>;
   };
@@ -31,12 +36,12 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
   },
   {
     accessorKey: "originalFileName",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t.home.queue.columns.originalFileName as string} />,
     cell: ({ row }) => {
       return (
         <HoverCard>
           <HoverCardTrigger asChild>
-            <span className="max-w-[300px] truncate font-medium hover:underline cursor-pointer">{row.getValue("originalFileName")}</span>
+            <p className="max-w-[400px] truncate font-medium hover:underline cursor-pointer">{row.getValue("originalFileName")}</p>
           </HoverCardTrigger>
           <HoverCardContent className="w-80">
             <div className="space-y-2">
@@ -59,7 +64,7 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
   },
   {
     accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t.home.queue.columns.status as string} />,
     cell: ({ row }) => {
       const stream = row.original;
       const status = stream.status;
@@ -76,9 +81,9 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
         icon = <XCircle className="size-4 text-red-500" />;
         variant = "destructive";
       } else if (stream.isProcessing) {
-        icon = <Loader2 className="size-4 animate-spin text-orange-400" />;
+        icon = <Loader2 className="size-4 animate-spin text-blue-400" />;
         variant = "secondary";
-        className = "bg-orange-300";
+        className = "bg-blue-300";
       } else {
         icon = <Clock className="size-4 text-gray-500" />;
         variant = "outline";
@@ -99,7 +104,7 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
   },
   {
     accessorKey: "progress",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Progress" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t.home.queue.columns.progress as string} />,
     cell: ({ row }) => {
       const stream = row.original;
       const progress = stream.progress || 0;
@@ -114,16 +119,17 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
     enableSorting: false,
   },
   {
-    accessorKey: "sizeInMegabytes",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Size" />,
+    id: "size",
+    accessorKey: "size",
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t.home.queue.columns.sizeInMegabytes as string} />,
     cell: ({ row }) => {
-      const size = row.getValue("sizeInMegabytes") as number | null;
+      const size = row.original.sizeInMegabytes || 0;
       return <div className="w-[80px]">{size ? size.toFixed(2) + " MB" : "--"}</div>;
     },
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t.home.queue.columns.createdAt as string} />,
     cell: ({ row }) => {
       const createdAt = row.getValue("createdAt") as string;
       return <div className="w-[140px] text-sm text-muted-foreground">{format(new Date(createdAt), "PP p", { locale: getLocale(lang) })}</div>;

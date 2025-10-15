@@ -26,6 +26,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const { getStreams } = useStreams();
 
   const [isUploading, setIsUploading] = useState(false);
+  const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
   const [fileSize, setFileSize] = useState<string>("-- MB");
   const [thumbnail, setThumbnail] = useState<string | null>(null);
@@ -96,6 +97,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           ? `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
           : `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
+      setDurationSeconds(totalSeconds);
       setDuration(formattedDuration);
 
       const randomTime = video.duration * (0.1 + Math.random() * 0.8);
@@ -196,6 +198,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         const formData = new FormData();
         formData.append("video", file as Blob);
         formData.append("optionId", option.id);
+        formData.append("duration", durationSeconds?.toString() || "");
 
         response = await fetch("/api/streams/video", {
           method: "POST",

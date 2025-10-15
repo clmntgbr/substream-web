@@ -32,25 +32,20 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
       queryParams.append("search[originalFileName]", search);
     }
 
-    const backendResponse = await fetch(
-      `${BACKEND_API_URL}/streams?${queryParams.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-          "Content-Type": "application/ld+json",
-        },
+    console.log(queryParams.toString());
+    const backendResponse = await fetch(`${BACKEND_API_URL}/streams?${queryParams.toString()}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        "Content-Type": "application/ld+json",
       },
-    );
+    });
 
     if (!backendResponse.ok) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as {
         error?: string;
       };
-      return NextResponse.json(
-        { error: errorData.error || "Failed to fetch streams" },
-        { status: backendResponse.status },
-      );
+      return NextResponse.json({ error: errorData.error || "Failed to fetch streams" }, { status: backendResponse.status });
     }
 
     const data = (await backendResponse.json()) as HydraResponse<Stream>;
@@ -75,10 +70,7 @@ async function getStreamsHandler(req: AuthenticatedRequest) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Failed to fetch streams" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch streams" }, { status: 500 });
   }
 }
 

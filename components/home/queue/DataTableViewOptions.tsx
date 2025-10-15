@@ -1,52 +1,35 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import { useTranslations } from "@/lib/use-translations";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Table } from "@tanstack/react-table";
-import { Settings2 } from "lucide-react";
+import { Columns3Cog } from "lucide-react";
 
-export function DataTableViewOptions<TData>({
-  table,
-}: {
-  table: Table<TData>;
-}) {
+export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) {
+  const t = useTranslations();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 lg:flex"
-        >
-          <Settings2 />
-          View
+        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
+          <Columns3Cog />
+          {t.home.queue.options.customizeColumns}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         {table
           .getAllColumns()
-          .filter(
-            (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide(),
-          )
+          .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize"
+                className="capitalize w-[300px]"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {t.home.queue.columns[column.id as keyof typeof t.home.queue.columns] as string}
               </DropdownMenuCheckboxItem>
             );
           })}

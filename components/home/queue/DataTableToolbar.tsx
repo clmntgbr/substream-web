@@ -13,9 +13,7 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({
-  table,
-}: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const [searchValue, setSearchValue] = useState("");
 
@@ -24,10 +22,7 @@ export function DataTableToolbar<TData>({
 
     if (value.length >= 3 || value.length === 0) {
       table.getColumn("originalFileName")?.setFilterValue(value);
-    } else if (
-      value.length < 3 &&
-      table.getColumn("originalFileName")?.getFilterValue()
-    ) {
+    } else if (value.length < 3 && table.getColumn("originalFileName")?.getFilterValue()) {
       table.getColumn("originalFileName")?.setFilterValue("");
     }
   };
@@ -41,13 +36,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) => handleSearchChange(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={Statuses}
-          />
-        )}
+        {table.getColumn("status") && <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={Statuses} />}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -62,7 +51,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-[300px]">
         <DataTableViewOptions table={table} />
       </div>
     </div>
