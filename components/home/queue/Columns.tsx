@@ -18,7 +18,7 @@ type Translations = {
     };
   };
   stream: {
-    status: Record<string, string>;
+    status: Record<string, { title: string; description: string }>;
   };
 };
 
@@ -89,13 +89,39 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
         variant = "outline";
       }
 
+      const statusTranslation = t.stream.status[status as keyof typeof t.stream.status];
+
       return (
-        <div className="flex items-center gap-2">
-          {icon}
-          <Badge variant={variant} className={className}>
-            {t.stream.status[status as keyof typeof t.stream.status] || status}
-          </Badge>
-        </div>
+        <>
+          {stream.isCompleted && (
+            <div className="flex items-center gap-2">
+              {icon}
+              <Badge variant={variant} className={className}>
+                {statusTranslation?.title || status}
+              </Badge>
+            </div>
+          )}
+          {(stream.isFailed || stream.isProcessing) && (
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <div className="flex items-center gap-2">
+                  {icon}
+                  <Badge variant={variant} className={className}>
+                    {statusTranslation?.title || status}
+                  </Badge>
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="flex justify-between gap-4">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">{statusTranslation?.title || status}</h4>
+                    <p className="text-sm">{statusTranslation?.description}</p>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+          )}
+        </>
       );
     },
     filterFn: (row, id, value) => {
@@ -109,9 +135,18 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
       const stream = row.original;
       const progress = stream.progress || 0;
 
+      let indicatorColor = "bg-blue-500";
+      if (stream.isFailed) {
+        indicatorColor = "bg-red-500";
+      } else if (stream.isCompleted) {
+        indicatorColor = "bg-emerald-500";
+      } else if (stream.isProcessing) {
+        indicatorColor = "bg-blue-500";
+      }
+
       return (
         <div className="flex items-center gap-2 w-[150px]">
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-2" indicatorClassName={indicatorColor} />
           <span className="text-xs text-muted-foreground w-[40px]">{Math.round(progress)}%</span>
         </div>
       );

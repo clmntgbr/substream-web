@@ -1,34 +1,118 @@
 {
   "stream": {
     "status": {
-      "created": "Created",
-      "uploaded": "Uploaded",
-      "uploading": "Uploading",
-      "extracting_sound": "Extracting",
-      "extracting_sound_completed": "Extracted",
-      "extracting_sound_failed": "Failed",
-      "generating_subtitle": "Generating SRT",
-      "generating_subtitle_completed": "SRT generated",
-      "generating_subtitle_failed": "Failed",
-      "transforming_subtitle": "Transforming SRT",
-      "transforming_subtitle_completed": "SRT transformed",
-      "transforming_subtitle_failed": "Failed",
-      "resizing_video": "Resizing",
-      "resizing_video_completed": "Resized",
-      "resizing_video_failed": "Failed",
-      "uploading_video": "Uploading",
-      "uploading_video_completed": "Uploaded",
-      "uploading_video_failed": "Failed",
-      "embedding_video": "Embedding",
-      "embedding_video_completed": "Embedded",
-      "embedding_video_failed": "Failed",
-      "chunking_video": "Chunking",
-      "chunking_video_completed": "Chunked",
-      "chunking_video_failed": "Failed",
-      "completed": "Finished",
-      "failed": "Failed",
-      "deleted": "Deleted",
-      "upload_failed": "Failed"
+      "created": {
+        "title": "Created",
+        "description": "Your project has been successfully created and initialized. The system is now ready to process your video file."
+      },
+      "uploaded": {
+        "title": "Uploaded",
+        "description": "Your file has been successfully uploaded to our servers. The file is now available for processing and all necessary validations have passed."
+      },
+      "uploading": {
+        "title": "Uploading",
+        "description": "Your file is currently being transferred to our servers. Please wait while the upload completes. Do not close this window."
+      },
+      "extracting_sound": {
+        "title": "Extracting",
+        "description": "We are extracting the audio track from your video file. This audio will be used to generate accurate subtitles for your content."
+      },
+      "extracting_sound_completed": {
+        "title": "Extracted",
+        "description": "Audio extraction completed successfully. The sound has been separated from the video and is ready for subtitle generation."
+      },
+      "extracting_sound_failed": {
+        "title": "Failed",
+        "description": "We encountered an error while extracting audio from your video. Please verify your file format is supported and try again."
+      },
+      "generating_subtitle": {
+        "title": "Generating SRT",
+        "description": "Our system is analyzing the audio and generating subtitles in SRT format. This process uses speech recognition to transcribe your content accurately."
+      },
+      "generating_subtitle_completed": {
+        "title": "SRT generated",
+        "description": "Subtitle generation completed successfully. Your transcription is ready and has been saved in standard SRT format."
+      },
+      "generating_subtitle_failed": {
+        "title": "Failed",
+        "description": "Subtitle generation encountered an error. This may be due to unclear audio, unsupported language, or technical issues. Please try again."
+      },
+      "transforming_subtitle": {
+        "title": "Transforming SRT",
+        "description": "We are converting and optimizing your subtitle file to the required format. This includes adjusting timing, formatting, and text encoding."
+      },
+      "transforming_subtitle_completed": {
+        "title": "SRT transformed",
+        "description": "Subtitle transformation completed. Your subtitles have been successfully converted and formatted according to your specifications."
+      },
+      "transforming_subtitle_failed": {
+        "title": "Failed",
+        "description": "An error occurred during subtitle transformation. The subtitle file may be corrupted or in an incompatible format. Please check and retry."
+      },
+      "resizing_video": {
+        "title": "Resizing",
+        "description": "Your video is being resized to match the target dimensions and aspect ratio. This process optimizes the video for your intended platform or use case."
+      },
+      "resizing_video_completed": {
+        "title": "Resized",
+        "description": "Video resizing completed successfully. Your video now has the correct dimensions and is optimized for playback on your target platform."
+      },
+      "resizing_video_failed": {
+        "title": "Failed",
+        "description": "Video resizing failed due to an error. This could be caused by unsupported video codec, resolution issues, or insufficient resources. Please try again."
+      },
+      "uploading_video": {
+        "title": "Uploading",
+        "description": "The processed video is being uploaded to its final destination. Please wait while the transfer completes. This may take a few moments depending on file size."
+      },
+      "uploading_video_completed": {
+        "title": "Uploaded",
+        "description": "Your processed video has been successfully uploaded and is now available at its destination. You can now share or publish your content."
+      },
+      "uploading_video_failed": {
+        "title": "Failed",
+        "description": "Video upload failed. This could be due to network issues, server problems, or insufficient storage space. Please check your connection and try again."
+      },
+      "embedding_video": {
+        "title": "Embedding",
+        "description": "We are embedding the generated subtitles directly into your video file. This creates a single file with burned-in captions for maximum compatibility."
+      },
+      "embedding_video_completed": {
+        "title": "Embedded",
+        "description": "Subtitles have been successfully embedded into your video. The captions are now permanently part of the video and will display on any player."
+      },
+      "embedding_video_failed": {
+        "title": "Failed",
+        "description": "Subtitle embedding failed. This may be due to video codec incompatibility or processing errors. Please verify your video format and try again."
+      },
+      "chunking_video": {
+        "title": "Chunking",
+        "description": "Your video is being split into smaller segments or chunks. This is useful for creating clips, optimizing streaming, or preparing content for social media."
+      },
+      "chunking_video_completed": {
+        "title": "Chunked",
+        "description": "Video chunking completed successfully. Your video has been divided into multiple segments that are ready for individual use or distribution."
+      },
+      "chunking_video_failed": {
+        "title": "Failed",
+        "description": "An error occurred while splitting the video into chunks. This could be due to file corruption, timing issues, or technical problems. Please retry."
+      },
+      "completed": {
+        "title": "Finished",
+        "description": "All processing steps have been completed successfully! Your video is ready and all requested operations have been applied. You can now download or use your content."
+      },
+      "failed": {
+        "title": "Failed",
+        "description": "The processing workflow encountered a critical error and could not complete. Please review the error details, verify your input file, and try again."
+      },
+      "deleted": {
+        "title": "Deleted",
+        "description": "The selected item has been permanently removed from the system. All associated files and data have been deleted and cannot be recovered."
+      },
+      "upload_failed": {
+        "title": "Failed",
+        "description": "File upload failed before completion. This may be caused by network interruption, file size limits, or unsupported file format. Please check and retry."
+      }
     }
   },
   "home": {
