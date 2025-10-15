@@ -1,28 +1,12 @@
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-  FieldTitle,
-} from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { useTranslations } from "@/lib/use-translations";
 import { ColorPicker } from "../misc/ColorPicker";
 import { NumberInput } from "../misc/NumberInput";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
 
 interface SettingsProps {
   open: boolean;
@@ -53,6 +37,7 @@ interface SettingsProps {
   setChunkNumber: (chunks: number) => void;
   yAxisAlignment: number;
   setYAxisAlignment: (position: number) => void;
+  readOnly?: boolean;
 }
 
 export const Settings = ({
@@ -84,20 +69,16 @@ export const Settings = ({
   setChunkNumber,
   yAxisAlignment,
   setYAxisAlignment,
+  readOnly = false,
 }: SettingsProps) => {
   const t = useTranslations();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col"
-      >
+      <SheetContent side="right" className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col">
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <SheetTitle>{t.home.preview.settings.title}</SheetTitle>
-          <SheetDescription>
-            {t.home.preview.settings.description}
-          </SheetDescription>
+          <SheetDescription>{t.home.preview.settings.description}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
@@ -105,65 +86,36 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>
-                    {t.home.preview.settings.fontAndSize}
-                  </FieldLegend>
+                  <FieldLegend>{t.home.preview.settings.fontAndSize}</FieldLegend>
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup
-                          defaultValue={subtitleFont}
-                          onValueChange={(value) => setSubtitleFont(value)}
-                        >
+                        <RadioGroup defaultValue={subtitleFont} onValueChange={(value) => setSubtitleFont(value)} disabled={readOnly}>
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {t.home.preview.settings.arial}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {t.home.preview.settings.arialDescription}
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.arial}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.arialDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="Arial" id="arial" />
+                              <RadioGroupItem value="Arial" id="arial" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="timesNewRoman">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {t.home.preview.settings.timesNewRoman}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    t.home.preview.settings
-                                      .timesNewRomanDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.timesNewRoman}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.timesNewRomanDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="Times New Roman"
-                                id="timesNewRoman"
-                              />
+                              <RadioGroupItem value="Times New Roman" id="timesNewRoman" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="courierNew">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {t.home.preview.settings.courierNew}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    t.home.preview.settings
-                                      .courierNewDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.courierNew}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.courierNewDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="Courier New"
-                                id="courierNew"
-                              />
+                              <RadioGroupItem value="Courier New" id="courierNew" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -178,6 +130,7 @@ export const Settings = ({
                           description={t.home.preview.settings.sizeDescription}
                           label={t.home.preview.settings.size}
                           unit="px"
+                          disabled={readOnly}
                         />
                       </Field>
                     </FieldGroup>
@@ -193,28 +146,15 @@ export const Settings = ({
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
-                      <ColorPicker
-                        background={subtitleColor}
-                        setBackground={setSubtitleColor}
-                      />
+                      <ColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>
-                        {t.home.preview.settings.outlineColor}
-                      </FieldTitle>
-                      <ColorPicker
-                        background={subtitleOutlineColor}
-                        setBackground={setSubtitleOutlineColor}
-                      />
+                      <FieldTitle>{t.home.preview.settings.outlineColor}</FieldTitle>
+                      <ColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>
-                        {t.home.preview.settings.shadowColor}
-                      </FieldTitle>
-                      <ColorPicker
-                        background={subtitleShadowColor}
-                        setBackground={setSubtitleShadowColor}
-                      />
+                      <FieldTitle>{t.home.preview.settings.shadowColor}</FieldTitle>
+                      <ColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -228,48 +168,24 @@ export const Settings = ({
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="bold">
-                          {t.home.preview.settings.bold}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {t.home.preview.settings.boldDescription}
-                        </FieldDescription>
+                        <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.boldDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch
-                        id="bold"
-                        checked={subtitleBold}
-                        onCheckedChange={setSubtitleBold}
-                      />
+                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="italic">
-                          {t.home.preview.settings.italic}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {t.home.preview.settings.italicDescription}
-                        </FieldDescription>
+                        <FieldLabel htmlFor="italic">{t.home.preview.settings.italic}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.italicDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch
-                        id="italic"
-                        checked={subtitleItalic}
-                        onCheckedChange={setSubtitleItalic}
-                      />
+                      <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} disabled={readOnly} />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="underline">
-                          {t.home.preview.settings.underline}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {t.home.preview.settings.underlineDescription}
-                        </FieldDescription>
+                        <FieldLabel htmlFor="underline">{t.home.preview.settings.underline}</FieldLabel>
+                        <FieldDescription>{t.home.preview.settings.underlineDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch
-                        id="underline"
-                        checked={subtitleUnderline}
-                        onCheckedChange={setSubtitleUnderline}
-                      />
+                      <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} disabled={readOnly} />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -288,10 +204,9 @@ export const Settings = ({
                         max={4}
                         step={1}
                         label={t.home.preview.settings.outlineThickness}
-                        description={
-                          t.home.preview.settings.outlineThicknessDescription
-                        }
+                        description={t.home.preview.settings.outlineThicknessDescription}
                         unit="px"
+                        disabled={readOnly}
                       />
                     </Field>
                     <Field>
@@ -304,6 +219,7 @@ export const Settings = ({
                         description={t.home.preview.settings.shadowDescription}
                         label={t.home.preview.settings.shadow}
                         unit="px"
+                        disabled={readOnly}
                       />
                     </Field>
                   </FieldGroup>
@@ -313,68 +229,36 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>
-                    {t.home.preview.settings.videoSettings}
-                  </FieldLegend>
+                  <FieldLegend>{t.home.preview.settings.videoSettings}</FieldLegend>
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup
-                          defaultValue={format}
-                          onValueChange={(value) => setFormat(value)}
-                        >
+                        <RadioGroup defaultValue={format} onValueChange={(value) => setFormat(value)} disabled={readOnly}>
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {t.home.preview.settings.original}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {t.home.preview.settings.originalDescription}
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.original}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.originalDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="original" id="original" />
+                              <RadioGroupItem value="original" id="original" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="zoomed_916">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {t.home.preview.settings.zoomed_916}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    t.home.preview.settings
-                                      .zoomed_916Description
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.zoomed_916}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.zoomed_916Description}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="zoomed_916"
-                                id="zoomed_916"
-                              />
+                              <RadioGroupItem value="zoomed_916" id="zoomed_916" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="normal_916_with_borders">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {
-                                    t.home.preview.settings
-                                      .normal_916_with_borders
-                                  }
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    t.home.preview.settings
-                                      .normal_916_with_bordersDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{t.home.preview.settings.normal_916_with_borders}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="normal_916_with_borders"
-                                id="normal_916_with_borders"
-                              />
+                              <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -387,11 +271,10 @@ export const Settings = ({
                         max={100}
                         min={0}
                         step={1}
-                        description={
-                          t.home.preview.settings.chunkNumberDescription
-                        }
+                        description={t.home.preview.settings.chunkNumberDescription}
                         label={t.home.preview.settings.chunkNumber}
                         unit="  parts"
+                        disabled={readOnly}
                       />
                     </Field>
                     <Field>
@@ -401,11 +284,10 @@ export const Settings = ({
                         max={200}
                         min={0}
                         step={1}
-                        description={
-                          t.home.preview.settings.yAxisAlignmentDescription
-                        }
+                        description={t.home.preview.settings.yAxisAlignmentDescription}
                         label={t.home.preview.settings.yAxisAlignment}
                         unit="px"
+                        disabled={readOnly}
                       />
                     </Field>
                   </FieldGroup>
@@ -416,7 +298,7 @@ export const Settings = ({
         </div>
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
-          <Button variant="default" onClick={() => onOpenChange(false)}>
+          <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
             {t.home.preview.settings.close}
           </Button>
         </SheetFooter>

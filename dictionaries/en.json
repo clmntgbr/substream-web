@@ -40,7 +40,7 @@
         "originalFileName": "Name",
         "status": "Status",
         "progress": "Progress",
-        "sizeInMegabytes": "Size",
+        "size": "Size",
         "createdAt": "Created At"
       }
     },

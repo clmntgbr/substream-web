@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ interface NumberInputProps {
   label?: string;
   description?: string;
   unit?: string;
+  disabled?: boolean;
 }
 
 export const NumberInput = ({
@@ -24,6 +26,7 @@ export const NumberInput = ({
   label,
   description,
   unit = "px",
+  disabled = false,
 }: NumberInputProps) => {
   const [inputValue, setInputValue] = useState(value.toString());
 
@@ -62,17 +65,11 @@ export const NumberInput = ({
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4 transition-all shadow-none">
+    <div className={cn("rounded-xl border border-border bg-card p-4 transition-all shadow-none", disabled && "cursor-not-allowed opacity-60")}>
       <div className="flex items-center justify-between gap-4 shadow-none">
-        <div className="flex-1">
-          {label && (
-            <label className="text-sm font-semibold text-foreground">
-              {label}
-            </label>
-          )}
-          {description && (
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-          )}
+        <div className={cn("flex-1", disabled && "cursor-not-allowed")}>
+          {label && <label className="text-sm font-semibold text-foreground">{label}</label>}
+          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
 
         <div className="flex items-center gap-2">
@@ -80,8 +77,8 @@ export const NumberInput = ({
             variant="outline"
             size="icon"
             onClick={decrement}
-            disabled={value <= min}
-            className="h-8 w-8 shrink-0 rounded-lg transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
+            disabled={disabled || value <= min}
+            className="h-8 w-8 shrink-0 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -96,33 +93,32 @@ export const NumberInput = ({
               min={min}
               max={max}
               step={step}
-              className="h-8 w-24 rounded-lg border-2 text-center font-semibold tabular-nums transition-all focus:scale-105 focus:border-primary cursor-pointer"
+              className="h-8 w-24 rounded-lg border-2 text-center font-semibold tabular-nums transition-all focus:scale-105 focus:border-primary cursor-pointer disabled:cursor-not-allowed"
             />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
-              {unit}
-            </span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">{unit}</span>
           </div>
 
           <Button
             variant="outline"
             size="icon"
             onClick={increment}
-            disabled={value >= max}
-            className="h-8 w-8 shrink-0 rounded-lg transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
+            disabled={disabled || value >= max}
+            className="h-8 w-8 shrink-0 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             <Plus className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <div className="relative pt-4">
+      <div className={cn("relative pt-4", disabled && "cursor-not-allowed")}>
         <Slider
           value={[value]}
           onValueChange={handleSliderChange}
           max={max}
           min={min}
           step={step}
-          className="w-full cursor-pointer"
+          disabled={disabled}
+          className={cn("w-full", disabled ? "cursor-not-allowed" : "cursor-pointer")}
         />
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>

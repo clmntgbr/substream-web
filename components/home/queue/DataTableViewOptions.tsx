@@ -12,7 +12,7 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
+        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex cursor-pointer">
           <Columns3Cog />
           {t.home.queue.options.customizeColumns}
         </Button>
@@ -25,7 +25,7 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize w-[300px]"
+                className="capitalize w-[300px] cursor-pointer"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
