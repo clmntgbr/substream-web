@@ -82,8 +82,7 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
         variant = "destructive";
       } else if (stream.isProcessing) {
         icon = <Loader2 className="size-4 animate-spin text-blue-400" />;
-        variant = "secondary";
-        className = "bg-blue-300";
+        variant = "outline";
       } else {
         icon = <Clock className="size-4 text-gray-500" />;
         variant = "outline";
@@ -96,7 +95,7 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
           {stream.isCompleted && (
             <div className="flex items-center gap-2">
               {icon}
-              <Badge variant={variant} className={className}>
+              <Badge variant={variant} className={`${className}`}>
                 {statusTranslation?.title || status}
               </Badge>
             </div>
@@ -104,14 +103,14 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
           {(stream.isFailed || stream.isProcessing) && (
             <HoverCard>
               <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 cursor-pointer">
                   {icon}
-                  <Badge variant={variant} className={className}>
+                  <Badge variant={variant} className={`${className}`}>
                     {statusTranslation?.title || status}
                   </Badge>
                 </div>
               </HoverCardTrigger>
-              <HoverCardContent className="w-80">
+              <HoverCardContent className="w-80" side="top">
                 <div className="flex justify-between gap-4">
                   <div className="space-y-1">
                     <h4 className="text-sm font-semibold">{statusTranslation?.title || status}</h4>
