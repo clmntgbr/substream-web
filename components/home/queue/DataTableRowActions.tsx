@@ -57,11 +57,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuItem onClick={handleDownload} className="cursor-pointer">
+          <DropdownMenuItem onClick={handleDownload} disabled={!stream.isDownloadable} className="cursor-pointer">
             <Download className="mr-2 size-4" />
             Download
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDownloadSubtitle} className="cursor-pointer">
+          <DropdownMenuItem onClick={handleDownloadSubtitle} disabled={!stream.isSrtDownloadable} className="cursor-pointer">
             <FileText className="mr-2 size-4" />
             Download subtitle
           </DropdownMenuItem>
@@ -107,6 +107,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         yAxisAlignment={stream.option.yAxisAlignment}
         setYAxisAlignment={() => {}}
         readOnly={true}
+        isResume={stream.option.isResume}
+        setIsResume={() => {}}
       />
     </>
   );

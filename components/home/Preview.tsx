@@ -51,6 +51,8 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const [chunkNumber, setChunkNumber] = useState(2);
   const [yAxisAlignment, setYAxisAlignment] = useState(0);
 
+  const [isResume, setIsResume] = useState(false);
+
   useHotkeys("meta+e", () => {
     if (url || file) {
       handleProcess();
@@ -183,6 +185,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         format,
         chunkNumber,
         yAxisAlignment,
+        isResume,
       };
 
       const option = (await createOption(optionData)) as Option;
@@ -389,6 +392,8 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         setChunkNumber={setChunkNumber}
         yAxisAlignment={yAxisAlignment}
         setYAxisAlignment={setYAxisAlignment}
+        isResume={isResume}
+        setIsResume={setIsResume}
       />
     </>
   );

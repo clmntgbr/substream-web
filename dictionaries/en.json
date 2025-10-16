@@ -85,6 +85,18 @@
         "title": "Subtitles embedding failed",
         "description": "Subtitle embedding failed. This may be due to video codec incompatibility or processing errors. Please verify your video format and try again."
       },
+      "resuming": {
+        "title": "Generating video resume",
+        "description": "We are creating a resume summary for your video, highlighting the main points and content in a concise format."
+      },
+      "resuming_completed": {
+        "title": "Video resume generated",
+        "description": "Video resume generation completed successfully. The summary has been created and is now ready for your review."
+      },
+      "resuming_failed": {
+        "title": "Video resume generation failed",
+        "description": "Video resume generation failed. This may be due to technical issues or insufficient resources. Please check your system and try again."
+      },
       "chunking_video": {
         "title": "Chunking video",
         "description": "Your video is being split into smaller segments or chunks. This is useful for creating clips, optimizing streaming, or preparing content for social media."
@@ -196,7 +208,10 @@
         "colors": "Colors",
         "textStyle": "Text Style",
         "effects": "Effects",
-        "videoSettings": "Video Settings"
+        "videoSettings": "Video Settings",
+        "aiSettings": "AI Settings",
+        "isResume": "Resume",
+        "isResumeDescription": "Generate a resume of the video"
       }
     }
   },

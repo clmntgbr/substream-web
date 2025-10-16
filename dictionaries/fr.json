@@ -123,7 +123,7 @@
     "queue": {
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",
-        "streamNotAvailable": "Stream is not available for download yet"
+        "streamNotAvailable": "This is not available for download yet"
       },
       "options": {
         "customizeColumns": "Customize Columns"
@@ -196,7 +196,10 @@
         "colors": "Colors",
         "textStyle": "Text Style",
         "effects": "Effects",
-        "videoSettings": "Video Settings"
+        "videoSettings": "Video Settings",
+        "aiSettings": "AI Settings",
+        "isResume": "Resume",
+        "isResumeDescription": "Generate a resume of the video"
       }
     }
   },

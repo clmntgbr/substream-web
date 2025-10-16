@@ -37,6 +37,8 @@ interface SettingsProps {
   setChunkNumber: (chunks: number) => void;
   yAxisAlignment: number;
   setYAxisAlignment: (position: number) => void;
+  isResume: boolean;
+  setIsResume: (resume: boolean) => void;
   readOnly?: boolean;
 }
 
@@ -70,6 +72,8 @@ export const Settings = ({
   yAxisAlignment,
   setYAxisAlignment,
   readOnly = false,
+  isResume,
+  setIsResume,
 }: SettingsProps) => {
   const t = useTranslations();
 
@@ -171,21 +175,33 @@ export const Settings = ({
                         <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
                         <FieldDescription>{t.home.preview.settings.boldDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} />
+                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} className="cursor-pointer" />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldLabel htmlFor="italic">{t.home.preview.settings.italic}</FieldLabel>
                         <FieldDescription>{t.home.preview.settings.italicDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch id="italic" checked={subtitleItalic} onCheckedChange={setSubtitleItalic} disabled={readOnly} />
+                      <Switch
+                        id="italic"
+                        checked={subtitleItalic}
+                        onCheckedChange={setSubtitleItalic}
+                        disabled={readOnly}
+                        className="cursor-pointer"
+                      />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldLabel htmlFor="underline">{t.home.preview.settings.underline}</FieldLabel>
                         <FieldDescription>{t.home.preview.settings.underlineDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch id="underline" checked={subtitleUnderline} onCheckedChange={setSubtitleUnderline} disabled={readOnly} />
+                      <Switch
+                        id="underline"
+                        checked={subtitleUnderline}
+                        onCheckedChange={setSubtitleUnderline}
+                        disabled={readOnly}
+                        className="cursor-pointer"
+                      />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -290,6 +306,28 @@ export const Settings = ({
                         disabled={readOnly}
                       />
                     </Field>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>{t.home.preview.settings.aiSettings}</FieldLegend>
+                  <FieldGroup>
+                    <FieldGroup>
+                      <FieldSet>
+                        <FieldGroup>
+                          <Field orientation="horizontal">
+                            <FieldContent>
+                              <FieldLabel htmlFor="isResume">{t.home.preview.settings.isResume}</FieldLabel>
+                              <FieldDescription>{t.home.preview.settings.isResumeDescription}</FieldDescription>
+                            </FieldContent>
+                            <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
+                          </Field>
+                        </FieldGroup>
+                      </FieldSet>
+                    </FieldGroup>
                   </FieldGroup>
                 </FieldSet>
               </CardContent>
