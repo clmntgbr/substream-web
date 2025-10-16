@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
+import { useTranslations } from "@/lib/use-translations";
 import { Row } from "@tanstack/react-table";
-import { Download, Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { Download, Eye, FileText, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Settings } from "../Settings";
 
 interface DataTableRowActionsProps<TData> {
@@ -15,13 +17,24 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const stream = row.original as Stream;
-  const { downloadStream, deleteStream } = useStreams();
+  const { downloadStream, downloadSubtitle, deleteStream } = useStreams();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const t = useTranslations();
 
   const handleDownload = () => {
-    if (stream.id && stream.isCompleted) {
-      downloadStream(stream.id, stream.originalFileName);
+    if (!stream.isDownloadable || !stream.id) {
+      toast.error(t.home.queue.actions.streamNotAvailable);
+      return;
     }
+    downloadStream(stream.id, stream.originalFileName);
+  };
+
+  const handleDownloadSubtitle = () => {
+    if (!stream.isSrtDownloadable || !stream.id) {
+      toast.error(t.home.queue.actions.subtitleNotAvailable);
+      return;
+    }
+    downloadSubtitle(stream.id, stream.originalFileName);
   };
 
   const handleDelete = async () => {
@@ -39,14 +52,18 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="data-[state=open]:bg-muted size-8 cursor-pointer">
-            <MoreHorizontal />
+            <MoreVertical />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={handleDownload} disabled={!stream.isCompleted} className="cursor-pointer">
+        <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuItem onClick={handleDownload} className="cursor-pointer">
             <Download className="mr-2 size-4" />
             Download
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDownloadSubtitle} className="cursor-pointer">
+            <FileText className="mr-2 size-4" />
+            Download subtitle
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
             <Eye className="mr-2 size-4" />

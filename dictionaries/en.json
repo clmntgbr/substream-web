@@ -121,6 +121,10 @@
   },
   "home": {
     "queue": {
+      "actions": {
+        "subtitleNotAvailable": "Subtitle is not available for download",
+        "streamNotAvailable": "This is not available for download yet"
+      },
       "options": {
         "customizeColumns": "Customize Columns"
       },
@@ -129,7 +133,7 @@
         "status": "Status",
         "progress": "Progress",
         "size": "Size",
-        "sizeInMegabytes": "Size (MB)",
+        "sizeInMegabytes": "Size",
         "createdAt": "Created At"
       }
     },

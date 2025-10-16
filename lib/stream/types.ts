@@ -20,6 +20,8 @@ export interface Stream {
   isProcessing: boolean;
   isCompleted: boolean;
   isFailed: boolean;
+  isDownloadable: boolean;
+  isSrtDownloadable: boolean;
   processingTimeEstimate: number;
 }
 
