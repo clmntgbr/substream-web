@@ -14,4 +14,5 @@ export interface Option {
   chunkNumber: number;
   yAxisAlignment: number;
   isResume: boolean;
+  language: string;
 }

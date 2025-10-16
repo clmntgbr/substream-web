@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { useTranslations } from "@/lib/use-translations";
-import { BrainCircuit, FormInputIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
+import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
 import { ColorPicker } from "../misc/ColorPicker";
 import { NumberInput } from "../misc/NumberInput";
 
@@ -41,6 +41,8 @@ interface SettingsProps {
   isResume: boolean;
   setIsResume: (resume: boolean) => void;
   readOnly?: boolean;
+  language: string;
+  setLanguage: (language: string) => void;
 }
 
 export const Settings = ({
@@ -75,6 +77,8 @@ export const Settings = ({
   readOnly = false,
   isResume,
   setIsResume,
+  language,
+  setLanguage,
 }: SettingsProps) => {
   const t = useTranslations();
 
@@ -357,6 +361,53 @@ export const Settings = ({
                             <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
                           </Field>
                         </FieldGroup>
+                      </FieldSet>
+                    </FieldGroup>
+                  </FieldGroup>
+                </FieldSet>
+              </CardContent>
+            </Card>
+            <Card className="shadow-none">
+              <CardContent className="shadow-none">
+                <FieldSet>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <LanguagesIcon className="size-4" />
+                      {t.home.preview.settings.language}
+                    </span>
+                  </FieldLegend>
+                  <FieldGroup>
+                    <FieldGroup>
+                      <FieldSet>
+                        <RadioGroup defaultValue={language} onValueChange={(value) => setLanguage(value)} disabled={readOnly}>
+                          <FieldLabel htmlFor="auto">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.auto}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.autoDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="auto" id="auto" disabled={readOnly} />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="english">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.english}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.englishDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="english" id="english" disabled={readOnly} />
+                            </Field>
+                          </FieldLabel>
+                          <FieldLabel htmlFor="french">
+                            <Field orientation="horizontal">
+                              <FieldContent>
+                                <FieldTitle>{t.home.preview.settings.french}</FieldTitle>
+                                <FieldDescription>{t.home.preview.settings.frenchDescription}</FieldDescription>
+                              </FieldContent>
+                              <RadioGroupItem value="french" id="french" disabled={readOnly} />
+                            </Field>
+                          </FieldLabel>
+                        </RadioGroup>
                       </FieldSet>
                     </FieldGroup>
                   </FieldGroup>

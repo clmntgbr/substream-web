@@ -6,7 +6,7 @@ import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
 import { useTranslations } from "@/lib/use-translations";
 import { Row } from "@tanstack/react-table";
-import { BrainCircuit, Download, Eye, FileText, MoreVertical, Trash2 } from "lucide-react";
+import { BrainCircuit, Download, FileText, MoreVertical, Settings2Icon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Settings } from "../Settings";
@@ -51,7 +51,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     }
   };
 
-  const handleViewDetails = () => {
+  const handleViewOptions = () => {
     setSettingsOpen(true);
   };
 
@@ -77,9 +77,9 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             <BrainCircuit className="mr-2 size-4" />
             Download resume
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
-            <Eye className="mr-2 size-4" />
-            View Details
+          <DropdownMenuItem onClick={handleViewOptions} className="cursor-pointer">
+            <Settings2Icon className="mr-2 size-4" />
+            View Options
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onClick={handleDelete} className="cursor-pointer">
@@ -121,6 +121,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         readOnly={true}
         isResume={stream.option.isResume}
         setIsResume={() => {}}
+        language={stream.option.language}
+        setLanguage={() => {}}
       />
     </>
   );
