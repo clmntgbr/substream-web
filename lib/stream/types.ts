@@ -22,6 +22,7 @@ export interface Stream {
   isFailed: boolean;
   isDownloadable: boolean;
   isSrtDownloadable: boolean;
+  isResumeDownloadable: boolean;
   processingTimeEstimate: number;
 }
 

@@ -23,6 +23,7 @@ interface StreamContextType {
   deleteStream: (id: string) => Promise<void>;
   downloadStream: (id: string, filename: string) => Promise<void>;
   downloadSubtitle: (id: string, filename: string) => Promise<void>;
+  downloadResume: (id: string, filename: string) => Promise<void>;
   refreshStreams: (params?: StreamQueryParams) => Promise<void>;
   totalItems: number;
   currentPage: number;
@@ -350,6 +351,71 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const downloadResume = useCallback(async (id: string, filename: string) => {
+    dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+
+    toast.info("Download starting", {
+      description: "Preparing your resume for download...",
+    });
+
+    try {
+      const response = await fetch(`/api/streams/${id}/download/resume`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json().catch(() => ({}))) as {
+          message?: string;
+          error?: string;
+        };
+        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
+
+        toast.error("Download failed", {
+          description: errorMessage,
+        });
+
+        dispatch({
+          type: "SET_ERROR",
+          payload: errorMessage,
+        });
+        return;
+      }
+
+      const contentDisposition = response.headers.get("Content-Disposition");
+      const downloadFilename = contentDisposition
+        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+        : filename.replace(/\.[^/.]+$/, ".txt");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = downloadFilename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast.success("Download completed", {
+        description: "Your resume has been downloaded successfully.",
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to download resume";
+
+      toast.error("Download failed", {
+        description: errorMessage,
+      });
+
+      dispatch({
+        type: "SET_ERROR",
+        payload: errorMessage,
+      });
+    } finally {
+      dispatch({ type: "SET_DOWNLOADING_END", payload: id });
+    }
+  }, []);
+
   const refreshStreams = useCallback(
     async (params?: StreamQueryParams) => {
       await getStreams(params);
@@ -372,6 +438,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         deleteStream,
         downloadStream,
         downloadSubtitle,
+        downloadResume,
         refreshStreams,
         totalItems,
         currentPage,

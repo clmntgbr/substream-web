@@ -135,7 +135,8 @@
     "queue": {
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",
-        "streamNotAvailable": "This is not available for download yet"
+        "streamNotAvailable": "This is not available for download yet",
+        "resumeNotAvailable": "Resume is not available for download"
       },
       "options": {
         "customizeColumns": "Customize Columns"
@@ -164,7 +165,7 @@
       }
     },
     "preview": {
-      "subtitle": "This is an example of subtitle",
+      "subtitle": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "settings": {
         "title": "Video & subtitle settings",
         "settings": "Settings",

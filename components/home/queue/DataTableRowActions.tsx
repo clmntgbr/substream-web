@@ -6,7 +6,7 @@ import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
 import { useTranslations } from "@/lib/use-translations";
 import { Row } from "@tanstack/react-table";
-import { Download, Eye, FileText, MoreVertical, Trash2 } from "lucide-react";
+import { BrainCircuit, Download, Eye, FileText, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Settings } from "../Settings";
@@ -17,7 +17,7 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const stream = row.original as Stream;
-  const { downloadStream, downloadSubtitle, deleteStream } = useStreams();
+  const { downloadStream, downloadSubtitle, downloadResume, deleteStream } = useStreams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const t = useTranslations();
 
@@ -35,6 +35,14 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       return;
     }
     downloadSubtitle(stream.id, stream.originalFileName);
+  };
+
+  const handleDownloadResume = () => {
+    if (!stream.isResumeDownloadable || !stream.id) {
+      toast.error(t.home.queue.actions.resumeNotAvailable);
+      return;
+    }
+    downloadResume(stream.id, stream.originalFileName);
   };
 
   const handleDelete = async () => {
@@ -64,6 +72,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           <DropdownMenuItem onClick={handleDownloadSubtitle} disabled={!stream.isSrtDownloadable} className="cursor-pointer">
             <FileText className="mr-2 size-4" />
             Download subtitle
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDownloadResume} disabled={!stream.isResumeDownloadable} className="cursor-pointer">
+            <BrainCircuit className="mr-2 size-4" />
+            Download resume
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
             <Eye className="mr-2 size-4" />

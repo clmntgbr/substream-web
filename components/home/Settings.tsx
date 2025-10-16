@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { useTranslations } from "@/lib/use-translations";
+import { BrainCircuit, FormInputIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
 import { ColorPicker } from "../misc/ColorPicker";
 import { NumberInput } from "../misc/NumberInput";
 
@@ -90,7 +91,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.fontAndSize}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <FormInputIcon className="size-4" />
+                      {t.home.preview.settings.fontAndSize}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
@@ -146,7 +152,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.colors}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <PaletteIcon className="size-4" />
+                      {t.home.preview.settings.colors}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <Field>
                       <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
@@ -168,7 +179,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.textStyle}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <Text className="size-4" />
+                      {t.home.preview.settings.textStyle}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
@@ -210,7 +226,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.effects}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <WandSparkles className="size-4" />
+                      {t.home.preview.settings.effects}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <Field>
                       <NumberInput
@@ -245,7 +266,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.videoSettings}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <VideoIcon className="size-4" />
+                      {t.home.preview.settings.videoSettings}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
@@ -313,7 +339,12 @@ export const Settings = ({
             <Card className="shadow-none">
               <CardContent className="shadow-none">
                 <FieldSet>
-                  <FieldLegend>{t.home.preview.settings.aiSettings}</FieldLegend>
+                  <FieldLegend>
+                    <span className="flex items-center gap-2">
+                      <BrainCircuit className="size-4" />
+                      {t.home.preview.settings.aiSettings}
+                    </span>
+                  </FieldLegend>
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>

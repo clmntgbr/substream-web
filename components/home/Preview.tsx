@@ -352,10 +352,12 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                 </Button>
                 <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup>
-                    <Kbd>⌘ + e</Kbd>
+                    <Kbd className="bg-black/10 backdrop-blur-md text-white border-white/20 rounded-md px-2 py-1 dark:bg-white/10 dark:border-black/20 dark:text-black">
+                      ⌘ + e
+                    </Kbd>
                   </KbdGroup>
                   {t.home.preview.settings.process}
-                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
                 </Button>
               </div>
             </div>
