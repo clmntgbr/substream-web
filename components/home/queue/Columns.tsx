@@ -7,7 +7,7 @@ import { Stream } from "@/lib/stream/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
-import { CheckCircle2, Clock, Loader2, XCircle } from "lucide-react";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { DataTableRowActions } from "./DataTableRowActions";
 
@@ -69,57 +69,41 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
       const stream = row.original;
       const status = stream.status;
 
-      let icon = null;
-      let variant: "default" | "secondary" | "destructive" | "outline" = "default";
-      let className = "";
-
-      if (stream.isCompleted) {
-        icon = <CheckCircle2 className="size-4 text-emerald-400" />;
-        variant = "secondary";
-        className = "bg-emerald-400";
-      } else if (stream.isFailed) {
-        icon = <XCircle className="size-4 text-red-500" />;
-        variant = "destructive";
-      } else if (stream.isProcessing) {
-        icon = <Loader2 className="size-4 animate-spin text-blue-400" />;
-        variant = "outline";
-      } else {
-        icon = <Clock className="size-4 text-gray-500" />;
-        variant = "outline";
-      }
-
       const statusTranslation = t.stream.status[status as keyof typeof t.stream.status];
 
       return (
         <>
-          {stream.isCompleted && (
-            <div className="flex items-center gap-2">
-              {icon}
-              <Badge variant={variant} className={`${className}`}>
-                {statusTranslation?.title || status}
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Badge variant="outline" className="text-muted-foreground px-1.5 cursor-pointer">
+                {stream.isCompleted && (
+                  <>
+                    <CheckCircle2 className="size-4 text-emerald-400" />
+                    {statusTranslation?.title}
+                  </>
+                )}
+                {stream.isFailed && (
+                  <>
+                    <XCircle className="size-4 text-red-500" /> {t.stream.status.failed.title}
+                  </>
+                )}
+                {stream.isProcessing && (
+                  <>
+                    <Loader2 className="size-4 animate-spin text-blue-400" />
+                    {t.stream.status.in_process.title}
+                  </>
+                )}
               </Badge>
-            </div>
-          )}
-          {(stream.isFailed || stream.isProcessing) && (
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2 cursor-pointer">
-                  {icon}
-                  <Badge variant={variant} className={`${className}`}>
-                    {statusTranslation?.title || status}
-                  </Badge>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80" side="top">
+              <div className="flex justify-between gap-4">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold">{statusTranslation?.title || status}</h4>
+                  <p className="text-sm">{statusTranslation?.description}</p>
                 </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80" side="top">
-                <div className="flex justify-between gap-4">
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">{statusTranslation?.title || status}</h4>
-                    <p className="text-sm">{statusTranslation?.description}</p>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          )}
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </>
       );
     },
@@ -134,18 +118,9 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
       const stream = row.original;
       const progress = stream.progress || 0;
 
-      let indicatorColor = "bg-blue-500";
-      if (stream.isFailed) {
-        indicatorColor = "bg-red-500";
-      } else if (stream.isCompleted) {
-        indicatorColor = "bg-emerald-500";
-      } else if (stream.isProcessing) {
-        indicatorColor = "bg-blue-500";
-      }
-
       return (
         <div className="flex items-center gap-2 w-[150px]">
-          <Progress value={progress} className="h-2" indicatorClassName={indicatorColor} />
+          <Progress value={progress} className="h-2" indicatorClassName={"bg-blue-500"} />
           <span className="text-xs text-muted-foreground w-[40px]">{Math.round(progress)}%</span>
         </div>
       );
