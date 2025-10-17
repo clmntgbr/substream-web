@@ -6,7 +6,7 @@ export interface Stream {
   fileName: string;
   originalFileName: string;
   mimeType: string;
-  sizeInMegabytes: number;
+  sizeInMegabytes: number | null;
   duration: string;
   audioFiles: string[];
   status: string;
@@ -20,12 +20,17 @@ export interface Stream {
   isProcessing: boolean;
   isCompleted: boolean;
   isFailed: boolean;
+  isDownloadable: boolean;
+  isSrtDownloadable: boolean;
+  isResumeDownloadable: boolean;
+  processingTimeEstimate: number;
 }
 
 export interface StreamState {
   streams: Stream[];
   currentStream: Stream | null;
   isLoading: boolean;
+  isRefreshing: boolean;
   error: string | null;
   downloadingIds: Set<string>;
 }
@@ -37,6 +42,7 @@ export type StreamAction =
   | { type: "UPDATE_STREAM"; payload: Stream }
   | { type: "DELETE_STREAM"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_REFRESHING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_DOWNLOADING_START"; payload: string }
   | { type: "SET_DOWNLOADING_END"; payload: string }

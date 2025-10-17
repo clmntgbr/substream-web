@@ -1,3 +1,8 @@
+import { Settings } from "@/components/home/Settings";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Option, useOptions } from "@/lib/option";
 import { useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
@@ -6,11 +11,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Kbd, KbdGroup } from "../ui/kbd";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
-import Settings from "./settings";
 
 interface PreviewProps {
   open: boolean;
@@ -26,6 +26,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const { getStreams } = useStreams();
 
   const [isUploading, setIsUploading] = useState(false);
+  const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
   const [fileSize, setFileSize] = useState<string>("-- MB");
   const [thumbnail, setThumbnail] = useState<string | null>(null);
@@ -49,6 +50,9 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const [format, setFormat] = useState("original");
   const [chunkNumber, setChunkNumber] = useState(2);
   const [yAxisAlignment, setYAxisAlignment] = useState(0);
+
+  const [isResume, setIsResume] = useState(false);
+  const [language, setLanguage] = useState("auto");
 
   useHotkeys("meta+e", () => {
     if (url || file) {
@@ -96,6 +100,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           ? `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
           : `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
+      setDurationSeconds(totalSeconds);
       setDuration(formattedDuration);
 
       const randomTime = video.duration * (0.1 + Math.random() * 0.8);
@@ -181,6 +186,8 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         format,
         chunkNumber,
         yAxisAlignment,
+        isResume,
+        language,
       };
 
       const option = (await createOption(optionData)) as Option;
@@ -196,6 +203,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         const formData = new FormData();
         formData.append("video", file as Blob);
         formData.append("optionId", option.id);
+        formData.append("duration", durationSeconds?.toString() || "");
 
         response = await fetch("/api/streams/video", {
           method: "POST",
@@ -212,6 +220,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           body: JSON.stringify({
             url: url,
             optionId: option.id,
+            name: videoTitle,
           }),
         });
       } else {
@@ -263,17 +272,17 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           }
         }}
       >
-        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0" hideCloseButton>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => !isUploading && onOpenChange(false)}
-            disabled={isUploading}
-            className="absolute top-4 right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-          <SheetHeader>
+        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen" hideCloseButton>
+          <SheetHeader className="px-4 pt-6 pb-4 border-b">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => !isUploading && onOpenChange(false)}
+              disabled={isUploading}
+              className="absolute top-4 right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
+            >
+              <X className="h-5 w-5" />
+            </Button>
             <SheetTitle>{videoTitle}</SheetTitle>
             <SheetDescription className="flex flex-row gap-2">
               <Badge variant="outline">
@@ -291,7 +300,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
             </SheetDescription>
           </SheetHeader>
           <div className="relative h-full w-full flex items-center justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-            <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-black/40 group">
+            <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl aspect-video rounded-2xl overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 opacity-50" />
 
               {thumbnail ? (
@@ -345,10 +354,12 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                 </Button>
                 <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup>
-                    <Kbd>⌘ + e</Kbd>
+                    <Kbd className="bg-black/10 backdrop-blur-md text-white border-white/20 rounded-md px-2 py-1 dark:bg-white/10 dark:border-black/20 dark:text-black">
+                      ⌘ + e
+                    </Kbd>
                   </KbdGroup>
                   {t.home.preview.settings.process}
-                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4 fill-white" />}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
                 </Button>
               </div>
             </div>
@@ -385,6 +396,10 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         setChunkNumber={setChunkNumber}
         yAxisAlignment={yAxisAlignment}
         setYAxisAlignment={setYAxisAlignment}
+        isResume={isResume}
+        setIsResume={setIsResume}
+        language={language}
+        setLanguage={setLanguage}
       />
     </>
   );

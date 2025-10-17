@@ -68,8 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute =
-        pathname.endsWith("/login") || pathname.endsWith("/register");
+      const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register");
 
       if (!user && !isPublicRoute) {
         router.push(`/${lang}/login`);
@@ -95,8 +94,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = (await response.json()) as { user: User };
         setUser(data.user);
       } else {
-        const errorData = (await response.json()) as { error?: string };
-        throw new Error(errorData.error || "Failed to login");
+        const errorData = (await response.json()) as {
+          error?: string;
+          detail?: string;
+          description?: string;
+          errors?: Record<string, string[]>;
+        };
+
+        // If structured errors exist, pass them as JSON string
+        if (errorData.errors && typeof errorData.errors === "object") {
+          throw new Error(JSON.stringify(errorData));
+        }
+
+        // Otherwise use simple error message
+        const errorMessage = errorData.error || errorData.detail || errorData.description || "Failed to login";
+        throw new Error(errorMessage);
       }
     } catch (error) {
       throw error;
@@ -116,13 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, logout, isLoading, refreshUser }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

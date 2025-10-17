@@ -1,30 +1,17 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
+import { fontVariables } from "@/lib/fonts";
 import { OptionProvider } from "@/lib/option";
 import { StreamProvider } from "@/lib/stream";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Substream Web",
   description: "Application sécurisée avec authentification JWT",
 };
-
-export async function generateStaticParams() {
-  return [{ lang: "en" }, { lang: "fr" }];
-}
 
 export default async function RootLayout({
   children,
@@ -38,7 +25,10 @@ export default async function RootLayout({
   return (
     <html lang={lang} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(
+          "text-foreground group/body theme-blue overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]",
+          fontVariables,
+        )}
       >
         <ThemeProvider
           attribute="class"
