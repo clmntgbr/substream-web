@@ -120,7 +120,7 @@ export const getColumns = (t: Translations, lang?: string): ColumnDef<Stream>[] 
 
       return (
         <div className="flex items-center gap-2 w-[150px]">
-          <Progress value={progress} className="h-2" indicatorClassName={"bg-blue-500"} />
+          <Progress value={progress} className="h-2" indicatorClassName={"bg-red-500"} />
           <span className="text-xs text-muted-foreground w-[40px]">{Math.round(progress)}%</span>
         </div>
       );
