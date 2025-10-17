@@ -272,17 +272,17 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           }
         }}
       >
-        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen p-0 border-0" hideCloseButton>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => !isUploading && onOpenChange(false)}
-            disabled={isUploading}
-            className="absolute top-4 right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-          <SheetHeader>
+        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen" hideCloseButton>
+          <SheetHeader className="px-4 pt-6 pb-4 border-b">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => !isUploading && onOpenChange(false)}
+              disabled={isUploading}
+              className="absolute top-4 right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
+            >
+              <X className="h-5 w-5" />
+            </Button>
             <SheetTitle>{videoTitle}</SheetTitle>
             <SheetDescription className="flex flex-row gap-2">
               <Badge variant="outline">
@@ -300,7 +300,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
             </SheetDescription>
           </SheetHeader>
           <div className="relative h-full w-full flex items-center justify-center px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-            <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-black/40 group">
+            <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl aspect-video rounded-2xl overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 opacity-50" />
 
               {thumbnail ? (

@@ -395,7 +395,7 @@ export const Settings = ({
                                 <FieldTitle>{t.home.preview.settings.english}</FieldTitle>
                                 <FieldDescription>{t.home.preview.settings.englishDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="english" id="english" disabled={readOnly} />
+                              <RadioGroupItem value="english" id="english" disabled={true} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="french">
@@ -404,7 +404,7 @@ export const Settings = ({
                                 <FieldTitle>{t.home.preview.settings.french}</FieldTitle>
                                 <FieldDescription>{t.home.preview.settings.frenchDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="french" id="french" disabled={readOnly} />
+                              <RadioGroupItem value="french" id="french" disabled={true} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>

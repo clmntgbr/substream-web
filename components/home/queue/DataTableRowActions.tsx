@@ -6,9 +6,10 @@ import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
 import { useTranslations } from "@/lib/use-translations";
 import { Row } from "@tanstack/react-table";
-import { BrainCircuit, Download, FileText, MoreVertical, Settings2Icon, Trash2 } from "lucide-react";
+import { BrainCircuit, Download, FileText, MoreVertical, Settings2Icon, SettingsIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import Details from "../Details";
 import { Settings } from "../Settings";
 
 interface DataTableRowActionsProps<TData> {
@@ -19,6 +20,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const stream = row.original as Stream;
   const { downloadStream, downloadSubtitle, downloadResume, deleteStream } = useStreams();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const t = useTranslations();
 
   const handleDownload = () => {
@@ -55,6 +57,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     setSettingsOpen(true);
   };
 
+  const handleViewDetails = () => {
+    setDetailsOpen(true);
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -78,8 +84,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             Download resume
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleViewOptions} className="cursor-pointer">
-            <Settings2Icon className="mr-2 size-4" />
+            <SettingsIcon className="mr-2 size-4" />
             View Options
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
+            <Settings2Icon className="mr-2 size-4" />
+            View Details
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onClick={handleDelete} className="cursor-pointer">
@@ -88,6 +98,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Details stream={stream} open={detailsOpen} onOpenChange={setDetailsOpen} />
 
       <Settings
         open={settingsOpen}
