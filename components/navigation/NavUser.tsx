@@ -13,10 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
-import { User } from "@/lib/auth-context";
+import { useAuth, User } from "@/lib/auth-context";
 
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile } = useSidebar();
+  const { logout } = useAuth();
 
   if (!user) {
     return null;
@@ -77,7 +78,7 @@ export function NavUser({ user }: { user: User | null }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
