@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
-import { UserMenu } from "./navigation/user";
+import { NavUser } from "./navigation/NavUser";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
@@ -32,7 +32,7 @@ export function Header() {
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           <DarkModeToggle />
-          <UserMenu user={user} />
+          <NavUser user={user} />
 
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
