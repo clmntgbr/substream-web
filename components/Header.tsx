@@ -32,7 +32,7 @@ export function Header() {
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           <DarkModeToggle />
-          <NavUser user={user} />
+          <NavUser />
 
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>

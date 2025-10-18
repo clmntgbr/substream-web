@@ -9,6 +9,7 @@ export interface User {
   username?: string;
   firstname?: string;
   lastname?: string;
+  picture?: string;
   roles?: string[];
   id?: string;
   sub?: string;
@@ -35,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async () => {
     try {
-      const response = await apiClient.get("/api/profile", {
+      const response = await apiClient.get("/api/me", {
         skipAuthRedirect: true,
       });
 
@@ -60,10 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initAuth = async () => {
       // Don't fetch profile on public routes
-      const isPublicRoute =
-        pathname?.endsWith("/login") ||
-        pathname?.endsWith("/register") ||
-        pathname?.includes("/oauth");
+      const isPublicRoute = pathname?.endsWith("/login") || pathname?.endsWith("/register") || pathname?.includes("/oauth");
 
       if (!isPublicRoute) {
         await fetchProfile();
@@ -76,10 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute =
-        pathname.endsWith("/login") ||
-        pathname.endsWith("/register") ||
-        pathname.includes("/oauth");
+      const isPublicRoute = pathname.endsWith("/login") || pathname.endsWith("/register") || pathname.includes("/oauth");
 
       if (!user && !isPublicRoute) {
         router.push(`/${lang}/login`);
@@ -99,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             "Content-Type": "application/ld+json",
           },
           skipAuthRedirect: true,
-        },
+        }
       );
 
       if (response.ok) {
@@ -119,11 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Otherwise use simple error message
-        const errorMessage =
-          errorData.error ||
-          errorData.detail ||
-          errorData.description ||
-          "Failed to login";
+        const errorMessage = errorData.error || errorData.detail || errorData.description || "Failed to login";
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -143,13 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, logout, isLoading, refreshUser }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
