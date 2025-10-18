@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/components/oauth/Loading";
+import { useTranslations } from "@/lib/use-translations";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -12,6 +13,7 @@ export default function GitHubOAuthCallbackPage() {
   const lang = (params.lang as string) || "en";
   const [isLoading, setIsLoading] = useState(true);
   const hasExchangedToken = useRef(false);
+  const t = useTranslations();
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
@@ -23,7 +25,7 @@ export default function GitHubOAuthCallbackPage() {
       const state = searchParams.get("state");
 
       if (!code) {
-        toast.error("Authentication failed. Please try again.");
+        toast.error(t.oauth.authenticationFailed);
         router.push(`/${lang}/login`);
         return;
       }
@@ -31,7 +33,7 @@ export default function GitHubOAuthCallbackPage() {
       const codeVerifier = localStorage.getItem("github_oauth_code_verifier");
 
       if (!codeVerifier) {
-        toast.error("Authentication failed. Please try again.");
+        toast.error(t.oauth.authenticationFailed);
         router.push(`/${lang}/login`);
         return;
       }
@@ -53,7 +55,7 @@ export default function GitHubOAuthCallbackPage() {
         });
 
         if (!response.ok) {
-          toast.error("Authentication failed. Please try again.");
+          toast.error(t.oauth.authenticationFailed);
           router.push(`/${lang}/login`);
           return;
         }
@@ -66,7 +68,7 @@ export default function GitHubOAuthCallbackPage() {
 
         router.push(`/${lang}`);
       } catch {
-        toast.error("Authentication failed. Please try again.");
+        toast.error(t.oauth.authenticationFailed);
         router.push(`/${lang}/login`);
       } finally {
         setIsLoading(false);

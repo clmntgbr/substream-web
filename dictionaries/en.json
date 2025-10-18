@@ -245,5 +245,12 @@
     "alreadyHaveAccount": "Already have an account?",
     "login": "Login",
     "submit": "Register"
+  },
+  "oauth": {
+    "authenticationFailed": "Authentication failed. Please try again.",
+    "loading": {
+      "title": "Authenticating...",
+      "description": "Please wait while we complete your authentication"
+    }
   }
 }

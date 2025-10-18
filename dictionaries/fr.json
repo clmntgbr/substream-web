@@ -245,5 +245,12 @@
     "alreadyHaveAccount": "Already have an account?",
     "login": "Login",
     "submit": "Register"
+  },
+  "oauth": {
+    "authenticationFailed": "L'authentification a échoué. Veuillez réessayer.",
+    "loading": {
+      "title": "Authentification en cours...",
+      "description": "Veuillez patienter pendant que nous finalisons votre authentification"
+    }
   }
 }
