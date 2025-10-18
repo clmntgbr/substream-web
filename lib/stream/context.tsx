@@ -2,13 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { toast } from "sonner";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
@@ -23,10 +17,7 @@ export interface StreamQueryParams {
 
 interface StreamContextType {
   state: StreamState;
-  getStreams: (
-    params?: StreamQueryParams,
-    isBackgroundRefresh?: boolean,
-  ) => Promise<void>;
+  getStreams: (params?: StreamQueryParams, isBackgroundRefresh?: boolean) => Promise<void>;
   getStream: (id: string) => Promise<void>;
   createStream: (streamData: Partial<Stream>) => Promise<Stream | null>;
   updateStream: (id: string, streamData: Partial<Stream>) => Promise<void>;
@@ -50,71 +41,68 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const [pageCount, setPageCount] = React.useState(1);
   const pathname = usePathname();
 
-  const getStreams = useCallback(
-    async (params?: StreamQueryParams, isBackgroundRefresh = false) => {
-      if (isBackgroundRefresh) {
-        dispatch({ type: "SET_REFRESHING", payload: true });
-      } else {
-        dispatch({ type: "SET_LOADING", payload: true });
+  const getStreams = useCallback(async (params?: StreamQueryParams, isBackgroundRefresh = false) => {
+    if (isBackgroundRefresh) {
+      dispatch({ type: "SET_REFRESHING", payload: true });
+    } else {
+      dispatch({ type: "SET_LOADING", payload: true });
+    }
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.page) {
+        queryParams.append("page", params.page.toString());
+        setCurrentPage(params.page);
       }
-      try {
-        const queryParams = new URLSearchParams();
-        if (params?.page) {
-          queryParams.append("page", params.page.toString());
-          setCurrentPage(params.page);
-        }
-        if (params?.sortBy) {
-          queryParams.append("sortBy", params.sortBy);
-        }
-        if (params?.sortOrder) {
-          queryParams.append("sortOrder", params.sortOrder);
-        }
-        if (params?.status) {
-          queryParams.append("status", params.status);
-        }
-        if (params?.search) {
-          queryParams.append("search", params.search);
-        }
+      if (params?.sortBy) {
+        queryParams.append("sortBy", params.sortBy);
+      }
+      if (params?.sortOrder) {
+        queryParams.append("sortOrder", params.sortOrder);
+      }
+      if (params?.status) {
+        queryParams.append("status", params.status);
+      }
+      if (params?.search) {
+        queryParams.append("search", params.search);
+      }
 
-        const url = `/api/streams${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-        const response = await fetch(url, {
-          method: "GET",
-          credentials: "include",
-        });
+      const url = `/api/streams${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+      const response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+      });
 
-        if (response.ok) {
-          const data = (await response.json()) as {
-            streams: Stream[];
-            totalItems: number;
-            page: number;
-            pageCount: number;
-          };
-          dispatch({ type: "SET_STREAMS", payload: data.streams || [] });
-          setTotalItems(data.totalItems || 0);
-          if (data.page) setCurrentPage(data.page);
-          if (data.pageCount) setPageCount(data.pageCount);
-        } else {
-          const errorData = (await response.json()) as { error?: string };
-          dispatch({
-            type: "SET_ERROR",
-            payload: errorData.error || "Failed to fetch streams",
-          });
-        }
-      } catch {
+      if (response.ok) {
+        const data = (await response.json()) as {
+          streams: Stream[];
+          totalItems: number;
+          page: number;
+          pageCount: number;
+        };
+        dispatch({ type: "SET_STREAMS", payload: data.streams || [] });
+        setTotalItems(data.totalItems || 0);
+        if (data.page) setCurrentPage(data.page);
+        if (data.pageCount) setPageCount(data.pageCount);
+      } else {
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
-          payload: "Failed to fetch streams",
+          payload: errorData.error || "Failed to fetch streams",
         });
-      } finally {
-        if (isBackgroundRefresh) {
-          dispatch({ type: "SET_REFRESHING", payload: false });
-        } else {
-          dispatch({ type: "SET_LOADING", payload: false });
-        }
       }
-    },
-    [],
-  );
+    } catch {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to fetch streams",
+      });
+    } finally {
+      if (isBackgroundRefresh) {
+        dispatch({ type: "SET_REFRESHING", payload: false });
+      } else {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
+    }
+  }, []);
 
   const getStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -179,40 +167,37 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const updateStream = useCallback(
-    async (id: string, streamData: Partial<Stream>) => {
-      dispatch({ type: "SET_LOADING", payload: true });
-      try {
-        const response = await fetch(`/api/streams/${id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/ld+json",
-          },
-          credentials: "include",
-          body: JSON.stringify(streamData),
-        });
+  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await fetch(`/api/streams/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/ld+json",
+        },
+        credentials: "include",
+        body: JSON.stringify(streamData),
+      });
 
-        if (response.ok) {
-          const data = (await response.json()) as { stream: Stream };
-          dispatch({ type: "UPDATE_STREAM", payload: data.stream });
-        } else {
-          const errorData = (await response.json()) as { error?: string };
-          dispatch({
-            type: "SET_ERROR",
-            payload: errorData.error || "Failed to update stream",
-          });
-        }
-      } catch {
+      if (response.ok) {
+        const data = (await response.json()) as { stream: Stream };
+        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+      } else {
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
-          payload: "Failed to update stream",
+          payload: errorData.error || "Failed to update stream",
         });
-      } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
       }
-    },
-    [],
-  );
+    } catch {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to update stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
 
   const deleteStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -259,10 +244,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
         toast.error("Download failed", {
           description: errorMessage,
@@ -276,9 +258,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       }
 
       const contentDisposition = response.headers.get("Content-Disposition");
-      const downloadFilename = contentDisposition
-        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
-        : filename;
+      const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -294,8 +274,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         description: "Your file has been downloaded successfully.",
       });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download stream";
+      const errorMessage = error instanceof Error ? error.message : "Failed to download stream";
 
       toast.error("Download failed", {
         description: errorMessage,
@@ -328,10 +307,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
         toast.error("Download failed", {
           description: errorMessage,
@@ -363,8 +339,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         description: "Your subtitle has been downloaded successfully.",
       });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download subtitle";
+      const errorMessage = error instanceof Error ? error.message : "Failed to download subtitle";
 
       toast.error("Download failed", {
         description: errorMessage,
@@ -397,10 +372,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        const errorMessage = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
         toast.error("Download failed", {
           description: errorMessage,
@@ -432,8 +404,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         description: "Your resume has been downloaded successfully.",
       });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download resume";
+      const errorMessage = error instanceof Error ? error.message : "Failed to download resume";
 
       toast.error("Download failed", {
         description: errorMessage,
@@ -460,10 +431,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Failed to get resume with status ${response.status}`;
+        const errorMessage = errorData.message || errorData.error || `Failed to get resume with status ${response.status}`;
 
         dispatch({
           type: "SET_ERROR",
@@ -476,8 +444,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const text = await blob.text();
       return text;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to get resume";
+      const errorMessage = error instanceof Error ? error.message : "Failed to get resume";
 
       dispatch({
         type: "SET_ERROR",
@@ -491,15 +458,12 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     async (params?: StreamQueryParams) => {
       await getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   useEffect(() => {
     // Don't load streams on public routes
-    const isPublicRoute =
-      pathname?.endsWith("/login") ||
-      pathname?.endsWith("/register") ||
-      pathname?.includes("/twitter/oauth");
+    const isPublicRoute = pathname?.endsWith("/login") || pathname?.endsWith("/register") || pathname?.includes("/oauth");
 
     if (!isPublicRoute) {
       getStreams();
