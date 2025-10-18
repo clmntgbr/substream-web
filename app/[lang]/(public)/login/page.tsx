@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/lib/auth-context";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
@@ -151,7 +152,9 @@ export default function LoginPage() {
                     </div>
                   )}
                   <Field>
-                    <Button type="submit">Login</Button>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? <Spinner className="size-4" /> : t.login.submit}
+                    </Button>
                     <FieldDescription className="text-center">
                       Don&apos;t have an account? <a href="#">Sign up</a>
                     </FieldDescription>
