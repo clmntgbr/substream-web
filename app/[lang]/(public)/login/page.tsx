@@ -93,7 +93,9 @@ export default function LoginPage() {
         <div className="flex flex-col gap-6">
           <Card className="shadow-none">
             <CardHeader className="text-center">
-              <CardTitle className="text-xl">Welcome back</CardTitle>
+              <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                {t.login.welcome}
+              </CardTitle>
             </CardHeader>
             <CardContent className="shadow-none">
               <form onSubmit={handleLogin} className="space-y-4">

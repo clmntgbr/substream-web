@@ -225,6 +225,7 @@
     }
   },
   "login": {
+    "welcome": "Welcome",
     "title": "Login",
     "email": "Email",
     "password": "Password",
