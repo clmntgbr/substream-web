@@ -6,9 +6,9 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { code, state } = body;
+    const { code, state, code_verifier } = body;
 
-    if (!code) {
+    if (!code || !code_verifier) {
       return NextResponse.json(
         { error: "Missing required parameters" },
         { status: 400 },
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const backendResponse = await fetch(
-      `${BACKEND_API_URL}/oauth/google/exchange-token`,
+      `${BACKEND_API_URL}/oauth/github/exchange-token`,
       {
         method: "POST",
         headers: {
@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           code,
           state,
+          code_verifier,
         }),
       },
     );
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
-        username: user.email?.split("@")[0] || "google_user",
+        username: user.email?.split("@")[0] || "github_user",
         firstname: user.firstname,
         lastname: user.lastname,
         roles: user.roles,

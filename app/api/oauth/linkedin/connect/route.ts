@@ -5,7 +5,7 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 export async function GET() {
   try {
     const backendResponse = await fetch(
-      `${BACKEND_API_URL}/oauth/google/connect`,
+      `${BACKEND_API_URL}/oauth/linkedin/connect`,
       {
         method: "GET",
       },

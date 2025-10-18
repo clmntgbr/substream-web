@@ -1,6 +1,6 @@
-export async function initiateGoogleOAuth() {
+export async function initiateLinkedInOAuth() {
   try {
-    const response = await fetch("/api/oauth/google/connect", {
+    const response = await fetch("/api/oauth/linkedin/connect", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export async function initiateGoogleOAuth() {
 
     window.location.href = result.data.url;
   } catch (error) {
-    console.error("Error initiating Google OAuth:", error);
+    console.error("Error initiating LinkedIn OAuth:", error);
     throw error;
   }
 }

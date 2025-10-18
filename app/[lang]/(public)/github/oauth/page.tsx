@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export default function GoogleOAuthCallbackPage() {
+export default function GitHubOAuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = useParams();
@@ -28,13 +28,22 @@ export default function GoogleOAuthCallbackPage() {
         return;
       }
 
+      const codeVerifier = localStorage.getItem("github_oauth_code_verifier");
+
+      if (!codeVerifier) {
+        toast.error("Authentication failed. Please try again.");
+        router.push(`/${lang}/login`);
+        return;
+      }
+
       try {
         const exchangeData = {
           code,
           state,
+          code_verifier: codeVerifier,
         };
 
-        const response = await fetch("/api/oauth/google/exchange-token", {
+        const response = await fetch("/api/oauth/github/exchange-token", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -50,6 +59,8 @@ export default function GoogleOAuthCallbackPage() {
         }
 
         await response.json();
+
+        localStorage.removeItem("github_oauth_code_verifier");
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
 

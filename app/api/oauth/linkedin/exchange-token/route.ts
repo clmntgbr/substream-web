@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const backendResponse = await fetch(
-      `${BACKEND_API_URL}/oauth/google/exchange-token`,
+      `${BACKEND_API_URL}/oauth/linkedin/exchange-token`,
       {
         method: "POST",
         headers: {
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
-        username: user.email?.split("@")[0] || "google_user",
+        username: user.email?.split("@")[0] || "linkedin_user",
         firstname: user.firstname,
         lastname: user.lastname,
         roles: user.roles,

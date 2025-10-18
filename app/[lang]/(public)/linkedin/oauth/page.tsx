@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export default function GoogleOAuthCallbackPage() {
+export default function LinkedInOAuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = useParams();
@@ -34,7 +34,7 @@ export default function GoogleOAuthCallbackPage() {
           state,
         };
 
-        const response = await fetch("/api/oauth/google/exchange-token", {
+        const response = await fetch("/api/oauth/linkedin/exchange-token", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

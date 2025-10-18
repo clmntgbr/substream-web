@@ -1,6 +1,6 @@
-export async function initiateGoogleOAuth() {
+export async function initiateGitHubOAuth() {
   try {
-    const response = await fetch("/api/oauth/google/connect", {
+    const response = await fetch("/api/oauth/github/connect", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -15,17 +15,23 @@ export async function initiateGoogleOAuth() {
       success: boolean;
       data: {
         url: string;
+        code_verifier: string;
       };
       message: string;
     };
 
-    if (!result.success || !result.data.url) {
+    if (!result.success || !result.data.url || !result.data.code_verifier) {
       throw new Error("Invalid response from backend");
     }
 
+    localStorage.setItem(
+      "github_oauth_code_verifier",
+      result.data.code_verifier,
+    );
+
     window.location.href = result.data.url;
   } catch (error) {
-    console.error("Error initiating Google OAuth:", error);
+    console.error("Error initiating GitHub OAuth:", error);
     throw error;
   }
 }

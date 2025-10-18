@@ -1,5 +1,6 @@
 "use client";
 
+import { apiClient } from "@/lib/api-client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -34,9 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch("/api/profile", {
-        method: "GET",
-        credentials: "include", // Important for cookies
+      const response = await apiClient.get("/api/profile", {
+        skipAuthRedirect: true,
       });
 
       if (response.ok) {
@@ -91,15 +91,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      // Send credentials to API to authenticate and set session cookie
-      const response = await fetch("/api/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/ld+json",
+      const response = await apiClient.post(
+        "/api/token",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/ld+json",
+          },
+          skipAuthRedirect: true,
         },
-        credentials: "include", // Important for cookies
-        body: JSON.stringify({ email, password }),
-      });
+      );
 
       if (response.ok) {
         const data = (await response.json()) as { user: User };
@@ -132,9 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch("/api/logout", {
-        method: "POST",
-        credentials: "include", // Important for cookies
+      await apiClient.post("/api/logout", undefined, {
+        skipAuthRedirect: true,
       });
     } catch {
     } finally {
