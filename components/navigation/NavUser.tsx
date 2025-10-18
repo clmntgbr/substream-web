@@ -12,7 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 
 export function NavUser() {
@@ -29,7 +34,10 @@ export function NavUser() {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="cursor-pointer hover:bg-transparent focus:bg-transparent">
+            <SidebarMenuButton
+              size="lg"
+              className="cursor-pointer hover:bg-transparent focus:bg-transparent"
+            >
               <Avatar className="h-8 w-8 rounded-full">
                 <AvatarImage src={user.picture} alt={user.email} />
                 <AvatarFallback className="rounded-full">
@@ -48,7 +56,10 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.picture || ""} alt={user.firstname || ""} />
+                  <AvatarImage
+                    src={user.picture || ""}
+                    alt={user.firstname || ""}
+                  />
                   <AvatarFallback className="rounded-lg">
                     {user.firstname?.charAt(0) || ""}
                     {user.lastname?.charAt(0) || ""}

@@ -1,4 +1,3 @@
-import { useAuth } from "@/lib/auth-context";
 import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
@@ -10,7 +9,6 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const { user } = useAuth();
 
   const menuItems = [
     { href: "#features", label: "Features" },
