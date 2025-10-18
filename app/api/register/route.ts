@@ -10,7 +10,10 @@ export async function POST(request: NextRequest) {
     const { email, password, confirmPassword, firstname, lastname } = body;
 
     if (!email || !password || !confirmPassword || !firstname || !lastname) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
     }
 
     // Call the external backend API to register
@@ -40,7 +43,10 @@ export async function POST(request: NextRequest) {
     const { token, user } = data;
 
     if (!token) {
-      return NextResponse.json({ error: "No token received from backend" }, { status: 500 });
+      return NextResponse.json(
+        { error: "No token received from backend" },
+        { status: 500 },
+      );
     }
 
     // Create response with user data
@@ -61,6 +67,9 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch {
-    return NextResponse.json({ error: "Registration failed. Please check your backend connection." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Registration failed. Please check your backend connection." },
+      { status: 500 },
+    );
   }
 }

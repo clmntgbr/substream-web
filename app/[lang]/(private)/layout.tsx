@@ -1,0 +1,34 @@
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/lib/auth-context";
+import { OptionProvider } from "@/lib/option";
+import { StreamProvider } from "@/lib/stream";
+
+export default function PrivateLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <AuthProvider>
+        <StreamProvider>
+          <OptionProvider>
+            {children}
+            <Toaster
+              richColors
+              expand={false}
+              position="top-right"
+              closeButton
+            />
+          </OptionProvider>
+        </StreamProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}

@@ -1,0 +1,84 @@
+import { setSessionCookie } from "@/lib/session";
+import { NextRequest, NextResponse } from "next/server";
+
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { code, state } = body;
+
+    if (!code) {
+      return NextResponse.json(
+        { error: "Missing required parameters" },
+        { status: 400 },
+      );
+    }
+
+    // Call the external backend API to exchange the code for a token
+    // No authorization token needed for this public endpoint
+    const backendResponse = await fetch(
+      `${BACKEND_API_URL}/oauth/google/exchange-token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          state,
+        }),
+      },
+    );
+
+    if (!backendResponse.ok) {
+      const errorData = await backendResponse.json().catch(() => ({}));
+      return NextResponse.json(errorData, { status: backendResponse.status });
+    }
+
+    const response = (await backendResponse.json()) as {
+      token: string;
+      user: {
+        id: string;
+        email: string;
+        firstname: string;
+        lastname: string;
+        roles: string[];
+        createdAt: string;
+        updatedAt: string;
+      };
+    };
+
+    if (!response.token) {
+      return NextResponse.json(
+        { error: "No token received from backend" },
+        { status: 500 },
+      );
+    }
+
+    const { token, user } = response;
+
+    // Create response with user data
+    // Map backend user data to our User format
+    const userResponse = NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.email?.split("@")[0] || "google_user",
+        firstname: user.firstname,
+        lastname: user.lastname,
+        roles: user.roles,
+      },
+    });
+
+    // Set the session cookie with token
+    setSessionCookie(userResponse, token);
+
+    return userResponse;
+  } catch {
+    return NextResponse.json(
+      { error: "Token exchange failed. Please check your backend connection." },
+      { status: 500 },
+    );
+  }
+}

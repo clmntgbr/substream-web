@@ -1,18 +1,30 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 import { useTranslations } from "@/lib/use-translations";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Table } from "@tanstack/react-table";
 import { Columns3Cog } from "lucide-react";
 
-export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) {
+export function DataTableViewOptions<TData>({
+  table,
+}: {
+  table: Table<TData>;
+}) {
   const t = useTranslations();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex cursor-pointer">
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-auto hidden h-8 lg:flex cursor-pointer"
+        >
           <Columns3Cog />
           {t.home.queue.options.customizeColumns}
         </Button>
@@ -20,7 +32,10 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
       <DropdownMenuContent align="end" className="w-[150px]">
         {table
           .getAllColumns()
-          .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+          .filter(
+            (column) =>
+              typeof column.accessorFn !== "undefined" && column.getCanHide(),
+          )
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
@@ -29,7 +44,11 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {t.home.queue.columns[column.id as keyof typeof t.home.queue.columns] as string}
+                {
+                  t.home.queue.columns[
+                    column.id as keyof typeof t.home.queue.columns
+                  ] as string
+                }
               </DropdownMenuCheckboxItem>
             );
           })}

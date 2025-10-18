@@ -1,9 +1,4 @@
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/lib/auth-context";
 import { fontVariables } from "@/lib/fonts";
-import { OptionProvider } from "@/lib/option";
-import { StreamProvider } from "@/lib/stream";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import "../globals.css";
@@ -30,26 +25,7 @@ export default async function RootLayout({
           fontVariables,
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <StreamProvider>
-              <OptionProvider>
-                {children}
-                <Toaster
-                  richColors
-                  expand={false}
-                  position="top-right"
-                  closeButton
-                />
-              </OptionProvider>
-            </StreamProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
