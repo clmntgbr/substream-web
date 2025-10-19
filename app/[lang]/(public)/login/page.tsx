@@ -18,6 +18,7 @@ import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
 import { loginSchema, type LoginFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -256,7 +257,19 @@ export default function LoginPage() {
       </div>
 
       <div className="sticky top-0 hidden h-screen rounded-xl p-4 lg:block">
-        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30"></div>
+        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30">
+          <Image
+            alt="LoginBanner"
+            loading="eager"
+            width="1384"
+            height="1824"
+            decoding="async"
+            data-nimg="1"
+            className="pointer-events-none block h-full w-full select-none rounded-xl object-cover dark:hidden"
+            style={{ color: "transparent" }}
+            src="/background.webp"
+          />
+        </div>
       </div>
     </div>
   );
