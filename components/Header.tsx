@@ -29,18 +29,9 @@ export function Header() {
             </span>
           </div>
           <nav className="hidden items-center gap-6 md:flex">
-            <a
-              className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80"
-              href="https://discord.com/invite/lovable-dev"
-            >
-              Community
-            </a>
             <Link className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80" href="/pricing">
               Pricing
             </Link>
-            <a className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80" href="https://enterprise.lovable.dev">
-              Enterprise
-            </a>
           </nav>
         </div>
         <div className="flex items-center gap-4 md:pr-8">
