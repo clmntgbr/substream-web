@@ -121,7 +121,7 @@ export default function LoginPage() {
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                    className={`relative flex w-full space-x-2 h-8 hover:bg-muted/70 bg-muted/30 dark:bg-background rounded-md px-4 py-2 ${
                       lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
@@ -136,7 +136,7 @@ export default function LoginPage() {
                     onClick={handleGitHubLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                    className={`relative flex w-full space-x-2 h-8 hover:bg-muted/70 bg-muted/30 dark:bg-background rounded-md px-4 py-2 ${
                       lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
@@ -151,7 +151,7 @@ export default function LoginPage() {
                     onClick={handleLinkedInLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 hover:bg-muted/70 bg-muted/30 dark:bg-background ${
                       lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
