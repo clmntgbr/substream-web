@@ -83,8 +83,8 @@ const HomePage = () => {
   return (
     <>
       <Upload />
-      <Card>
-        <CardContent>
+      <Card className="border-none">
+        <CardContent className="border-none">
           <DataTable
             data={state.streams}
             columns={columns}

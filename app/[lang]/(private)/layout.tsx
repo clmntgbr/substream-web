@@ -24,9 +24,9 @@ export default function PrivateLayout({
                     backgroundImage: "url(/gradient-optimized.webp)",
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center -20px", // descend un peu l'image
-                    WebkitMask: "linear-gradient(to bottom, transparent 0%, black 5%, black 100%)",
-                    mask: "linear-gradient(to bottom, transparent 0%, black 5%, black 100%)",
+                    backgroundPosition: "center -20px",
+                    WebkitMask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
+                    mask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
                     WebkitBackfaceVisibility: "hidden",
                     backfaceVisibility: "hidden",
                     WebkitPerspective: "1000px",

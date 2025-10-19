@@ -69,8 +69,8 @@ export const Upload = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="file" className="shadow-none">
-            <Card className="shadow-none">
-              <CardContent className="grid gap-6 shadow-none py-[13vh]">
+            <Card className="shadow-none border-none">
+              <CardContent className="grid gap-6 shadow-none py-[13vh] border-none">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                     <UploadIcon size={28} className="text-primary" />
