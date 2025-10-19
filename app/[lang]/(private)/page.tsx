@@ -3,6 +3,7 @@ import { getColumns } from "@/components/home/queue/Columns";
 import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/Upload";
+import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
 import { useTranslations } from "@/lib/use-translations";
@@ -82,16 +83,20 @@ const HomePage = () => {
   return (
     <>
       <Upload />
-      <DataTable
-        data={state.streams}
-        columns={columns}
-        serverSide
-        pageCount={pageCount}
-        onPaginationChange={handlePaginationChange}
-        onSortingChange={handleSortingChange}
-        onColumnFiltersChange={handleColumnFiltersChange}
-        ToolbarComponent={DataTableToolbar}
-      />
+      <Card>
+        <CardContent>
+          <DataTable
+            data={state.streams}
+            columns={columns}
+            serverSide
+            pageCount={pageCount}
+            onPaginationChange={handlePaginationChange}
+            onSortingChange={handleSortingChange}
+            onColumnFiltersChange={handleColumnFiltersChange}
+            ToolbarComponent={DataTableToolbar}
+          />
+        </CardContent>
+      </Card>
     </>
   );
 };
