@@ -23,7 +23,6 @@ import { toast } from "sonner";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const [lastUsedProvider, setLastUsedProviderState] = useState<SocialProvider | null>(null);
@@ -36,7 +35,6 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFieldErrors({});
     setIsLoading(true);
 
     try {
@@ -46,9 +44,6 @@ export default function LoginPage() {
       try {
         const errorData = JSON.parse(err.message);
         if (errorData.errors && typeof errorData.errors === "object") {
-          // Handle field-specific errors
-          setFieldErrors(errorData.errors);
-          // Show general error toast if there are general errors
           if (errorData.errors.general) {
             errorData.errors.general.forEach((errorMsg: string) => {
               toast.error(errorMsg);
