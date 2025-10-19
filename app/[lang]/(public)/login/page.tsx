@@ -4,15 +4,18 @@ import { GitHubSVG } from "@/components/misc/GitHubSVG";
 import { GoogleSVG } from "@/components/misc/GoogleSVG";
 import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Field, FieldDescription } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth-context";
 import { getLastUsedProvider, setLastUsedProvider, type SocialProvider } from "@/lib/cookies";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
+import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -108,10 +111,6 @@ export default function LoginPage() {
         <div className="relative flex w-full max-w-[350px] flex-col items-start justify-center">
           <div className="min-h-[450px] w-full">
             <div className="flex flex-col gap-8">
-              <div className="flex flex-col gap-3">
-                <h1 className="text-3xl font-medium">Log in</h1>
-              </div>
-
               <div className="grid gap-4">
                 <div className="relative">
                   <Button
@@ -170,37 +169,64 @@ export default function LoginPage() {
                 <form onSubmit={handleLogin}>
                   <div className="grid gap-4">
                     <Field>
-                      <FieldLabel htmlFor="email">Email</FieldLabel>
-                      <Input id="email" type="email" placeholder={t.login.email} value={email} onChange={(e) => setEmail(e.target.value)} required />
-                      <FieldError errors={fieldErrors.email?.map((msg) => ({ message: msg }))} />
+                      <InputGroup>
+                        <InputGroupInput
+                          id="email"
+                          type="email"
+                          placeholder="random@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                        <InputGroupAddon align="block-start">
+                          <Label htmlFor="email" className="text-foreground">
+                            {t.login.email}
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                                <HelpCircle />
+                              </InputGroupButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>We&apos;ll use this to send you notifications</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </Field>
                     <Field>
-                      <div className="flex items-center">
-                        <FieldLabel htmlFor="password">Password</FieldLabel>
-                        <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-                          {t.login.forgotPassword}
-                        </a>
-                      </div>
-                      <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder={t.login.password}
-                        required
-                      />
-                      <FieldError
-                        errors={fieldErrors.password?.map((msg) => ({
-                          message: msg,
-                        }))}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          id="password"
+                          type="password"
+                          placeholder="********"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <InputGroupAddon align="block-start">
+                          <Label htmlFor="password" className="text-foreground">
+                            {t.login.password}
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                                <InfoIcon />
+                              </InputGroupButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Password must be at least 8 characters</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </Field>
-
                     <div className="flex flex-col gap-3">
                       <div className="relative flex items-center">
                         <div className="flex-grow">
                           <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : "Continue"}
+                            {isLoading ? <Spinner className="size-4" /> : "Continue"} <CheckCheck />
                           </Button>
                         </div>
                       </div>
