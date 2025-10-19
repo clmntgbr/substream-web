@@ -18,7 +18,7 @@ export default function PrivateLayout({
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex-1">
-                <div
+                {/* <div
                   className="pointer-events-none fixed left-1/2 top-[-100px] -z-10 aspect-square w-[350%] -translate-x-1/2 overflow-hidden md:w-[190%] lg:w-[190%] xl:w-[190%] 2xl:mx-auto"
                   style={{
                     backgroundImage: "url(/gradient-optimized.webp)",
@@ -34,7 +34,7 @@ export default function PrivateLayout({
                     willChange: "transform",
                   }}
                   aria-hidden="true"
-                />
+                /> */}
                 <div className="flex flex-1 flex-col gap-4 p-4 container max-w-6xl mx-auto">{children}</div>
               </main>
             </div>
