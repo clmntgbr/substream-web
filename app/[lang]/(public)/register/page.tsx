@@ -4,17 +4,24 @@ import { GitHubSVG } from "@/components/misc/GitHubSVG";
 import { GoogleSVG } from "@/components/misc/GoogleSVG";
 import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Field, FieldDescription } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
+import { getLastUsedProvider, setLastUsedProvider, type SocialProvider } from "@/lib/cookies";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
+import { registerSchema, type RegisterFormData } from "@/lib/validation/auth";
+import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -22,18 +29,39 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { refreshUser } = useAuth();
+  const [lastUsedProvider, setLastUsedProviderState] = useState<SocialProvider | null>(null);
+  const t = useTranslations();
   const router = useRouter();
   const params = useParams();
   const lang = (params.lang as string) || "en";
-  const t = useTranslations();
-  const { refreshUser } = useAuth();
+
+  useEffect(() => {
+    const provider = getLastUsedProvider();
+    setLastUsedProviderState(provider);
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFieldErrors({});
     setIsLoading(true);
+
+    const formData: RegisterFormData = {
+      firstname,
+      lastname,
+      email,
+      password,
+      confirmPassword,
+    };
+    const validationResult = registerSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      validationResult.error.issues.forEach((issue) => {
+        toast.error(issue.message);
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await apiClient.post(
@@ -61,180 +89,276 @@ export default function RegisterPage() {
           errors?: Record<string, string[]>;
         };
 
-        // Check if errors object exists (new format with field-specific errors)
         if (data.errors && typeof data.errors === "object") {
-          setFieldErrors(data.errors);
+          if (data.errors.general) {
+            data.errors.general.forEach((errorMsg: string) => {
+              toast.error(errorMsg);
+            });
+          }
         } else {
-          // Fallback to old format (detail/description/error) - show as general error
-          const errorMessage = data.detail || data.description || data.error || "An error occurred";
-          setFieldErrors({ general: [errorMessage] });
+          toast.error(data.detail || data.description || data.error || "An error occurred");
         }
-        return;
+      } else {
+        await refreshUser();
+        router.push(`/${lang}`);
       }
-
-      // Registration successful, user is now logged in
-      await response.json();
-
-      // Refresh user context
-      await refreshUser();
-
-      // Redirect to home page
-      router.push(`/${lang}`);
     } catch {
-      setFieldErrors({ general: ["An error occurred"] });
-    } finally {
+      toast.error("An error occurred during registration");
       setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("google");
     try {
       await initiateGoogleOAuth();
     } catch {
-      setFieldErrors({ general: ["Failed to initiate Google login"] });
+      setIsLoading(false);
+      toast.error("Failed to initiate Google register");
     }
-    setIsLoading(false);
   };
 
   const handleGitHubLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("github");
     try {
       await initiateGitHubOAuth();
     } catch {
-      setFieldErrors({ general: ["Failed to initiate GitHub login"] });
+      setIsLoading(false);
+      toast.error("Failed to initiate GitHub register");
     }
-    setIsLoading(false);
   };
 
   const handleLinkedInLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("linkedin");
     try {
       await initiateLinkedInOAuth();
     } catch {
-      setFieldErrors({ general: ["Failed to initiate LinkedIn login"] });
+      setIsLoading(false);
+      toast.error("Failed to initiate LinkedIn register");
     }
-    setIsLoading(false);
   };
 
+  const LastUsedBadge = () => (
+    <div className="absolute -right-2 -top-1/3">
+      <span className="rounded-lg border border-affirmative-primary bg-affirmative px-1.5 py-0.5 text-xs text-affirmative-foreground shadow-none bg-background">
+        {t.register.last_used}
+      </span>
+    </div>
+  );
+
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <div className="flex flex-col gap-6">
-          <Card className="shadow-none">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {t.register.welcome}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="shadow-none">
-              <form onSubmit={handleRegister} className="space-y-4">
-                <FieldGroup>
-                  <Field>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleGoogleLogin}>
-                      <GoogleSVG />
-                      Register with Google
-                    </Button>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleGitHubLogin}>
-                      <GitHubSVG />
-                      Register with GitHub
-                    </Button>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleLinkedInLogin}>
-                      <LinkedInSVG />
-                      Register with LinkedIn
-                    </Button>
-                  </Field>
-                  <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">{t.register.orContinueWith}</FieldSeparator>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field data-invalid={!!fieldErrors.firstname}>
-                      <FieldLabel htmlFor="firstname">{t.register.firstname}</FieldLabel>
-                      <Input
-                        id="firstname"
-                        type="text"
-                        value={firstname}
-                        onChange={(e) => setFirstname(e.target.value)}
-                        required
-                        placeholder="Jean"
-                      />
-                      <FieldError
-                        errors={fieldErrors.firstname?.map((msg) => ({
-                          message: msg,
-                        }))}
-                      />
-                    </Field>
-
-                    <Field data-invalid={!!fieldErrors.lastname}>
-                      <FieldLabel htmlFor="lastname">{t.register.lastname}</FieldLabel>
-                      <Input id="lastname" type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} required placeholder="Dupont" />
-                      <FieldError
-                        errors={fieldErrors.lastname?.map((msg) => ({
-                          message: msg,
-                        }))}
-                      />
-                    </Field>
-                  </div>
-
-                  <Field data-invalid={!!fieldErrors.email}>
-                    <FieldLabel htmlFor="email">{t.register.email}</FieldLabel>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="votre@email.com" />
-                    <FieldError errors={fieldErrors.email?.map((msg) => ({ message: msg }))} />
-                  </Field>
-
-                  <Field data-invalid={!!fieldErrors.plainPassword}>
-                    <FieldLabel htmlFor="password">{t.register.password}</FieldLabel>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      placeholder="••••••••"
-                    />
-                    <FieldError
-                      errors={fieldErrors.plainPassword?.map((msg) => ({
-                        message: msg,
-                      }))}
-                    />
-                  </Field>
-
-                  <Field data-invalid={!!fieldErrors.confirmPassword}>
-                    <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      placeholder="••••••••"
-                    />
-                    <FieldError
-                      errors={fieldErrors.confirmPassword?.map((msg) => ({
-                        message: msg,
-                      }))}
-                    />
-                  </Field>
-
-                  {fieldErrors.general && (
-                    <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-                      <ul className="text-sm text-red-600 dark:text-red-400 list-disc list-inside space-y-1">
-                        {fieldErrors.general.map((err, index) => (
-                          <li key={index}>{err}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                    {isLoading ? t.register.submitDisabled : t.register.submit}
+    <div className="grid h-full min-h-screen lg:grid-cols-2">
+      <div className="flex justify-center px-4 py-20">
+        <div className="relative flex w-full max-w-[450px] flex-col items-start justify-center">
+          <div className="min-h-[450px] w-full">
+            <div className="flex flex-col gap-8">
+              <div className="grid gap-4">
+                <div className="relative">
+                  <Button
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <GoogleSVG />
+                    <span>{t.register.continueWithGoogle}</span>
                   </Button>
-                </FieldGroup>
-              </form>
-            </CardContent>
-          </Card>
-          <FieldDescription className="px-6 text-center">
-            By clicking register, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-          </FieldDescription>
+                  {lastUsedProvider === "google" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <Button
+                    onClick={handleGitHubLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <GitHubSVG />
+                    <span>{t.register.continueWithGitHub}</span>
+                  </Button>
+                  {lastUsedProvider === "github" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <Button
+                    onClick={handleLinkedInLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <LinkedInSVG />
+                    <span>{t.register.continueWithLinkedIn}</span>
+                  </Button>
+                  {lastUsedProvider === "linkedin" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t"></span>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-background px-2 text-muted-foreground">{t.register.orContinueWith}</span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div className="grid gap-4">
+                    <Field>
+                      <div className="flex flex-row gap-4">
+                        <InputGroup className="flex-1">
+                          <InputGroupInput
+                            id="firstname"
+                            type="text"
+                            placeholder="John"
+                            value={firstname}
+                            onChange={(e) => setFirstname(e.target.value)}
+                            required
+                          />
+                          <InputGroupAddon align="block-start">
+                            <Label htmlFor="firstname" className="text-foreground">
+                              {t.register.firstname}
+                            </Label>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        <InputGroup className="flex-1">
+                          <InputGroupInput
+                            id="lastname"
+                            type="text"
+                            placeholder="Doe"
+                            value={lastname}
+                            onChange={(e) => setLastname(e.target.value)}
+                            required
+                          />
+                          <InputGroupAddon align="block-start">
+                            <Label htmlFor="lastname" className="text-foreground">
+                              {t.register.lastname}
+                            </Label>
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </div>
+                    </Field>
+                    <Field>
+                      <InputGroup>
+                        <InputGroupInput
+                          id="email"
+                          type="email"
+                          placeholder="random@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                        <InputGroupAddon align="block-start">
+                          <Label htmlFor="email" className="text-foreground">
+                            {t.register.email}
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild className="hover:bg-transparent">
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                                <HelpCircle />
+                              </InputGroupButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{t.register.weWillUseThisToSendYouNotifications}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </Field>
+                    <Field>
+                      <InputGroup>
+                        <InputGroupInput
+                          id="password"
+                          type="password"
+                          placeholder="********"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <InputGroupAddon align="block-start">
+                          <Label htmlFor="password" className="text-foreground">
+                            {t.register.password}
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild className="hover:bg-transparent">
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                                <InfoIcon />
+                              </InputGroupButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Password must be at least 8 characters</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </Field>
+                    <Field>
+                      <InputGroup>
+                        <InputGroupInput
+                          id="confirmPassword"
+                          type="password"
+                          placeholder="********"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                        />
+                        <InputGroupAddon align="block-start">
+                          <Label htmlFor="confirmPassword" className="text-foreground">
+                            {t.register.confirmPassword}
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild className="hover:bg-transparent">
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                                <InfoIcon />
+                              </InputGroupButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{t.register.passwordsMustMatch}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </Field>
+                    <div className="flex flex-col gap-3">
+                      <div className="relative flex items-center">
+                        <div className="flex-grow">
+                          <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
+                            {isLoading ? <Spinner className="size-4" /> : t.register.continue} <CheckCheck />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="text-center text-base font-normal">
+                        <span className="text-sm text-muted-foreground">
+                          {t.register.alreadyHaveAccount}{" "}
+                          <Link href="/login" className="text-sm text-primary underline">
+                            {t.register.login}
+                          </Link>
+                        </span>
+                      </div>
+                      <FieldDescription className="px-6 text-center pt-5">
+                        {t.register.byClickingRegister} <a href="#">{t.register.termsOfService}</a> {t.register.and} <a href="#">{t.register.and}</a>{" "}
+                        <a href="#">{t.register.privacyPolicy}</a>.
+                      </FieldDescription>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="sticky top-0 hidden h-screen rounded-xl p-4 lg:block">
+        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30"></div>
       </div>
     </div>
   );

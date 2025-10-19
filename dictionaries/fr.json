@@ -234,11 +234,12 @@
     "forgotPassword": "Forgot password?",
     "register": "Register",
     "alreadyHaveAccount": "Already have an account?",
-    "login": "Login",
+    "continue": "Login",
     "signup": "Sign up",
-    "orContinueWith": "Or continue with"
+    "orContinueWith": "or continue with"
   },
   "register": {
+    "last_used": "Last used",
     "orContinueWith": "Or continue with",
     "welcome": "Welcome",
     "title": "Register",
@@ -247,10 +248,21 @@
     "lastname": "Lastname",
     "email": "Email",
     "password": "Password",
+    "passwordsMustMatch": "Passwords must match",
+    "weWillUseThisToSendYouNotifications": "We'll use this to send you notifications",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGitHub": "Continue with GitHub",
+    "continueWithLinkedIn": "Continue with LinkedIn",
+    "continue": "Register",
     "submitDisabled": "Submit",
-    "alreadyHaveAccount": "Already have an account?",
+    "confirmPassword": "Confirm Password",
     "login": "Login",
-    "submit": "Register"
+    "submit": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "byClickingRegister": "By clicking register, you agree to our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy"
   },
   "oauth": {
     "authenticationFailed": "Authentication failed. Please try again.",

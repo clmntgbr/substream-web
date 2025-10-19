@@ -15,6 +15,7 @@ import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
+import { loginSchema, type LoginFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -36,6 +37,19 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Validate form data with Zod
+    const formData: LoginFormData = { email, password };
+    const validationResult = loginSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      // Show validation errors in toasts
+      validationResult.error.issues.forEach((issue) => {
+        toast.error(issue.message);
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await login(email, password);
@@ -103,7 +117,7 @@ export default function LoginPage() {
   return (
     <div className="grid h-full min-h-screen lg:grid-cols-2">
       <div className="flex justify-center px-4 py-20">
-        <div className="relative flex w-full max-w-[350px] flex-col items-start justify-center">
+        <div className="relative flex w-full max-w-[450px] flex-col items-start justify-center">
           <div className="min-h-[450px] w-full">
             <div className="flex flex-col gap-8">
               <div className="grid gap-4">
@@ -178,7 +192,7 @@ export default function LoginPage() {
                             {t.login.email}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild>
+                            <TooltipTrigger asChild className="hover:bg-transparent">
                               <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
                                 <HelpCircle />
                               </InputGroupButton>
@@ -205,7 +219,7 @@ export default function LoginPage() {
                             {t.login.password}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild>
+                            <TooltipTrigger asChild className="hover:bg-transparent">
                               <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
                                 <InfoIcon />
                               </InputGroupButton>
@@ -221,7 +235,7 @@ export default function LoginPage() {
                       <div className="relative flex items-center">
                         <div className="flex-grow">
                           <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : "Continue"} <CheckCheck />
+                            {isLoading ? <Spinner className="size-4" /> : t.login.continue} <CheckCheck />
                           </Button>
                         </div>
                       </div>
