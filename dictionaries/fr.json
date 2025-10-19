@@ -225,6 +225,7 @@
     }
   },
   "login": {
+    "last_used": "Last used",
     "welcome": "Welcome",
     "title": "Login",
     "email": "Email",

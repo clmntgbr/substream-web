@@ -4,28 +4,32 @@ import { GitHubSVG } from "@/components/misc/GitHubSVG";
 import { GoogleSVG } from "@/components/misc/GoogleSVG";
 import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/lib/auth-context";
+import { getLastUsedProvider, setLastUsedProvider, type SocialProvider } from "@/lib/cookies";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const params = useParams();
-  const lang = (params.lang as string) || "en";
+  const { login } = useAuth();
+  const [lastUsedProvider, setLastUsedProviderState] = useState<SocialProvider | null>(null);
   const t = useTranslations();
+
+  useEffect(() => {
+    const provider = getLastUsedProvider();
+    setLastUsedProviderState(provider);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,17 +40,22 @@ export default function LoginPage() {
       await login(email, password);
     } catch (error) {
       const err = error as Error;
-      // Try to parse as JSON error with field-specific errors
       try {
         const errorData = JSON.parse(err.message);
         if (errorData.errors && typeof errorData.errors === "object") {
+          // Handle field-specific errors
           setFieldErrors(errorData.errors);
+          // Show general error toast if there are general errors
+          if (errorData.errors.general) {
+            errorData.errors.general.forEach((errorMsg: string) => {
+              toast.error(errorMsg);
+            });
+          }
         } else {
-          setFieldErrors({ general: [err.message || "Login failed"] });
+          toast.error(err.message || "Login failed");
         }
       } catch {
-        // Not JSON, treat as general error
-        setFieldErrors({ general: [err.message || "Login failed"] });
+        toast.error(err.message || "Login failed");
       }
       setIsLoading(false);
     }
@@ -54,133 +63,170 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("google");
     try {
       await initiateGoogleOAuth();
     } catch {
       setIsLoading(false);
-      setFieldErrors({ general: ["Failed to initiate Google login"] });
+      toast.error("Failed to initiate Google login");
     }
   };
 
   const handleGitHubLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("github");
     try {
       await initiateGitHubOAuth();
     } catch {
       setIsLoading(false);
-      setFieldErrors({ general: ["Failed to initiate GitHub login"] });
+      toast.error("Failed to initiate GitHub login");
     }
   };
 
   const handleLinkedInLogin = async () => {
     setIsLoading(true);
+    setLastUsedProvider("linkedin");
     try {
       await initiateLinkedInOAuth();
     } catch {
       setIsLoading(false);
-      setFieldErrors({ general: ["Failed to initiate LinkedIn login"] });
+      toast.error("Failed to initiate LinkedIn login");
     }
   };
 
+  const LastUsedBadge = () => (
+    <div className="absolute -right-2 -top-1/3">
+      <span className="rounded-lg border border-affirmative-primary bg-affirmative px-1.5 py-0.5 text-xs text-affirmative-foreground shadow-none bg-background">
+        {t.login.last_used}
+      </span>
+    </div>
+  );
+
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col">
-        <div className="flex flex-col">
-          <Card className="shadow-none gap-0">
-            <CardHeader className="text-center gap-0">
-              <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {t.login.welcome}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="shadow-none mt-5">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <FieldGroup>
-                  <Field>
-                    <div className="flex flex-row justify-center gap-2">
-                      <Button
-                        size="icon-lg"
-                        aria-label="Submit"
-                        disabled={isLoading}
-                        onClick={handleGoogleLogin}
-                        variant="outline"
-                        className="rounded-full cursor-pointer"
-                      >
-                        <GoogleSVG />
-                      </Button>
-                      <Button
-                        size="icon-lg"
-                        aria-label="Submit"
-                        disabled={isLoading}
-                        onClick={handleGitHubLogin}
-                        variant="outline"
-                        className="rounded-full cursor-pointer"
-                      >
-                        <GitHubSVG />
-                      </Button>
-                      <Button
-                        size="icon-lg"
-                        aria-label="Submit"
-                        disabled={isLoading}
-                        onClick={handleLinkedInLogin}
-                        variant="outline"
-                        className="rounded-full cursor-pointer"
-                      >
-                        <LinkedInSVG />
-                      </Button>
+    <div className="grid h-full min-h-screen lg:grid-cols-2">
+      <div className="flex justify-center px-4 py-20">
+        <div className="relative flex w-full max-w-[350px] flex-col items-start justify-center">
+          <div className="min-h-[450px] w-full">
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-3">
+                <h1 className="text-3xl font-medium">Log in</h1>
+              </div>
+
+              <div className="grid gap-4">
+                <div className="relative">
+                  <Button
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <GoogleSVG />
+                    <span>Continue with Google</span>
+                  </Button>
+                  {lastUsedProvider === "google" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <Button
+                    onClick={handleGitHubLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <GitHubSVG />
+                    <span>Continue with GitHub</span>
+                  </Button>
+                  {lastUsedProvider === "github" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <Button
+                    onClick={handleLinkedInLogin}
+                    disabled={isLoading}
+                    variant="outline"
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
+                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
+                    }`}
+                  >
+                    <LinkedInSVG />
+                    <span>Continue with LinkedIn</span>
+                  </Button>
+                  {lastUsedProvider === "linkedin" && <LastUsedBadge />}
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t"></span>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-background px-2 text-muted-foreground">{t.login.orContinueWith}</span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleLogin}>
+                  <div className="grid gap-4">
+                    <Field>
+                      <FieldLabel htmlFor="email">Email</FieldLabel>
+                      <Input id="email" type="email" placeholder={t.login.email} value={email} onChange={(e) => setEmail(e.target.value)} required />
+                      <FieldError errors={fieldErrors.email?.map((msg) => ({ message: msg }))} />
+                    </Field>
+                    <Field>
+                      <div className="flex items-center">
+                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                        <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                          {t.login.forgotPassword}
+                        </a>
+                      </div>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={t.login.password}
+                        required
+                      />
+                      <FieldError
+                        errors={fieldErrors.password?.map((msg) => ({
+                          message: msg,
+                        }))}
+                      />
+                    </Field>
+
+                    <div className="flex flex-col gap-3">
+                      <div className="relative flex items-center">
+                        <div className="flex-grow">
+                          <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
+                            {isLoading ? <Spinner className="size-4" /> : "Continue"}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="text-center text-base font-normal">
+                        <span className="text-sm text-muted-foreground">
+                          Don&apos;t have an account?{" "}
+                          <Link href="/register" className="text-sm text-primary underline">
+                            Create your account
+                          </Link>
+                        </span>
+                      </div>
+                      <FieldDescription className="px-6 text-center pt-5">
+                        By clicking login, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                      </FieldDescription>
                     </div>
-                  </Field>
-                  <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">{t.login.orContinueWith}</FieldSeparator>
-                  <Field>
-                    <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input id="email" type="email" placeholder={t.login.email} value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    <FieldError errors={fieldErrors.email?.map((msg) => ({ message: msg }))} />
-                  </Field>
-                  <Field>
-                    <div className="flex items-center">
-                      <FieldLabel htmlFor="password">Password</FieldLabel>
-                      <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-                        Forgot your password?
-                      </a>
-                    </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder={t.login.password}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <FieldError
-                      errors={fieldErrors.password?.map((msg) => ({
-                        message: msg,
-                      }))}
-                    />
-                  </Field>
-                  {fieldErrors.general && (
-                    <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-                      <ul className="text-sm text-red-600 dark:text-red-400 list-disc list-inside space-y-1">
-                        {fieldErrors.general.map((err, index) => (
-                          <li key={index}>{err}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  <Field>
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? <Spinner className="size-4" /> : t.login.submit}
-                    </Button>
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account? <Link href="/register">{t.login.signup}</Link>
-                    </FieldDescription>
-                  </Field>
-                </FieldGroup>
-              </form>
-            </CardContent>
-          </Card>
-          <FieldDescription className="px-6 text-center pt-5">
-            By clicking login, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-          </FieldDescription>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="sticky top-0 hidden h-screen rounded-xl p-4 lg:block">
+        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30"></div>
       </div>
     </div>
   );

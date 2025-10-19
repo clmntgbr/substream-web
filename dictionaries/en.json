@@ -225,6 +225,7 @@
     }
   },
   "login": {
+    "last_used": "Last used",
     "welcome": "Welcome",
     "title": "Login",
     "email": "Email",
@@ -235,7 +236,7 @@
     "alreadyHaveAccount": "Already have an account?",
     "login": "Login",
     "signup": "Sign up",
-    "orContinueWith": "Or continue with"
+    "orContinueWith": "or continue with"
   },
   "register": {
     "orContinueWith": "Or continue with",
