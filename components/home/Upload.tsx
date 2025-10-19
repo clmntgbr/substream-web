@@ -73,7 +73,7 @@ export const Upload = () => {
               <CardContent className="grid gap-6 shadow-none py-[13vh]">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
-                    <UploadIcon size={28} className="text-muted-foreground" />
+                    <UploadIcon size={28} className="text-primary" />
                   </div>
 
                   <h3 className="text-xl font-semibold">{t.home.upload.upload_file.title}</h3>
@@ -91,7 +91,7 @@ export const Upload = () => {
               <CardContent className="grid gap-6 shadow-none py-[13vh]">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
-                    <LinkIcon size={28} className="text-muted-foreground" />
+                    <LinkIcon size={28} className="text-primary" />
                   </div>
 
                   <h3 className="text-xl font-semibold">{t.home.upload.upload_url.title}</h3>
