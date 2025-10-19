@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 const BillingPage = () => {
   const { user } = useAuth();
 
-  if (!user) return null;
+  console.log(user);
 
   return (
     <div className="[--header-height:calc(--spacing(14))]">

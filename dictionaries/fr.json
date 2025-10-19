@@ -131,7 +131,9 @@
       }
     }
   },
+  "back": "Back",
   "home": {
+    "title": "Home",
     "queue": {
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",

@@ -1,69 +1,68 @@
 "use client";
 
-import { MenuIcon } from "lucide-react";
-import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "@/lib/use-translations";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Logo } from "./Logo";
-import { Menu } from "./Menu";
 import { NavUser } from "./navigation/NavUser";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Skeleton } from "./ui/skeleton";
 
 export function Header() {
-  const [open, setOpen] = useState(false);
-
-  const menuItems = [
-    { href: "#features", label: "Features" },
-    { href: "#docs", label: "Documentation" },
-    { href: "#community", label: "Community" },
-    { href: "#pricing", label: "Pricing" },
-  ];
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+  const params = useParams();
+  const lang = (params?.lang as string) || "en";
+  const t = useTranslations();
 
   return (
-    <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="flex h-12 items-center justify-between px-4">
-        <Logo />
-
-        {/* Desktop Navigation - Center */}
-        <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-          <Menu />
-        </nav>
-
-        {/* Right Actions */}
-        <div className="flex items-center gap-3">
-          <DarkModeToggle />
-          <NavUser />
-
-          {/* Mobile Menu */}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <MenuIcon className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-              <nav className="flex flex-col gap-4 mt-8">
-                {menuItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="text-lg font-medium text-foreground/80 hover:text-foreground transition-colors py-2"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-                <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-border">
-                  <Button variant="ghost" className="w-full justify-start">
-                    Sign In
-                  </Button>
-                  <Button className="w-full">Get Started</Button>
-                </div>
-              </nav>
-            </SheetContent>
-          </Sheet>
+    <>
+      <div className="md:container mx-auto px-10 flex h-16 w-full items-center justify-between">
+        <div className="flex items-center gap-8 md:pl-8">
+          <div className="relative">
+            <span data-state="closed" data-slot="context-menu-trigger" className="flex flex-col gap-1.5">
+              <Link className="transition-opacity hover:opacity-75" href="/">
+                <Logo />
+              </Link>
+            </span>
+          </div>
+          <nav className="hidden items-center gap-6 md:flex">
+            <a
+              className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80"
+              href="https://discord.com/invite/lovable-dev"
+            >
+              Community
+            </a>
+            <Link className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80" href="/pricing">
+              Pricing
+            </Link>
+            <a className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80" href="https://enterprise.lovable.dev">
+              Enterprise
+            </a>
+          </nav>
+        </div>
+        <div className="flex items-center gap-4 md:pr-8">
+          <div className="flex gap-2">
+            <DarkModeToggle />
+            {isLoading ? (
+              <Skeleton className="w-10 h-10 rounded-full" />
+            ) : user ? (
+              <NavUser />
+            ) : (
+              <>
+                <Button variant="outline" onClick={() => router.push(`/${lang}/login`)}>
+                  {t.login.title}
+                </Button>
+                <Button variant="outline" onClick={() => router.push(`/${lang}/register`)}>
+                  {t.register.title}
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }

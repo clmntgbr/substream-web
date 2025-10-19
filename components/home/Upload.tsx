@@ -57,7 +57,7 @@ export const Upload = () => {
   return (
     <>
       <div className="flex w-full flex-col gap-6">
-        <Tabs defaultValue="url" className="shadow-none">
+        <Tabs defaultValue="file" className="shadow-none">
           <TabsList className="w-full shadow-none">
             <TabsTrigger value="file" className="cursor-pointer shadow-none">
               <UploadIcon className="w-4 h-4" />
