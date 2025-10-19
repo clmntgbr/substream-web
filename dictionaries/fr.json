@@ -225,7 +225,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenue",
+    "welcome": "Welcome",
     "title": "Login",
     "email": "Email",
     "password": "Password",
@@ -233,9 +233,13 @@
     "forgotPassword": "Forgot password?",
     "register": "Register",
     "alreadyHaveAccount": "Already have an account?",
-    "login": "Login"
+    "login": "Login",
+    "signup": "Sign up",
+    "orContinueWith": "Or continue with"
   },
   "register": {
+    "orContinueWith": "Or continue with",
+    "welcome": "Welcome",
     "title": "Register",
     "notice": "Please note that the registration is currently disabled.",
     "firstname": "Firstname",
@@ -248,10 +252,10 @@
     "submit": "Register"
   },
   "oauth": {
-    "authenticationFailed": "L'authentification a échoué. Veuillez réessayer.",
+    "authenticationFailed": "Authentication failed. Please try again.",
     "loading": {
-      "title": "Authentification en cours...",
-      "description": "Veuillez patienter pendant que nous finalisons votre authentification"
+      "title": "Authenticating...",
+      "description": "Please wait while we complete your authentication"
     }
   }
 }

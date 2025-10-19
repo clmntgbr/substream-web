@@ -13,7 +13,7 @@ import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
-import { GalleryVerticalEnd } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
@@ -57,9 +57,9 @@ export default function LoginPage() {
     try {
       await initiateGoogleOAuth();
     } catch {
+      setIsLoading(false);
       setFieldErrors({ general: ["Failed to initiate Google login"] });
     }
-    setIsLoading(false);
   };
 
   const handleGitHubLogin = async () => {
@@ -67,9 +67,9 @@ export default function LoginPage() {
     try {
       await initiateGitHubOAuth();
     } catch {
+      setIsLoading(false);
       setFieldErrors({ general: ["Failed to initiate GitHub login"] });
     }
-    setIsLoading(false);
   };
 
   const handleLinkedInLogin = async () => {
@@ -77,45 +77,59 @@ export default function LoginPage() {
     try {
       await initiateLinkedInOAuth();
     } catch {
+      setIsLoading(false);
       setFieldErrors({ general: ["Failed to initiate LinkedIn login"] });
     }
-    setIsLoading(false);
   };
 
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <a href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          Acme Inc.
-        </a>
-        <div className="flex flex-col gap-6">
-          <Card className="shadow-none">
-            <CardHeader className="text-center">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col">
+        <div className="flex flex-col">
+          <Card className="shadow-none gap-0">
+            <CardHeader className="text-center gap-0">
               <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 {t.login.welcome}
               </CardTitle>
             </CardHeader>
-            <CardContent className="shadow-none">
+            <CardContent className="shadow-none mt-5">
               <form onSubmit={handleLogin} className="space-y-4">
                 <FieldGroup>
                   <Field>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleGoogleLogin}>
-                      <GoogleSVG />
-                      Login with Google
-                    </Button>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleGitHubLogin}>
-                      <GitHubSVG />
-                      Login with GitHub
-                    </Button>
-                    <Button type="button" variant="outline" disabled={isLoading} className="w-full cursor-pointer" onClick={handleLinkedInLogin}>
-                      <LinkedInSVG />
-                      Login with LinkedIn
-                    </Button>
+                    <div className="flex flex-row justify-center gap-2">
+                      <Button
+                        size="icon-lg"
+                        aria-label="Submit"
+                        disabled={isLoading}
+                        onClick={handleGoogleLogin}
+                        variant="outline"
+                        className="rounded-full cursor-pointer"
+                      >
+                        <GoogleSVG />
+                      </Button>
+                      <Button
+                        size="icon-lg"
+                        aria-label="Submit"
+                        disabled={isLoading}
+                        onClick={handleGitHubLogin}
+                        variant="outline"
+                        className="rounded-full cursor-pointer"
+                      >
+                        <GitHubSVG />
+                      </Button>
+                      <Button
+                        size="icon-lg"
+                        aria-label="Submit"
+                        disabled={isLoading}
+                        onClick={handleLinkedInLogin}
+                        variant="outline"
+                        className="rounded-full cursor-pointer"
+                      >
+                        <LinkedInSVG />
+                      </Button>
+                    </div>
                   </Field>
-                  <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">Or continue with</FieldSeparator>
+                  <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">{t.login.orContinueWith}</FieldSeparator>
                   <Field>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
                     <Input id="email" type="email" placeholder={t.login.email} value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -156,15 +170,15 @@ export default function LoginPage() {
                       {isLoading ? <Spinner className="size-4" /> : t.login.submit}
                     </Button>
                     <FieldDescription className="text-center">
-                      Don&apos;t have an account? <a href="#">Sign up</a>
+                      Don&apos;t have an account? <Link href="/register">{t.login.signup}</Link>
                     </FieldDescription>
                   </Field>
                 </FieldGroup>
               </form>
             </CardContent>
           </Card>
-          <FieldDescription className="px-6 text-center">
-            By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          <FieldDescription className="px-6 text-center pt-5">
+            By clicking login, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
           </FieldDescription>
         </div>
       </div>
