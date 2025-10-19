@@ -76,7 +76,7 @@ export default function GitHubOAuthCallbackPage() {
     };
 
     handleOAuthCallback();
-  }, [searchParams, router, lang]);
+  }, [searchParams, router, lang, t.oauth.authenticationFailed]);
 
   if (isLoading) {
     return <Loading />;

@@ -65,7 +65,7 @@ export default function GoogleOAuthCallbackPage() {
     };
 
     handleOAuthCallback();
-  }, [searchParams, router, lang]);
+  }, [searchParams, router, lang, t.oauth.authenticationFailed]);
 
   if (isLoading) {
     return <Loading />;

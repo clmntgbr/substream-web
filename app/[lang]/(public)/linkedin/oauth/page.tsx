@@ -65,7 +65,7 @@ export default function LinkedInOAuthCallbackPage() {
     };
 
     handleOAuthCallback();
-  }, [searchParams, router, lang]);
+  }, [searchParams, router, lang, t.oauth.authenticationFailed]);
 
   if (isLoading) {
     return <Loading />;
