@@ -3,27 +3,15 @@
 import { GitHubSVG } from "@/components/misc/GitHubSVG";
 import { GoogleSVG } from "@/components/misc/GoogleSVG";
 import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
+import { LastUsedBadge } from "@/components/oauth/LastUsedBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth-context";
-import {
-  getLastUsedProvider,
-  setLastUsedProvider,
-  type SocialProvider,
-} from "@/lib/cookies";
+import { getLastUsedProvider, setLastUsedProvider, type SocialProvider } from "@/lib/cookies";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
@@ -39,8 +27,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
-  const [lastUsedProvider, setLastUsedProviderState] =
-    useState<SocialProvider | null>(null);
+  const [lastUsedProvider, setLastUsedProviderState] = useState<SocialProvider | null>(null);
   const t = useTranslations();
 
   useEffect(() => {
@@ -122,14 +109,6 @@ export default function LoginPage() {
     }
   };
 
-  const LastUsedBadge = () => (
-    <div className="absolute -right-2 -top-1/3">
-      <span className="rounded-lg border border-affirmative-primary bg-affirmative px-1.5 py-0.5 text-xs text-affirmative-foreground shadow-none bg-background">
-        {t.login.last_used}
-      </span>
-    </div>
-  );
-
   return (
     <div className="grid h-full min-h-screen lg:grid-cols-2">
       <div className="flex justify-center px-4 py-20">
@@ -143,9 +122,7 @@ export default function LoginPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "google"
-                        ? "border border-affirmative-primary shadow-none"
-                        : ""
+                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
                     <GoogleSVG />
@@ -160,9 +137,7 @@ export default function LoginPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "github"
-                        ? "border border-affirmative-primary shadow-none"
-                        : ""
+                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
                     <GitHubSVG />
@@ -177,9 +152,7 @@ export default function LoginPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "linkedin"
-                        ? "border border-affirmative-primary shadow-none"
-                        : ""
+                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
                     }`}
                   >
                     <LinkedInSVG />
@@ -193,9 +166,7 @@ export default function LoginPage() {
                     <span className="w-full border-t"></span>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      {t.login.orContinueWith}
-                    </span>
+                    <span className="bg-background px-2 text-muted-foreground">{t.login.orContinueWith}</span>
                   </div>
                 </div>
 
@@ -216,23 +187,13 @@ export default function LoginPage() {
                             {t.login.email}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger
-                              asChild
-                              className="hover:bg-transparent"
-                            >
-                              <InputGroupButton
-                                variant="ghost"
-                                aria-label="Help"
-                                className="ml-auto rounded-full"
-                                size="icon-xs"
-                              >
+                            <TooltipTrigger asChild className="hover:bg-transparent">
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
                                 <HelpCircle />
                               </InputGroupButton>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>
-                                We&apos;ll use this to send you notifications
-                              </p>
+                              <p>We&apos;ll use this to send you notifications</p>
                             </TooltipContent>
                           </Tooltip>
                         </InputGroupAddon>
@@ -253,16 +214,8 @@ export default function LoginPage() {
                             {t.login.password}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger
-                              asChild
-                              className="hover:bg-transparent"
-                            >
-                              <InputGroupButton
-                                variant="ghost"
-                                aria-label="Help"
-                                className="ml-auto rounded-full"
-                                size="icon-xs"
-                              >
+                            <TooltipTrigger asChild className="hover:bg-transparent">
+                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
                                 <InfoIcon />
                               </InputGroupButton>
                             </TooltipTrigger>
@@ -276,17 +229,8 @@ export default function LoginPage() {
                     <div className="flex flex-col gap-3">
                       <div className="relative flex items-center">
                         <div className="flex-grow">
-                          <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full h-8 rounded-md px-4 py-2"
-                          >
-                            {isLoading ? (
-                              <Spinner className="size-4" />
-                            ) : (
-                              t.login.continue
-                            )}{" "}
-                            <CheckCheck />
+                          <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
+                            {isLoading ? <Spinner className="size-4" /> : t.login.continue} <CheckCheck />
                           </Button>
                         </div>
                       </div>
@@ -294,18 +238,13 @@ export default function LoginPage() {
                       <div className="text-center text-base font-normal">
                         <span className="text-sm text-muted-foreground">
                           Don&apos;t have an account?{" "}
-                          <Link
-                            href="/register"
-                            className="text-sm text-primary underline"
-                          >
+                          <Link href="/register" className="text-sm text-primary underline">
                             Create your account
                           </Link>
                         </span>
                       </div>
                       <FieldDescription className="px-6 text-center pt-5">
-                        By clicking login, you agree to our{" "}
-                        <a href="#">Terms of Service</a> and{" "}
-                        <a href="#">Privacy Policy</a>.
+                        By clicking login, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
                       </FieldDescription>
                     </div>
                   </div>
