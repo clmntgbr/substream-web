@@ -1,19 +1,12 @@
 "use client";
-import { Header } from "@/components/Header";
 import { getColumns } from "@/components/home/queue/Columns";
 import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/Upload";
-import { SidebarComponent } from "@/components/Sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 import { StreamQueryParams, useStreams } from "@/lib/stream/context";
 import { useTranslations } from "@/lib/use-translations";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
+import { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -35,7 +28,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   const handleSortingChange = useCallback(
@@ -52,7 +45,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   const handleColumnFiltersChange = useCallback(
@@ -73,7 +66,7 @@ const HomePage = () => {
       currentParamsRef.current = params;
       getStreams(params);
     },
-    [getStreams],
+    [getStreams]
   );
 
   useEffect(() => {
@@ -87,29 +80,19 @@ const HomePage = () => {
   if (!user) return null;
 
   return (
-    <div className="[--header-height:calc(--spacing(14))]">
-      <SidebarProvider className="flex flex-col">
-        <Header />
-        <div className="flex flex-1">
-          <SidebarComponent />
-          <SidebarInset>
-            <div className="flex flex-1 flex-col gap-4 p-4 container max-w-6xl mx-auto">
-              <Upload />
-              <DataTable
-                data={state.streams}
-                columns={columns}
-                serverSide
-                pageCount={pageCount}
-                onPaginationChange={handlePaginationChange}
-                onSortingChange={handleSortingChange}
-                onColumnFiltersChange={handleColumnFiltersChange}
-                ToolbarComponent={DataTableToolbar}
-              />
-            </div>
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
-    </div>
+    <>
+      <Upload />
+      <DataTable
+        data={state.streams}
+        columns={columns}
+        serverSide
+        pageCount={pageCount}
+        onPaginationChange={handlePaginationChange}
+        onSortingChange={handleSortingChange}
+        onColumnFiltersChange={handleColumnFiltersChange}
+        ToolbarComponent={DataTableToolbar}
+      />
+    </>
   );
 };
 

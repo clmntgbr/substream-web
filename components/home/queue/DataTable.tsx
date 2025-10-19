@@ -17,14 +17,7 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Table as TableType } from "@tanstack/react-table";
 
 import { DataTablePagination } from "./DataTablePagination";
@@ -54,11 +47,8 @@ export function DataTable<TData, TValue>({
   ToolbarComponent = DataTableToolbar,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -67,53 +57,36 @@ export function DataTable<TData, TValue>({
 
   const handleSortingChange = React.useCallback(
     (updaterOrValue: SortingState | ((old: SortingState) => SortingState)) => {
-      const newSorting =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(sorting)
-          : updaterOrValue;
+      const newSorting = typeof updaterOrValue === "function" ? updaterOrValue(sorting) : updaterOrValue;
       setSorting(newSorting);
       if (serverSide && onSortingChangeProp) {
         onSortingChangeProp(newSorting);
       }
     },
-    [sorting, serverSide, onSortingChangeProp],
+    [sorting, serverSide, onSortingChangeProp]
   );
 
   const handleColumnFiltersChange = React.useCallback(
-    (
-      updaterOrValue:
-        | ColumnFiltersState
-        | ((old: ColumnFiltersState) => ColumnFiltersState),
-    ) => {
-      const newFilters =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(columnFilters)
-          : updaterOrValue;
+    (updaterOrValue: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
+      const newFilters = typeof updaterOrValue === "function" ? updaterOrValue(columnFilters) : updaterOrValue;
       setColumnFilters(newFilters);
       if (serverSide && onColumnFiltersChangeProp) {
         onColumnFiltersChangeProp(newFilters);
         setPagination((old) => ({ ...old, pageIndex: 0 }));
       }
     },
-    [columnFilters, serverSide, onColumnFiltersChangeProp],
+    [columnFilters, serverSide, onColumnFiltersChangeProp]
   );
 
   const handlePaginationChange = React.useCallback(
-    (
-      updaterOrValue:
-        | PaginationState
-        | ((old: PaginationState) => PaginationState),
-    ) => {
-      const newPagination =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(pagination)
-          : updaterOrValue;
+    (updaterOrValue: PaginationState | ((old: PaginationState) => PaginationState)) => {
+      const newPagination = typeof updaterOrValue === "function" ? updaterOrValue(pagination) : updaterOrValue;
       setPagination(newPagination);
       if (serverSide && onPaginationChange) {
         onPaginationChange(newPagination);
       }
     },
-    [pagination, serverSide, onPaginationChange],
+    [pagination, serverSide, onPaginationChange]
   );
 
   const table = useReactTable({
@@ -155,12 +128,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -170,10 +138,7 @@ export function DataTable<TData, TValue>({
           <TableBody className="transition-opacity duration-200">
             {isLoading ? (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                     <span>Loading...</span>
@@ -182,29 +147,14 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+              <></>
             )}
           </TableBody>
         </Table>
