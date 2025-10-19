@@ -58,12 +58,14 @@ export default function LoginPage() {
       try {
         const errorData = JSON.parse(err.message);
         if (errorData.errors && typeof errorData.errors === "object") {
-          if (errorData.errors.general) {
-            errorData.errors.general.forEach((errorMsg: string) => {
-              toast.error(errorMsg);
+          // Show all field-specific errors in toasts
+          Object.entries(errorData.errors).forEach(([, messages]) => {
+            (messages as string[]).forEach((message: string) => {
+              toast.error(message);
             });
-          }
+          });
         } else {
+          // Show generic error or server error message
           toast.error(err.message || "Login failed");
         }
       } catch {

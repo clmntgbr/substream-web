@@ -89,19 +89,24 @@ export default function RegisterPage() {
           errors?: Record<string, string[]>;
         };
 
+        // Show all errors in toasts
         if (data.errors && typeof data.errors === "object") {
-          if (data.errors.general) {
-            data.errors.general.forEach((errorMsg: string) => {
-              toast.error(errorMsg);
+          Object.entries(data.errors).forEach(([, messages]) => {
+            messages.forEach((message) => {
+              toast.error(message);
             });
-          }
+          });
         } else {
+          // Show generic error or server error message
           toast.error(data.detail || data.description || data.error || "An error occurred");
         }
-      } else {
-        await refreshUser();
-        router.push(`/${lang}`);
+        setIsLoading(false);
+        return;
       }
+
+      // Registration successful
+      await refreshUser();
+      router.push(`/${lang}`);
     } catch {
       toast.error("An error occurred during registration");
       setIsLoading(false);
