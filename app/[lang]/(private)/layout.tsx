@@ -19,12 +19,12 @@ export default function PrivateLayout({
               <Header />
               <main className="flex-1">
                 <div
-                  className="pointer-events-none fixed left-1/2 top-0 -z-10 aspect-square w-[350%] -translate-x-1/2 overflow-hidden md:w-[190%] lg:w-[190%] xl:w-[190%] 2xl:mx-auto"
+                  className="pointer-events-none fixed left-1/2 top-[-100px] -z-10 aspect-square w-[350%] -translate-x-1/2 overflow-hidden md:w-[190%] lg:w-[190%] xl:w-[190%] 2xl:mx-auto"
                   style={{
                     backgroundImage: "url(/gradient-optimized.webp)",
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center top",
+                    backgroundPosition: "center -20px", // descend un peu l'image
                     WebkitMask: "linear-gradient(to bottom, transparent 0%, black 5%, black 100%)",
                     mask: "linear-gradient(to bottom, transparent 0%, black 5%, black 100%)",
                     WebkitBackfaceVisibility: "hidden",
