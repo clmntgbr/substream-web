@@ -66,7 +66,7 @@ const HomePage = () => {
                 onChange={(e) => {
                   setUrlInput(e.target.value);
                 }}
-                className="rounded-r-none "
+                className="rounded-r-none font-bold placeholder:font-normal"
                 placeholder="https://youtu.be/uC0RFwhrWLE?si=tG6hdG1LIgsTgnun"
               />
               <InputGroupAddon align="inline-end" className="p-0">
