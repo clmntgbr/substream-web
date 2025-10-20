@@ -6,13 +6,26 @@ import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
 import { LastUsedBadge } from "@/components/oauth/LastUsedBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
-import { getLastUsedProvider, setLastUsedProvider, type SocialProvider } from "@/lib/cookies";
+import {
+  getLastUsedProvider,
+  setLastUsedProvider,
+  type SocialProvider,
+} from "@/lib/cookies";
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
@@ -32,7 +45,8 @@ export default function RegisterPage() {
   const [lastname, setLastname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { refreshUser } = useAuth();
-  const [lastUsedProvider, setLastUsedProviderState] = useState<SocialProvider | null>(null);
+  const [lastUsedProvider, setLastUsedProviderState] =
+    useState<SocialProvider | null>(null);
   const t = useTranslations();
   const router = useRouter();
   const params = useParams();
@@ -79,7 +93,7 @@ export default function RegisterPage() {
             "Content-Type": "application/ld+json",
           },
           skipAuthRedirect: true,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -99,7 +113,12 @@ export default function RegisterPage() {
           });
         } else {
           // Show generic error or server error message
-          toast.error(data.detail || data.description || data.error || "An error occurred");
+          toast.error(
+            data.detail ||
+              data.description ||
+              data.error ||
+              "An error occurred",
+          );
         }
         setIsLoading(false);
         return;
@@ -160,7 +179,9 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "google"
+                        ? "border border-affirmative-primary shadow-none"
+                        : ""
                     }`}
                   >
                     <GoogleSVG />
@@ -175,7 +196,9 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "github"
+                        ? "border border-affirmative-primary shadow-none"
+                        : ""
                     }`}
                   >
                     <GitHubSVG />
@@ -190,7 +213,9 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "linkedin"
+                        ? "border border-affirmative-primary shadow-none"
+                        : ""
                     }`}
                   >
                     <LinkedInSVG />
@@ -204,7 +229,9 @@ export default function RegisterPage() {
                     <span className="w-full border-t"></span>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">{t.register.orContinueWith}</span>
+                    <span className="bg-background px-2 text-muted-foreground">
+                      {t.register.orContinueWith}
+                    </span>
                   </div>
                 </div>
 
@@ -222,7 +249,10 @@ export default function RegisterPage() {
                             required
                           />
                           <InputGroupAddon align="block-start">
-                            <Label htmlFor="firstname" className="text-foreground">
+                            <Label
+                              htmlFor="firstname"
+                              className="text-foreground"
+                            >
                               {t.register.firstname}
                             </Label>
                           </InputGroupAddon>
@@ -237,7 +267,10 @@ export default function RegisterPage() {
                             required
                           />
                           <InputGroupAddon align="block-start">
-                            <Label htmlFor="lastname" className="text-foreground">
+                            <Label
+                              htmlFor="lastname"
+                              className="text-foreground"
+                            >
                               {t.register.lastname}
                             </Label>
                           </InputGroupAddon>
@@ -259,13 +292,23 @@ export default function RegisterPage() {
                             {t.register.email}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild className="hover:bg-transparent">
-                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                            <TooltipTrigger
+                              asChild
+                              className="hover:bg-transparent"
+                            >
+                              <InputGroupButton
+                                variant="ghost"
+                                aria-label="Help"
+                                className="ml-auto rounded-full"
+                                size="icon-xs"
+                              >
                                 <HelpCircle />
                               </InputGroupButton>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>{t.register.weWillUseThisToSendYouNotifications}</p>
+                              <p>
+                                {t.register.weWillUseThisToSendYouNotifications}
+                              </p>
                             </TooltipContent>
                           </Tooltip>
                         </InputGroupAddon>
@@ -286,8 +329,16 @@ export default function RegisterPage() {
                             {t.register.password}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild className="hover:bg-transparent">
-                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                            <TooltipTrigger
+                              asChild
+                              className="hover:bg-transparent"
+                            >
+                              <InputGroupButton
+                                variant="ghost"
+                                aria-label="Help"
+                                className="ml-auto rounded-full"
+                                size="icon-xs"
+                              >
                                 <InfoIcon />
                               </InputGroupButton>
                             </TooltipTrigger>
@@ -309,12 +360,23 @@ export default function RegisterPage() {
                           required
                         />
                         <InputGroupAddon align="block-start">
-                          <Label htmlFor="confirmPassword" className="text-foreground">
+                          <Label
+                            htmlFor="confirmPassword"
+                            className="text-foreground"
+                          >
                             {t.register.confirmPassword}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild className="hover:bg-transparent">
-                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                            <TooltipTrigger
+                              asChild
+                              className="hover:bg-transparent"
+                            >
+                              <InputGroupButton
+                                variant="ghost"
+                                aria-label="Help"
+                                className="ml-auto rounded-full"
+                                size="icon-xs"
+                              >
                                 <InfoIcon />
                               </InputGroupButton>
                             </TooltipTrigger>
@@ -328,8 +390,17 @@ export default function RegisterPage() {
                     <div className="flex flex-col gap-3">
                       <div className="relative flex items-center">
                         <div className="flex-grow">
-                          <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : t.register.continue} <CheckCheck />
+                          <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full h-8 rounded-md px-4 py-2"
+                          >
+                            {isLoading ? (
+                              <Spinner className="size-4" />
+                            ) : (
+                              t.register.continue
+                            )}{" "}
+                            <CheckCheck />
                           </Button>
                         </div>
                       </div>
@@ -337,13 +408,18 @@ export default function RegisterPage() {
                       <div className="text-center text-base font-normal">
                         <span className="text-sm text-muted-foreground">
                           {t.register.alreadyHaveAccount}{" "}
-                          <Link href="/login" className="text-sm text-primary underline">
+                          <Link
+                            href="/login"
+                            className="text-sm text-primary underline"
+                          >
                             {t.register.login}
                           </Link>
                         </span>
                       </div>
                       <FieldDescription className="px-6 text-center pt-5">
-                        {t.register.byClickingRegister} <a href="#">{t.register.termsOfService}</a> {t.register.and} <a href="#">{t.register.and}</a>{" "}
+                        {t.register.byClickingRegister}{" "}
+                        <a href="#">{t.register.termsOfService}</a>{" "}
+                        {t.register.and} <a href="#">{t.register.and}</a>{" "}
                         <a href="#">{t.register.privacyPolicy}</a>.
                       </FieldDescription>
                     </div>

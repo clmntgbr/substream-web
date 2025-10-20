@@ -2,7 +2,12 @@ import { Preview } from "@/components/home/Preview";
 import { YoutubeUrlSchema } from "@/components/misc/YoutubeUrlSchema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslations } from "@/lib/use-translations";
@@ -28,7 +33,9 @@ export const Upload = () => {
 
     Array.from(files).forEach((file) => {
       const fileName = file.name.toLowerCase();
-      const isVideo = videoExtensions.some((ext) => fileName.endsWith(ext)) || file.type.startsWith("video/");
+      const isVideo =
+        videoExtensions.some((ext) => fileName.endsWith(ext)) ||
+        file.type.startsWith("video/");
 
       if (isVideo) {
         setSelectedFile(file);
@@ -76,12 +83,30 @@ export const Upload = () => {
                     <UploadIcon size={28} className="text-primary" />
                   </div>
 
-                  <h3 className="text-xl font-semibold">{t.home.upload.upload_file.title}</h3>
-                  <p className="text-muted-foreground mb-6">{t.home.upload.upload_file.description}</p>
-                  <Button size="lg" className="cursor-pointer" onClick={() => document.getElementById("file-input")?.click()} disabled={isProcessing}>
+                  <h3 className="text-xl font-semibold">
+                    {t.home.upload.upload_file.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    {t.home.upload.upload_file.description}
+                  </p>
+                  <Button
+                    size="lg"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      document.getElementById("file-input")?.click()
+                    }
+                    disabled={isProcessing}
+                  >
                     Choose Files
                   </Button>
-                  <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
+                  <input
+                    id="file-input"
+                    type="file"
+                    multiple
+                    className="hidden"
+                    accept=".mp4"
+                    onChange={handleFileChange}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -94,8 +119,12 @@ export const Upload = () => {
                     <LinkIcon size={28} className="text-primary" />
                   </div>
 
-                  <h3 className="text-xl font-semibold">{t.home.upload.upload_url.title}</h3>
-                  <p className="text-muted-foreground mb-6">{t.home.upload.upload_url.description}</p>
+                  <h3 className="text-xl font-semibold">
+                    {t.home.upload.upload_url.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    {t.home.upload.upload_url.description}
+                  </p>
                   <div className="flex flex-col items-center gap-2">
                     <InputGroup className="w-[450px] focus:outline-none focus:ring-0 h-10">
                       <InputGroupInput
@@ -126,7 +155,11 @@ export const Upload = () => {
                             }
                           }}
                         >
-                          {isProcessing ? <Spinner className="w-4 h-4 animate-spin" /> : "Import URL"}
+                          {isProcessing ? (
+                            <Spinner className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Import URL"
+                          )}
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
@@ -137,7 +170,13 @@ export const Upload = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <Preview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} onUploadSuccess={handleUploadSuccess} />
+      <Preview
+        open={isPreviewOpen}
+        onOpenChange={handlePreviewClose}
+        file={selectedFile}
+        url={url}
+        onUploadSuccess={handleUploadSuccess}
+      />
     </>
   );
 };

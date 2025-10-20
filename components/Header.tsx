@@ -24,7 +24,7 @@ export function Header() {
           <div className="relative">
             <span data-state="closed" data-slot="context-menu-trigger" className="flex flex-col gap-1.5">
               <Link className="transition-opacity hover:opacity-75" href="/">
-                <Logo />
+                <Logo width={100} height={100} />
               </Link>
             </span>
           </div>

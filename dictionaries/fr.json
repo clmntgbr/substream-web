@@ -153,18 +153,8 @@
       }
     },
     "upload": {
-      "tab": {
-        "right": "Upload file",
-        "left": "Import from URL"
-      },
-      "upload_url": {
-        "title": "Import from URL",
-        "description": "Paste a link to import content directly"
-      },
-      "upload_file": {
-        "title": "Drag and drop your files",
-        "description": "or click the button below to browse"
-      }
+      "file": "Upload a video file",
+      "url": "Import a video from a URL"
     },
     "preview": {
       "subtitle": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",

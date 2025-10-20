@@ -51,7 +51,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(0.97 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.623 0.214 259.815);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -86,7 +86,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+  --primary: oklch(0.623 0.214 259.815);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -240,8 +240,12 @@
 }
 
 .shadow-md {
-  --tw-shadow: 0 0px 0px 0px var(--tw-shadow-color, rgba(0, 0, 0, 0.1)), 0 0px 0px 0px var(--tw-shadow-color, rgba(0, 0, 0, 0.1));
-  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  --tw-shadow:
+    0 0px 0px 0px var(--tw-shadow-color, rgba(0, 0, 0, 0.1)),
+    0 0px 0px 0px var(--tw-shadow-color, rgba(0, 0, 0, 0.1));
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
 
 /* Chrome autofill styling - make entire InputGroup same color */
