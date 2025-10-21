@@ -11,27 +11,21 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
       <AuthProvider>
         <StreamProvider>
           <OptionProvider>
             <div className="flex flex-col min-h-screen">
               <Header />
-              <main className="flex-1">
+              <main className="flex-1 relative">
                 <div
-                  className="pointer-events-none fixed left-1/2 top-[-100px] -z-10 aspect-square w-[350%] -translate-x-1/2 overflow-hidden md:w-[190%] lg:w-[190%] xl:w-[190%] 2xl:mx-auto"
+                  className="pointer-events-none absolute left-1/2 top-[-100px] -z-10 aspect-square w-[350%] -translate-x-1/2 overflow-hidden md:w-[190%] lg:w-[190%] xl:w-[190%] 2xl:mx-auto"
                   style={{
-                    backgroundImage: "url(/gradient-optimized.webp)",
+                    backgroundImage: "url(/gradient.svg)",
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center -20px",
-                    WebkitMask:
-                      "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
+                    backgroundPosition: "center center",
+                    WebkitMask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
                     mask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
                     WebkitBackfaceVisibility: "hidden",
                     backfaceVisibility: "hidden",
@@ -41,17 +35,10 @@ export default function PrivateLayout({
                   }}
                   aria-hidden="true"
                 />
-                <div className="flex flex-1 flex-col gap-4 p-4 container max-w-6xl mx-auto">
-                  {children}
-                </div>
+                <div className="flex flex-1 flex-col gap-4 px-4 container max-w-6xl mx-auto">{children}</div>
               </main>
             </div>
-            <Toaster
-              richColors
-              expand={false}
-              position="top-right"
-              closeButton
-            />
+            <Toaster richColors expand={false} position="top-right" closeButton />
           </OptionProvider>
         </StreamProvider>
       </AuthProvider>

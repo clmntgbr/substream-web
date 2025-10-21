@@ -19,7 +19,7 @@ export function Header() {
 
   return (
     <>
-      <div className="md:container mx-auto px-10 flex h-16 w-full items-center justify-between">
+      <div className="md:container mx-auto px-10 flex h-16 w-full items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-8 md:pl-8">
           <div className="relative">
             <span data-state="closed" data-slot="context-menu-trigger" className="flex flex-col gap-1.5">
