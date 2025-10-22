@@ -15,10 +15,8 @@ export default function PrivateLayout({
       <AuthProvider>
         <StreamProvider>
           <OptionProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-1 relative pb-20">{children}</main>
-            </div>
+            <Header />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">{children}</div>
             <Toaster richColors expand={false} position="top-right" closeButton />
           </OptionProvider>
         </StreamProvider>

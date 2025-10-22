@@ -55,8 +55,8 @@ export const Upload = () => {
 
   return (
     <>
-      <Card className="w-full max-w-4xl rounded-2xl">
-        <CardContent className="flex flex-row gap-4 items-center">
+      <Card className="w-full max-w-4xl rounded-2xl shadow-none">
+        <CardContent className="flex flex-row gap-4 items-center shadow-none">
           <Button
             variant="outline"
             className="shadow-none hover:bg-muted/30 hover:text-accent-foreground cursor-pointer rounded-2xl border-neutral-300"

@@ -4,6 +4,7 @@ import { DataTable } from "@/components/home/queue/DataTable";
 import { DataTableToolbar } from "@/components/home/queue/DataTableToolbar";
 import Upload from "@/components/home/Upload";
 import { Logo } from "@/components/Logo";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import { StreamQueryParams, useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
@@ -78,6 +79,21 @@ const HomePage = () => {
   }, [getStreams]);
   return (
     <>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div
         className="
                     pointer-events-none fixed left-1/2 top-[-100px] -z-10 
@@ -90,7 +106,7 @@ const HomePage = () => {
           backgroundImage: "url(/gradient.svg)",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center top",
+          backgroundPosition: "center 100px",
           WebkitMask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
           mask: "linear-gradient(to bottom, transparent 0%, white 15%, white 100%)",
           WebkitBackfaceVisibility: "hidden",
