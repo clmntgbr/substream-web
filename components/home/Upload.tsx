@@ -4,14 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
-import { useAuth } from "@/lib/auth-context";
 import { useTranslations } from "@/lib/use-translations";
 import { Link2Icon, PaperclipIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export const Upload = () => {
-  const { user } = useAuth();
   const [url, setUrl] = useState<string>("");
   const [urlInput, setUrlInput] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -69,7 +67,7 @@ export const Upload = () => {
             {t.home.upload.file}
           </Button>
           <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
-          <InputGroup className="flex rounded-2xl pr-0 w-full shadow-none border-neutral-300">
+          <InputGroup className="flex rounded-2xl pr-0 w-full shadow-none border-neutral-300 dark:border-white/20">
             <InputGroupInput
               value={urlInput}
               onChange={(e) => {
