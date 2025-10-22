@@ -65,22 +65,11 @@ export const NumberInput = ({
   };
 
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-border bg-card p-4 transition-all shadow-none",
-        disabled && "cursor-not-allowed opacity-60",
-      )}
-    >
-      <div className="flex items-center justify-between gap-4 shadow-none">
+    <div className={cn("rounded-xl border border-border bg-card p-4 transition-all ", disabled && "cursor-not-allowed opacity-60")}>
+      <div className="flex items-center justify-between gap-4 ">
         <div className={cn("flex-1", disabled && "cursor-not-allowed")}>
-          {label && (
-            <label className="text-sm font-semibold text-foreground">
-              {label}
-            </label>
-          )}
-          {description && (
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-          )}
+          {label && <label className="text-sm font-semibold text-foreground">{label}</label>}
+          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
 
         <div className="flex items-center gap-2">
@@ -106,9 +95,7 @@ export const NumberInput = ({
               step={step}
               className="h-8 w-24 rounded-lg border-2 text-center font-semibold tabular-nums transition-all focus:scale-105 focus:border-primary cursor-pointer disabled:cursor-not-allowed"
             />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
-              {unit}
-            </span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">{unit}</span>
           </div>
 
           <Button
@@ -131,10 +118,7 @@ export const NumberInput = ({
           min={min}
           step={step}
           disabled={disabled}
-          className={cn(
-            "w-full",
-            disabled ? "cursor-not-allowed" : "cursor-pointer",
-          )}
+          className={cn("w-full", disabled ? "cursor-not-allowed" : "cursor-pointer")}
         />
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>

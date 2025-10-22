@@ -55,11 +55,11 @@ export const Upload = () => {
 
   return (
     <>
-      <Card className="w-full max-w-4xl rounded-2xl shadow-none">
-        <CardContent className="flex flex-row gap-4 items-center shadow-none">
+      <Card className="w-full max-w-4xl rounded-2xl ">
+        <CardContent className="flex flex-row gap-4 items-center ">
           <Button
             variant="outline"
-            className="shadow-none hover:bg-muted/30 hover:text-accent-foreground cursor-pointer rounded-2xl border-neutral-300"
+            className=" hover:bg-muted/30 hover:text-accent-foreground cursor-pointer rounded-2xl border-neutral-300"
             onClick={() => document.getElementById("file-input")?.click()}
             disabled={isProcessing}
           >
@@ -67,7 +67,7 @@ export const Upload = () => {
             {t.home.upload.file}
           </Button>
           <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
-          <InputGroup className="flex rounded-2xl pr-0 w-full shadow-none border-neutral-300 dark:border-white/20">
+          <InputGroup className="flex rounded-2xl pr-0 w-full  border-neutral-300 dark:border-white/20">
             <InputGroupInput
               value={urlInput}
               onChange={(e) => {
@@ -79,7 +79,7 @@ export const Upload = () => {
             <InputGroupAddon align="inline-end" className="p-0">
               <Button
                 variant="outline"
-                className="border-l-1 border-l-neutral-300 border-t-0 border-b-0 border-r-0 mr-2 shadow-none bg-transparent hover:bg-muted/30 hover:text-accent-foreground dark:text-white cursor-pointer rounded-2xl text-black rounded-l-4xl"
+                className="border-l-1 border-l-neutral-300 border-t-0 border-b-0 border-r-0 mr-2  bg-transparent hover:bg-muted/30 hover:text-accent-foreground dark:text-white cursor-pointer rounded-2xl text-black rounded-l-4xl"
                 onClick={() => {
                   setIsProcessing(true);
                   try {
