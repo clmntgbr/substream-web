@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Logo } from "../Logo";
 import { Main } from "./menu/Main";
 import { User } from "./menu/User";
-import { ModeToggle } from "./ModeToggle";
 import Notifications from "./Notifications";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
@@ -28,7 +28,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
               <Notifications />
-              <ModeToggle />
+              <ThemeToggle />
               <User />
             </div>
           </div>

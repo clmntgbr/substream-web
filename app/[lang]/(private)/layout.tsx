@@ -1,5 +1,6 @@
 import { Header } from "@/components/header/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Footer } from "@/components/ui/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { OptionProvider } from "@/lib/option";
@@ -17,6 +18,7 @@ export default function PrivateLayout({
           <OptionProvider>
             <Header />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">{children}</div>
+            <Footer logoSrc="/images/logo.svg" />
             <Toaster richColors expand={false} position="top-right" closeButton />
           </OptionProvider>
         </StreamProvider>
