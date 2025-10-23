@@ -122,7 +122,7 @@ export function DataTable<TData, TValue>({
       <ToolbarComponent table={table} />
       <div className="overflow-hidden rounded-md border">
         <Table>
-          <TableHeader className="bg-muted/80">
+          <TableHeader className="bg-zinc-200 dark:bg-input">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="transition-opacity duration-200">
+          <TableBody className="transition-opacity duration-200 bg-white dark:bg-background">
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

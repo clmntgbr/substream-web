@@ -1,13 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Logo } from "./Logo";
 
-interface FooterProps extends React.HTMLAttributes<HTMLElement> {
+interface NavFooterProps extends React.HTMLAttributes<HTMLElement> {
   logoSrc: string;
   companyName?: string;
   description?: string;
@@ -17,7 +17,7 @@ interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   onSubscribe?: (email: string) => Promise<boolean>;
 }
 
-export function Footer({
+export function NavFooter({
   logoSrc,
   companyName = "Datally Inc.",
   description = "Empowering businesses with intelligent financial solutions, designed for the future of finance.",
@@ -36,7 +36,7 @@ export function Footer({
   onSubscribe,
   className,
   ...props
-}: FooterProps) {
+}: NavFooterProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle");
@@ -67,8 +67,7 @@ export function Footer({
         {/* Company Info */}
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
-            <Image src={logoSrc} alt={`${companyName} Logo`} width={40} height={40} className="h-10 w-10 rounded-full" />
-            <span className="text-xl font-bold">{companyName}</span>
+            <Logo width={90} height={90} />
           </div>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>

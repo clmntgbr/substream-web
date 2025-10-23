@@ -1,19 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Table } from "@tanstack/react-table";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   const currentPage = table.getState().pagination.pageIndex + 1;
   const pageCount = table.getPageCount();
 
@@ -28,7 +21,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             size="icon"
-            className="hidden size-8 lg:flex cursor-pointer"
+            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-background"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -38,7 +31,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             size="icon"
-            className="size-8 cursor-pointer"
+            className="size-8 cursor-pointer bg-white dark:bg-background"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -48,7 +41,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             size="icon"
-            className="size-8 cursor-pointer"
+            className="size-8 cursor-pointer bg-white dark:bg-background"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
@@ -58,7 +51,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             size="icon"
-            className="hidden size-8 lg:flex cursor-pointer"
+            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-background"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
