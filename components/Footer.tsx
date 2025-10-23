@@ -1,36 +1,23 @@
 "use client";
 
-import { Button } from "@/components/ui/button"; // Assumes shadcn Button
-import { Input } from "@/components/ui/input"; // Assumes shadcn Input
-import { cn } from "@/lib/utils"; // Assumes you have a `cn` utility
 import Image from "next/image";
-import React, { useState, type FC, type ReactNode } from "react";
+import { useState } from "react";
 
-/**
- * Props for the Footer component.
- */
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
 interface FooterProps extends React.HTMLAttributes<HTMLElement> {
-  /** The source URL for the company logo. */
   logoSrc: string;
-  /** The name of the company, displayed next to the logo. */
   companyName?: string;
-  /** A short description of the company. */
   description?: string;
-  /** An array of objects for generating useful links. */
   usefulLinks?: { label: string; href: string }[];
-  /** An array of objects for generating social media links. */
-  socialLinks?: { label: string; href: string; icon: ReactNode }[];
-  /** The title for the newsletter subscription section. */
+  socialLinks?: { label: string; href: string; icon: React.ReactNode }[];
   newsletterTitle?: string;
-  /** Async function to handle email subscription. Should return `true` for success and `false` for failure. */
   onSubscribe?: (email: string) => Promise<boolean>;
 }
 
-/**
- * A responsive and theme-adaptive footer component with a newsletter subscription form.
- * Designed following shadcn/ui and 21st.dev best practices.
- */
-export const Footer: FC<FooterProps> = ({
+export function Footer({
   logoSrc,
   companyName = "Datally Inc.",
   description = "Empowering businesses with intelligent financial solutions, designed for the future of finance.",
@@ -49,7 +36,7 @@ export const Footer: FC<FooterProps> = ({
   onSubscribe,
   className,
   ...props
-}) => {
+}: FooterProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle");
@@ -75,7 +62,7 @@ export const Footer: FC<FooterProps> = ({
   };
 
   return (
-    <footer className={cn("border-t text-foreground", className)} {...props}>
+    <footer className={cn("border-t", className)} {...props}>
       <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
         {/* Company Info */}
         <div className="flex flex-col items-start gap-4">
@@ -160,23 +147,24 @@ export const Footer: FC<FooterProps> = ({
       </div>
     </footer>
   );
-};
+}
 
-// Dummy Icon: Replace with your actual icon library e.g., Lucide React
-const DummyIcon: FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-5 w-5 text-muted-foreground"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="4" />
-  </svg>
-);
+function DummyIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5 text-muted-foreground"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}

@@ -1,6 +1,6 @@
 import { Header } from "@/components/header/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Footer } from "@/components/ui/footer";
+import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { OptionProvider } from "@/lib/option";
