@@ -114,7 +114,7 @@ export default function Pricing() {
   return (
     <>
       <main className="flex-1">
-        <div className="min-h-screen relative">
+        <div className="relative">
           <div className="mx-auto">
             <header className="mb-12 space-y-4 text-center">
               <h1 className="text-4xl font-bold md:text-5xl">Pricing</h1>

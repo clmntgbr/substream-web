@@ -8,6 +8,7 @@ import { useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, SettingsIcon, X } from "lucide-react";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
@@ -24,7 +25,9 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
   const t = useTranslations();
   const { createOption } = useOptions();
   const { getStreams } = useStreams();
-
+  const router = useRouter();
+  const params = useParams();
+  const lang = (params.lang as string) || "en";
   const [isUploading, setIsUploading] = useState(false);
   const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
@@ -239,6 +242,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
 
         onOpenChange(false);
 
+        router.push(`/${lang}/process`);
         toast.success("Video uploaded successfully!", {
           description: data.message || "Your video is now being processed.",
         });
@@ -279,7 +283,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
               size="icon"
               onClick={() => !isUploading && onOpenChange(false)}
               disabled={isUploading}
-              className="absolute top-4 right-4 h-11 w-11 rounded-full bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
+              className="absolute right-4 h-11 w-11 rounded-full bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
             >
               <X className="h-5 w-5" />
             </Button>

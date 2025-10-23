@@ -15,6 +15,7 @@ export default function Upload() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsProcessing(true);
@@ -50,25 +51,74 @@ export default function Upload() {
     setUrl("");
     setUrlInput("");
   };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const videoExtensions = [".mp4", ".mov", ".avi", ".mkv", ".webm"];
+
+      Array.from(files).forEach((file) => {
+        const fileName = file.name.toLowerCase();
+        const isVideo = videoExtensions.some((ext) => fileName.endsWith(ext)) || file.type.startsWith("video/");
+
+        if (isVideo) {
+          setSelectedFile(file);
+          setIsPreviewOpen(true);
+        } else {
+          toast.error("Invalid file type", {
+            description: "Please drop a video file (MP4, MOV, AVI, MKV, WEBM)",
+          });
+        }
+      });
+    }
+  };
   return (
     <div className="flex flex-col gap-2 w-2xl mx-auto h-[89vh] justify-center">
       <div className="relative mb-4 flex flex-col items-center px-4 text-center md:mb-6">
         <div className="flex w-full flex-col items-center justify-center gap-2"></div>
         <h1 className="mb-2 flex items-center gap-1 text-3xl font-bold leading-none text-foreground sm:text-3xl md:mb-2.5 md:gap-0 md:text-5xl">
-          <span className="pt-0.5 tracking-tight md:pt-0">
-            Build something <span className="md:sr-only">Lovable</span>
-          </span>
+          <span className="pt-0.5 tracking-tight md:pt-0">Build video clips</span>
         </h1>
         <p className="mb-6 max-w-[25ch] text-center text-lg leading-tight text-foreground/65 md:max-w-full md:text-xl">
-          Create apps and websites by chatting with AI
+          Create videos clips from your videos with AI
         </p>
       </div>
       <div className="relative">
-        <div className="relative flex min-h-52flex-col items-center justify-center bg-white dark:bg-input overflow-hidden rounded-md border border-input p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50">
-          <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
+        <div
+          className={`relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-md border border-input p-4 transition-all duration-200`}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          <input id="file-input" type="file" multiple className="hidden" accept=".mp4,.mov,.avi,.mkv,.webm" onChange={handleFileChange} />
           <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-            <div className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border" aria-hidden="true">
-              <ImageIcon className="size-4 opacity-60" />
+            <div
+              className={`mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border transition-all duration-200 border-input`}
+              aria-hidden="true"
+            >
+              <ImageIcon className={`size-4 transition-colors duration-200 opacity-60`} />
             </div>
             <p className="mb-1.5 text-sm font-medium">Drop your video here</p>
             <p className="text-xs text-muted-foreground">MP4, MOV, AVI, MKV, WEBM (max. 1GB)</p>
@@ -86,7 +136,7 @@ export default function Upload() {
           onChange={(e) => {
             setUrlInput(e.target.value);
           }}
-          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0 bg-white dark:bg-input"
+          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0"
           placeholder="https://www.youtube.com/watch?v=aX3z61QftVY"
           type="email"
         />
