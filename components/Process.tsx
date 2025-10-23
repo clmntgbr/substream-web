@@ -68,6 +68,8 @@ export function Process() {
   );
 
   return (
+    // <Card>
+    // <CardContent>
     <DataTable
       data={state.streams}
       columns={columns}
@@ -78,5 +80,7 @@ export function Process() {
       onColumnFiltersChange={handleColumnFiltersChange}
       ToolbarComponent={DataTableToolbar}
     />
+    // </CardContent>
+    // </Card>
   );
 }

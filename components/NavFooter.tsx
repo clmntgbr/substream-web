@@ -62,7 +62,7 @@ export function NavFooter({
   };
 
   return (
-    <footer className={cn("border-t", className)} {...props}>
+    <footer className={cn("border-t bg-background ", className)} {...props}>
       <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
         {/* Company Info */}
         <div className="flex flex-col items-start gap-4">

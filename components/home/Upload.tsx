@@ -53,7 +53,7 @@ export default function Upload() {
   return (
     <div className="flex flex-col gap-2 w-2xl mx-auto h-[70vh] justify-center">
       <div className="relative">
-        <div className="relative flex min-h-52flex-col items-center justify-center bg-white dark:bg-input overflow-hidden rounded-md border border-input p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50">
+        <div className="relative flex min-h-52flex-col items-center justify-center bg-white dark:bg-background overflow-hidden rounded-md border border-input p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50">
           <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
           <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
             <div className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border" aria-hidden="true">
@@ -75,7 +75,7 @@ export default function Upload() {
           onChange={(e) => {
             setUrlInput(e.target.value);
           }}
-          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0 bg-white dark:bg-input"
+          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0 bg-white dark:bg-background"
           placeholder="https://www.youtube.com/watch?v=aX3z61QftVY"
           type="email"
         />
