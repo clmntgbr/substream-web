@@ -125,7 +125,7 @@
 }
 
 .dark {
-  --background: oklch(0.2046 0 0);
+  --background: oklch(0.2303 0.0125 264.2926);
   --foreground: oklch(0.9219 0 0);
   --card: oklch(0.2686 0 0);
   --card-foreground: oklch(0.9219 0 0);
@@ -142,7 +142,7 @@
   --destructive: oklch(0.6303 0.1532 22.4864);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.3715 0 0);
-  --input: oklch(0.3715 0 0);
+  --input: oklch(0.3092 0 0);
   --ring: oklch(0.393 0.095 152.535);
   --chart-1: oklch(0.5126 0.1082 157.7813);
   --chart-2: oklch(0.627 0.194 149.214);

@@ -51,9 +51,20 @@ export default function Upload() {
     setUrlInput("");
   };
   return (
-    <div className="flex flex-col gap-2 w-2xl mx-auto h-[70vh] justify-center">
+    <div className="flex flex-col gap-2 w-2xl mx-auto h-[89vh] justify-center">
+      <div className="relative mb-4 flex flex-col items-center px-4 text-center md:mb-6">
+        <div className="flex w-full flex-col items-center justify-center gap-2"></div>
+        <h1 className="mb-2 flex items-center gap-1 text-3xl font-bold leading-none text-foreground sm:text-3xl md:mb-2.5 md:gap-0 md:text-5xl">
+          <span className="pt-0.5 tracking-tight md:pt-0">
+            Build something <span className="md:sr-only">Lovable</span>
+          </span>
+        </h1>
+        <p className="mb-6 max-w-[25ch] text-center text-lg leading-tight text-foreground/65 md:max-w-full md:text-xl">
+          Create apps and websites by chatting with AI
+        </p>
+      </div>
       <div className="relative">
-        <div className="relative flex min-h-52flex-col items-center justify-center bg-white dark:bg-background overflow-hidden rounded-md border border-input p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50">
+        <div className="relative flex min-h-52flex-col items-center justify-center bg-white dark:bg-input overflow-hidden rounded-md border border-input p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50">
           <input id="file-input" type="file" multiple className="hidden" accept=".mp4" onChange={handleFileChange} />
           <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
             <div className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border" aria-hidden="true">
@@ -75,7 +86,7 @@ export default function Upload() {
           onChange={(e) => {
             setUrlInput(e.target.value);
           }}
-          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0 bg-white dark:bg-background"
+          className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10 font-medium placeholder:font-normal focus-visible:ring-0 focus-visible:ring-offset-0 bg-white dark:bg-input"
           placeholder="https://www.youtube.com/watch?v=aX3z61QftVY"
           type="email"
         />
