@@ -21,7 +21,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           <Button
             variant="outline"
             size="icon"
-            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-background"
+            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-input"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -31,7 +31,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           <Button
             variant="outline"
             size="icon"
-            className="size-8 cursor-pointer bg-white dark:bg-background"
+            className="size-8 cursor-pointer bg-white dark:bg-input"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -41,7 +41,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           <Button
             variant="outline"
             size="icon"
-            className="size-8 cursor-pointer bg-white dark:bg-background"
+            className="size-8 cursor-pointer bg-white dark:bg-input"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
@@ -51,7 +51,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           <Button
             variant="outline"
             size="icon"
-            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-background"
+            className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-input"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
