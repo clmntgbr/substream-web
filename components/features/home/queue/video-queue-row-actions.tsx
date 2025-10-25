@@ -1,44 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
-import { useTranslations } from "@/lib/use-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations";
 import { Row } from "@tanstack/react-table";
-import {
-  BrainCircuit,
-  Download,
-  FileText,
-  MoreVertical,
-  Settings2Icon,
-  SettingsIcon,
-  Trash2,
-} from "lucide-react";
+import { BrainCircuit, Download, FileText, MoreVertical, Trash2, Settings2 as VideoSettings2Icon, Settings as VideoSettingsIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import Details from "../Details";
-import { Settings } from "../Settings";
+import VideoDetails from "../video-details";
+import { VideoSettings } from "../video-settings";
 
-interface DataTableRowActionsProps<TData> {
+interface VideoQueueRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function DataTableRowActions<TData>({
-  row,
-}: DataTableRowActionsProps<TData>) {
+export function VideoQueueRowActions<TData>({ row }: VideoQueueRowActionsProps<TData>) {
   const stream = row.original as Stream;
-  const { downloadStream, downloadSubtitle, downloadResume, deleteStream } =
-    useStreams();
+  const { downloadStream, downloadSubtitle, downloadResume, deleteStream } = useStreams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const t = useTranslations();
+  const t = useFeatureTranslations("home");
 
   const handleDownload = () => {
     if (!stream.isDownloadable || !stream.id) {
@@ -65,10 +48,7 @@ export function DataTableRowActions<TData>({
   };
 
   const handleDelete = async () => {
-    if (
-      stream.id &&
-      confirm(`Are you sure you want to delete "${stream.originalFileName}"?`)
-    ) {
+    if (stream.id && confirm(`Are you sure you want to delete "${stream.originalFileName}"?`)) {
       await deleteStream(stream.id);
     }
   };
@@ -85,73 +65,43 @@ export function DataTableRowActions<TData>({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="data-[state=open]:bg-muted size-8 cursor-pointer"
-          >
+          <Button variant="ghost" size="icon" className="data-[state=open]:bg-muted size-8 cursor-pointer">
             <MoreVertical />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuItem
-            onClick={handleDownload}
-            disabled={!stream.isDownloadable}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem onClick={handleDownload} disabled={!stream.isDownloadable} className="cursor-pointer">
             <Download className="mr-2 size-4" />
             Download
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleDownloadSubtitle}
-            disabled={!stream.isSrtDownloadable}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem onClick={handleDownloadSubtitle} disabled={!stream.isSrtDownloadable} className="cursor-pointer">
             <FileText className="mr-2 size-4" />
             Download subtitle
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleDownloadResume}
-            disabled={!stream.isResumeDownloadable}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem onClick={handleDownloadResume} disabled={!stream.isResumeDownloadable} className="cursor-pointer">
             <BrainCircuit className="mr-2 size-4" />
             Download resume
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleViewOptions}
-            className="cursor-pointer"
-          >
-            <SettingsIcon className="mr-2 size-4" />
+          <DropdownMenuItem onClick={handleViewOptions} className="cursor-pointer">
+            <VideoSettingsIcon className="mr-2 size-4" />
             View Options
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleViewDetails}
-            className="cursor-pointer"
-          >
-            <Settings2Icon className="mr-2 size-4" />
+          <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
+            <VideoSettings2Icon className="mr-2 size-4" />
             View Details
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={handleDelete}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem variant="destructive" onClick={handleDelete} className="cursor-pointer">
             <Trash2 className="mr-2 size-4" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Details
-        stream={stream}
-        open={detailsOpen}
-        onOpenChange={setDetailsOpen}
-      />
+      <VideoDetails stream={stream} open={detailsOpen} onOpenChange={setDetailsOpen} />
 
-      <Settings
+      <VideoSettings
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
         subtitleFont={stream.option.subtitleFont}

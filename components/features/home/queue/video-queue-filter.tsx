@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "@/lib/use-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations";
 import { cn } from "@/lib/utils";
 import { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
 
-interface DataTableFacetedFilterProps<TData, TValue> {
+interface VideoQueueFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
   title?: string;
   options: {
@@ -16,9 +16,9 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[];
 }
 
-export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
+export function VideoQueueFilter<TData, TValue>({ column, title, options }: VideoQueueFilterProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[]);
-  const t = useTranslations();
+  const t = useFeatureTranslations("home");
 
   return (
     <Popover>

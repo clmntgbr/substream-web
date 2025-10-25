@@ -1,11 +1,11 @@
 "use client";
 
-import Upload from "@/components/home/Upload";
+import VideoUpload from "@/components/features/home/video-upload";
 
 const HomePage = () => {
   return (
     <>
-      <Upload />
+      <VideoUpload />
     </>
   );
 };

@@ -1,6 +1,6 @@
-import { Header } from "@/components/header/Header";
-import { NavFooter } from "@/components/NavFooter";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { Header } from "@/components/layout/Header";
+import { NavFooter } from "@/components/layout/NavFooter";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { OptionProvider } from "@/lib/option";

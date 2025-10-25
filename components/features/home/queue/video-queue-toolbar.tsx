@@ -1,19 +1,19 @@
 "use client";
 
-import { DataTableViewOptions } from "@/components/home/queue/DataTableViewOptions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
 import { useState } from "react";
-import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
-import { Statuses } from "./Statuses";
+import { VideoQueueFilter } from "./video-queue-filter";
+import { VideoQueueStatuses } from "./video-queue-statuses";
+import { VideoQueueViewOptions } from "./video-queue-view-options";
 
-interface DataTableToolbarProps<TData> {
+interface VideoQueueToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function VideoQueueToolbar<TData>({ table }: VideoQueueToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const [searchValue, setSearchValue] = useState("");
 
@@ -36,7 +36,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           onChange={(event) => handleSearchChange(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px] bg-white dark:bg-input"
         />
-        {table.getColumn("status") && <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={Statuses} />}
+        {table.getColumn("status") && <VideoQueueFilter column={table.getColumn("status")} title="Status" options={VideoQueueStatuses} />}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -53,7 +53,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         )}
       </div>
       <div className="flex items-center gap-2 w-[300px]">
-        <DataTableViewOptions table={table} />
+        <VideoQueueViewOptions table={table} />
       </div>
     </div>
   );

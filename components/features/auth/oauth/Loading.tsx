@@ -1,10 +1,10 @@
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";
-import { useTranslations } from "@/lib/use-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations-simple";
 
 export default function Loading() {
-  const t = useTranslations();
+  const t = useFeatureTranslations("auth");
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/30 p-4">

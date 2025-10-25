@@ -17,7 +17,7 @@ interface NumberInputProps {
   disabled?: boolean;
 }
 
-export const NumberInput = ({
+export const SubtitleSizeInput = ({
   value,
   onChange,
   min = 1,

@@ -16,5 +16,5 @@ export function useTranslations() {
   const params = useParams();
   const locale = (params?.lang as Locale) || "en";
 
-  return dictionaries[locale];
+  return dictionaries[locale] || dictionaries.en;
 }

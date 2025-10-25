@@ -1,9 +1,9 @@
 "use client";
 
-import { GitHubSVG } from "@/components/misc/GitHubSVG";
-import { GoogleSVG } from "@/components/misc/GoogleSVG";
-import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
-import { LastUsedBadge } from "@/components/oauth/LastUsedBadge";
+import { GitHubSVG } from "@/components/features/auth/misc/GitHubSVG";
+import { GoogleSVG } from "@/components/features/auth/misc/GoogleSVG";
+import { LinkedInSVG } from "@/components/features/auth/misc/LinkedInSVG";
+import { LastUsedBadge } from "@/components/features/auth/oauth/LastUsedBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";

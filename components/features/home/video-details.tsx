@@ -1,11 +1,11 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
 import { Stream, useStreams } from "@/lib/stream";
 import { Clock, Film, HardDrive, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Badge } from "../ui/badge";
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "../ui/field";
-import { Textarea } from "../ui/textarea";
 
 interface DetailsProps {
   stream: Stream;

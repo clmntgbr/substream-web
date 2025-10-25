@@ -3,11 +3,11 @@
 import { ImageIcon, UploadIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
-import { YoutubeUrlSchema } from "../misc/YoutubeUrlSchema";
-import { Input } from "../ui/input";
-import Preview from "./Preview";
+import { YoutubeUrlSchema } from "../shared/misc/youtube-url-validation";
+import VideoPreview from "./video-preview";
 
 export default function Upload() {
   const [url, setUrl] = useState<string>("");
@@ -150,7 +150,7 @@ export default function Upload() {
           Upload from URL
         </Button>
       </div>
-      <Preview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} onUploadSuccess={handleUploadSuccess} />
+      <VideoPreview open={isPreviewOpen} onOpenChange={handlePreviewClose} file={selectedFile} url={url} onUploadSuccess={handleUploadSuccess} />
     </div>
   );
 }

@@ -20,10 +20,10 @@ import * as React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Table as TableType } from "@tanstack/react-table";
 
-import { DataTablePagination } from "./DataTablePagination";
-import { DataTableToolbar } from "./DataTableToolbar";
+import { VideoQueuePagination } from "./video-queue-pagination";
+import { VideoQueueToolbar } from "./video-queue-toolbar";
 
-interface DataTableProps<TData, TValue> {
+interface VideoQueueTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   serverSide?: boolean;
@@ -35,7 +35,7 @@ interface DataTableProps<TData, TValue> {
   ToolbarComponent?: React.ComponentType<{ table: TableType<TData> }>;
 }
 
-export function DataTable<TData, TValue>({
+export function VideoQueueTable<TData, TValue>({
   columns,
   data,
   serverSide = false,
@@ -44,8 +44,8 @@ export function DataTable<TData, TValue>({
   onSortingChange: onSortingChangeProp,
   onColumnFiltersChange: onColumnFiltersChangeProp,
   isLoading = false,
-  ToolbarComponent = DataTableToolbar,
-}: DataTableProps<TData, TValue>) {
+  ToolbarComponent = VideoQueueToolbar,
+}: VideoQueueTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -159,7 +159,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <VideoQueuePagination table={table} />
     </div>
   );
 }

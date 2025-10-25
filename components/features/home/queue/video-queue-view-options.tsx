@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "@/lib/use-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations";
 import { Table } from "@tanstack/react-table";
 import { Columns3Cog } from "lucide-react";
 
-export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) {
-  const t = useTranslations();
+export function VideoQueueViewOptions<TData>({ table }: { table: Table<TData> }) {
+  const t = useFeatureTranslations("home");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

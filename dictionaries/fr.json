@@ -1,4 +1,173 @@
 {
+  "auth": {
+    "login": {
+      "last_used": "Dernière utilisation",
+      "welcome": "Bienvenue",
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "register": "S'inscrire",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "continue": "Se connecter",
+      "signup": "S'inscrire",
+      "orContinueWith": "ou continuer avec"
+    },
+    "register": {
+      "last_used": "Dernière utilisation",
+      "orContinueWith": "Ou continuer avec",
+      "welcome": "Bienvenue",
+      "title": "Inscription",
+      "notice": "Veuillez noter que l'inscription est actuellement désactivée.",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "email": "Email",
+      "password": "Mot de passe",
+      "passwordsMustMatch": "Les mots de passe doivent correspondre",
+      "weWillUseThisToSendYouNotifications": "Nous l'utiliserons pour vous envoyer des notifications",
+      "continueWithGoogle": "Continuer avec Google",
+      "continueWithGitHub": "Continuer avec GitHub",
+      "continueWithLinkedIn": "Continuer avec LinkedIn",
+      "continue": "S'inscrire",
+      "submitDisabled": "Soumettre",
+      "confirmPassword": "Confirmer le mot de passe",
+      "login": "Se connecter",
+      "submit": "S'inscrire",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "byClickingRegister": "En cliquant sur s'inscrire, vous acceptez nos",
+      "termsOfService": "Conditions d'utilisation",
+      "and": "et",
+      "privacyPolicy": "Politique de confidentialité"
+    },
+    "oauth": {
+      "authenticationFailed": "L'authentification a échoué. Veuillez réessayer.",
+      "loading": {
+        "title": "Authentification...",
+        "description": "Veuillez patienter pendant que nous terminons votre authentification"
+      }
+    }
+  },
+  "home": {
+    "title": "Accueil",
+    "queue": {
+      "actions": {
+        "subtitleNotAvailable": "Le sous-titre n'est pas disponible au téléchargement",
+        "streamNotAvailable": "Ceci n'est pas encore disponible au téléchargement",
+        "resumeNotAvailable": "Le résumé n'est pas disponible au téléchargement"
+      },
+      "options": {
+        "customizeColumns": "Personnaliser les colonnes"
+      },
+      "columns": {
+        "originalFileName": "Nom",
+        "status": "Statut",
+        "progress": "Progression",
+        "size": "Taille",
+        "sizeInMegabytes": "Taille",
+        "createdAt": "Créé le"
+      }
+    },
+    "upload": {
+      "file": "Télécharger un fichier vidéo",
+      "url": "Importer une vidéo depuis une URL"
+    },
+    "preview": {
+      "subtitle": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "settings": {
+        "title": "Paramètres vidéo et sous-titres",
+        "settings": "Paramètres",
+        "process": "Traiter",
+        "description": "Configurez l'apparence et le format des sous-titres",
+        "close": "Fermer",
+        "font": "Famille de police",
+        "size": "Taille de police",
+        "sizeDescription": "Ajustez la taille de vos sous-titres",
+        "color": "Couleur de police",
+        "bold": "Gras",
+        "boldDescription": "Activer le style de police gras",
+        "italic": "Italique",
+        "italicDescription": "Activer le style de police italique",
+        "underline": "Souligné",
+        "underlineDescription": "Activer le style de police souligné",
+        "outlineColor": "Couleur de contour",
+        "outlineThickness": "Épaisseur de contour",
+        "outlineThicknessDescription": "Ajustez l'épaisseur du contour de vos sous-titres",
+        "shadow": "Ombre",
+        "shadowDescription": "Ajustez l'ombre de vos sous-titres",
+        "shadowColor": "Couleur d'ombre",
+        "format": "Format",
+        "chunkNumber": "Nombre de segments",
+        "yAxisAlignment": "Alignement axe Y",
+        "yAxisAlignmentDescription": "Ajustez l'alignement vertical de vos sous-titres",
+        "arial": "Arial",
+        "arialDescription": "Construisez vos sous-titres pour la famille de police Arial.",
+        "timesNewRoman": "Times New Roman",
+        "timesNewRomanDescription": "Construisez vos sous-titres pour la famille de police Times New Roman.",
+        "courierNew": "Courier New",
+        "courierNewDescription": "Construisez vos sous-titres pour la famille de police Courier New.",
+        "original": "Original",
+        "originalDescription": "Construisez vos sous-titres pour le ratio d'aspect original.",
+        "zoomed_916": "Zoomé 9:16",
+        "zoomed_916Description": "Construisez vos sous-titres pour le ratio d'aspect zoomé 9:16.",
+        "normal_916_with_borders": "Normal 9:16 avec bordures",
+        "normal_916_with_bordersDescription": "Construisez vos sous-titres pour le ratio d'aspect normal 9:16 avec bordures.",
+        "chunkNumberDescription": "Nombre de parties pour la vidéo",
+        "fontAndSize": "Police et taille",
+        "colors": "Couleurs",
+        "textStyle": "Style de texte",
+        "effects": "Effets",
+        "videoSettings": "Paramètres vidéo",
+        "aiSettings": "Paramètres IA",
+        "language": "Langue",
+        "languageDescription": "Sélectionnez la langue des sous-titres",
+        "isResume": "Résumé",
+        "isResumeDescription": "Générer un résumé de la vidéo",
+        "auto": "Automatique",
+        "autoDescription": "Détecter automatiquement la langue de la vidéo",
+        "english": "Anglais",
+        "englishDescription": "Construisez vos sous-titres pour la langue anglaise",
+        "french": "Français",
+        "frenchDescription": "Construisez vos sous-titres pour la langue française"
+      }
+    }
+  },
+  "shared": {
+    "logo": {
+      "alt": "Logo"
+    },
+    "misc": {
+      "colorPicker": {
+        "pickColor": "Choisir une couleur",
+        "customColor": "Couleur personnalisée"
+      },
+      "numberInput": {
+        "min": "Valeur minimale",
+        "max": "Valeur maximale",
+        "step": "Valeur d'étape"
+      },
+      "youtubeUrl": {
+        "invalid": "URL YouTube invalide",
+        "placeholder": "Entrez l'URL YouTube"
+      }
+    }
+  },
+  "layout": {
+    "header": {
+      "menu": "Menu",
+      "notifications": "Notifications",
+      "theme": "Thème"
+    },
+    "navFooter": {
+      "companyName": "Substream",
+      "description": "Plateforme de traitement vidéo alimentée par l'IA"
+    },
+    "theme": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    }
+  },
   "stream": {
     "status": {
       "created": {
@@ -131,136 +300,5 @@
       }
     }
   },
-  "back": "Back",
-  "home": {
-    "title": "Home",
-    "queue": {
-      "actions": {
-        "subtitleNotAvailable": "Subtitle is not available for download",
-        "streamNotAvailable": "This is not available for download yet",
-        "resumeNotAvailable": "Resume is not available for download"
-      },
-      "options": {
-        "customizeColumns": "Customize Columns"
-      },
-      "columns": {
-        "originalFileName": "Name",
-        "status": "Status",
-        "progress": "Progress",
-        "size": "Size",
-        "sizeInMegabytes": "Size",
-        "createdAt": "Created At"
-      }
-    },
-    "upload": {
-      "file": "Upload a video file",
-      "url": "Import a video from a URL"
-    },
-    "preview": {
-      "subtitle": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "settings": {
-        "title": "Video & subtitle settings",
-        "settings": "Settings",
-        "process": "Process",
-        "description": "Configure the appearance and format of the subtitles",
-        "close": "Close",
-        "font": "Font family",
-        "size": "Font size",
-        "sizeDescription": "Adjust the size of your subtitles",
-        "color": "Font color",
-        "bold": "Bold",
-        "boldDescription": "Enable bold font style",
-        "italic": "Italic",
-        "italicDescription": "Enable italic font style",
-        "underline": "Underline",
-        "underlineDescription": "Enable underline font style",
-        "outlineColor": "Outline Color",
-        "outlineThickness": "Outline Thickness",
-        "outlineThicknessDescription": "Adjust the thickness of your subtitles outline",
-        "shadow": "Shadow",
-        "shadowDescription": "Adjust the shadow of your subtitles",
-        "shadowColor": "Shadow Color",
-        "format": "Format",
-        "chunkNumber": "Chunk Number",
-        "yAxisAlignment": "Y Axis Alignment",
-        "yAxisAlignmentDescription": "Adjust the y axis alignment of your subtitles",
-        "arial": "Arial",
-        "arialDescription": "Build your subtitles for the arial font family.",
-        "timesNewRoman": "Times New Roman",
-        "timesNewRomanDescription": "Build your subtitles for the times new roman font family.",
-        "courierNew": "Courier New",
-        "courierNewDescription": "Build your subtitles for the courier new font family.",
-        "original": "Original",
-        "originalDescription": "Build your subtitles for the original aspect ratio.",
-        "zoomed_916": "Zoomed 9:16",
-        "zoomed_916Description": "Build your subtitles for the zoomed 9:16 aspect ratio.",
-        "normal_916_with_borders": "Normal 9:16 with borders",
-        "normal_916_with_bordersDescription": "Build your subtitles for the normal 9:16 aspect ratio with borders.",
-        "chunkNumberDescription": "Number of parts for the video",
-        "fontAndSize": "Font & Size",
-        "colors": "Colors",
-        "textStyle": "Text Style",
-        "effects": "Effects",
-        "videoSettings": "Video Settings",
-        "aiSettings": "AI Settings",
-        "language": "Language",
-        "languageDescription": "Select the language of the subtitles",
-        "isResume": "Resume",
-        "isResumeDescription": "Generate a resume of the video",
-        "auto": "Automatic",
-        "autoDescription": "Automatically detect the language of the video",
-        "english": "English",
-        "englishDescription": "Build your subtitles for the english language",
-        "french": "French",
-        "frenchDescription": "Build your subtitles for the french language"
-      }
-    }
-  },
-  "login": {
-    "last_used": "Last used",
-    "welcome": "Welcome",
-    "title": "Login",
-    "email": "Email",
-    "password": "Password",
-    "submit": "Login",
-    "forgotPassword": "Forgot password?",
-    "register": "Register",
-    "alreadyHaveAccount": "Already have an account?",
-    "continue": "Login",
-    "signup": "Sign up",
-    "orContinueWith": "or continue with"
-  },
-  "register": {
-    "last_used": "Last used",
-    "orContinueWith": "Or continue with",
-    "welcome": "Welcome",
-    "title": "Register",
-    "notice": "Please note that the registration is currently disabled.",
-    "firstname": "Firstname",
-    "lastname": "Lastname",
-    "email": "Email",
-    "password": "Password",
-    "passwordsMustMatch": "Passwords must match",
-    "weWillUseThisToSendYouNotifications": "We'll use this to send you notifications",
-    "continueWithGoogle": "Continue with Google",
-    "continueWithGitHub": "Continue with GitHub",
-    "continueWithLinkedIn": "Continue with LinkedIn",
-    "continue": "Register",
-    "submitDisabled": "Submit",
-    "confirmPassword": "Confirm Password",
-    "login": "Login",
-    "submit": "Register",
-    "alreadyHaveAccount": "Already have an account?",
-    "byClickingRegister": "By clicking register, you agree to our",
-    "termsOfService": "Terms of Service",
-    "and": "and",
-    "privacyPolicy": "Privacy Policy"
-  },
-  "oauth": {
-    "authenticationFailed": "Authentication failed. Please try again.",
-    "loading": {
-      "title": "Authenticating...",
-      "description": "Please wait while we complete your authentication"
-    }
-  }
+  "back": "Retour"
 }

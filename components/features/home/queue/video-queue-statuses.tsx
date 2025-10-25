@@ -1,4 +1,4 @@
-export const Statuses = [
+export const VideoQueueStatuses = [
   {
     value: "created",
   },

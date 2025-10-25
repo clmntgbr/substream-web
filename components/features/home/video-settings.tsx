@@ -4,10 +4,10 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLeg
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { useTranslations } from "@/lib/use-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations-simple";
 import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
-import { ColorPicker } from "../misc/ColorPicker";
-import { NumberInput } from "../misc/NumberInput";
+import { SubtitleColorPicker } from "../shared/misc/subtitle-color-picker";
+import { SubtitleSizeInput } from "../shared/misc/subtitle-size-input";
 
 interface SettingsProps {
   open: boolean;
@@ -45,7 +45,7 @@ interface SettingsProps {
   setLanguage: (language: string) => void;
 }
 
-export const Settings = ({
+export const VideoSettings = ({
   open,
   onOpenChange,
   subtitleFont,
@@ -80,14 +80,14 @@ export const Settings = ({
   language,
   setLanguage,
 }: SettingsProps) => {
-  const t = useTranslations();
+  const t = useFeatureTranslations("home");
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col">
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
-          <SheetTitle>{t.home.preview.settings.title}</SheetTitle>
-          <SheetDescription>{t.home.preview.settings.description}</SheetDescription>
+          <SheetTitle>{t?.preview?.settings?.title || "Video & subtitle settings"}</SheetTitle>
+          <SheetDescription>{t?.preview?.settings?.description || "Configure the appearance and format of the subtitles"}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
@@ -98,7 +98,7 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <FormInputIcon className="size-4" />
-                      {t.home.preview.settings.fontAndSize}
+                      {t.preview.settings.fontAndSize}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -108,8 +108,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.arial}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.arialDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.arial}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.arialDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Arial" id="arial" disabled={readOnly} />
                             </Field>
@@ -117,8 +117,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="timesNewRoman">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.timesNewRoman}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.timesNewRomanDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.timesNewRoman}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.timesNewRomanDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Times New Roman" id="timesNewRoman" disabled={readOnly} />
                             </Field>
@@ -126,8 +126,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="courierNew">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.courierNew}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.courierNewDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.courierNew}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.courierNewDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Courier New" id="courierNew" disabled={readOnly} />
                             </Field>
@@ -135,14 +135,14 @@ export const Settings = ({
                         </RadioGroup>
                       </FieldSet>
                       <Field>
-                        <NumberInput
+                        <SubtitleSizeInput
                           value={subtitleSize}
                           onChange={setSubtitleSize}
                           min={0}
                           max={100}
                           step={1}
-                          description={t.home.preview.settings.sizeDescription}
-                          label={t.home.preview.settings.size}
+                          description={t.preview.settings.sizeDescription}
+                          label={t.preview.settings.size}
                           unit="px"
                           disabled={readOnly}
                         />
@@ -159,21 +159,21 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <PaletteIcon className="size-4" />
-                      {t.home.preview.settings.colors}
+                      {t.preview.settings.colors}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.color}</FieldTitle>
-                      <ColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
+                      <FieldTitle>{t.preview.settings.color}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.outlineColor}</FieldTitle>
-                      <ColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
+                      <FieldTitle>{t.preview.settings.outlineColor}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.home.preview.settings.shadowColor}</FieldTitle>
-                      <ColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
+                      <FieldTitle>{t.preview.settings.shadowColor}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -186,21 +186,21 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <Text className="size-4" />
-                      {t.home.preview.settings.textStyle}
+                      {t.preview.settings.textStyle}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="bold">{t.home.preview.settings.bold}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.boldDescription}</FieldDescription>
+                        <FieldLabel htmlFor="bold">{t.preview.settings.bold}</FieldLabel>
+                        <FieldDescription>{t.preview.settings.boldDescription}</FieldDescription>
                       </FieldContent>
                       <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} className="cursor-pointer" />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="italic">{t.home.preview.settings.italic}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.italicDescription}</FieldDescription>
+                        <FieldLabel htmlFor="italic">{t.preview.settings.italic}</FieldLabel>
+                        <FieldDescription>{t.preview.settings.italicDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="italic"
@@ -212,8 +212,8 @@ export const Settings = ({
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="underline">{t.home.preview.settings.underline}</FieldLabel>
-                        <FieldDescription>{t.home.preview.settings.underlineDescription}</FieldDescription>
+                        <FieldLabel htmlFor="underline">{t.preview.settings.underline}</FieldLabel>
+                        <FieldDescription>{t.preview.settings.underlineDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="underline"
@@ -233,32 +233,32 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <WandSparkles className="size-4" />
-                      {t.home.preview.settings.effects}
+                      {t.preview.settings.effects}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <NumberInput
+                      <SubtitleSizeInput
                         value={subtitleOutlineThickness}
                         onChange={setSubtitleOutlineThickness}
                         min={0}
                         max={4}
                         step={1}
-                        label={t.home.preview.settings.outlineThickness}
-                        description={t.home.preview.settings.outlineThicknessDescription}
+                        label={t.preview.settings.outlineThickness}
+                        description={t.preview.settings.outlineThicknessDescription}
                         unit="px"
                         disabled={readOnly}
                       />
                     </Field>
                     <Field>
-                      <NumberInput
+                      <SubtitleSizeInput
                         value={subtitleShadow}
                         onChange={setSubtitleShadow}
                         max={4}
                         min={0}
                         step={1}
-                        description={t.home.preview.settings.shadowDescription}
-                        label={t.home.preview.settings.shadow}
+                        description={t.preview.settings.shadowDescription}
+                        label={t.preview.settings.shadow}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -273,7 +273,7 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <VideoIcon className="size-4" />
-                      {t.home.preview.settings.videoSettings}
+                      {t.preview.settings.videoSettings}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -283,8 +283,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.original}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.originalDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.original}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.originalDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="original" id="original" disabled={readOnly} />
                             </Field>
@@ -292,8 +292,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="zoomed_916">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.zoomed_916}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.zoomed_916Description}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.zoomed_916}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.zoomed_916Description}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="zoomed_916" id="zoomed_916" disabled={readOnly} />
                             </Field>
@@ -301,8 +301,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="normal_916_with_borders">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.normal_916_with_borders}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.normal_916_with_borders}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" disabled={readOnly} />
                             </Field>
@@ -311,27 +311,27 @@ export const Settings = ({
                       </FieldSet>
                     </FieldGroup>
                     <Field>
-                      <NumberInput
+                      <SubtitleSizeInput
                         value={chunkNumber}
                         onChange={setChunkNumber}
                         max={100}
                         min={0}
                         step={1}
-                        description={t.home.preview.settings.chunkNumberDescription}
-                        label={t.home.preview.settings.chunkNumber}
+                        description={t.preview.settings.chunkNumberDescription}
+                        label={t.preview.settings.chunkNumber}
                         unit="  parts"
                         disabled={readOnly}
                       />
                     </Field>
                     <Field>
-                      <NumberInput
+                      <SubtitleSizeInput
                         value={yAxisAlignment}
                         onChange={setYAxisAlignment}
                         max={200}
                         min={0}
                         step={1}
-                        description={t.home.preview.settings.yAxisAlignmentDescription}
-                        label={t.home.preview.settings.yAxisAlignment}
+                        description={t.preview.settings.yAxisAlignmentDescription}
+                        label={t.preview.settings.yAxisAlignment}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -346,7 +346,7 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <BrainCircuit className="size-4" />
-                      {t.home.preview.settings.aiSettings}
+                      {t.preview.settings.aiSettings}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -355,8 +355,8 @@ export const Settings = ({
                         <FieldGroup>
                           <Field orientation="horizontal">
                             <FieldContent>
-                              <FieldLabel htmlFor="isResume">{t.home.preview.settings.isResume}</FieldLabel>
-                              <FieldDescription>{t.home.preview.settings.isResumeDescription}</FieldDescription>
+                              <FieldLabel htmlFor="isResume">{t.preview.settings.isResume}</FieldLabel>
+                              <FieldDescription>{t.preview.settings.isResumeDescription}</FieldDescription>
                             </FieldContent>
                             <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
                           </Field>
@@ -373,7 +373,7 @@ export const Settings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <LanguagesIcon className="size-4" />
-                      {t.home.preview.settings.language}
+                      {t.preview.settings.language}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -383,8 +383,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="auto">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.auto}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.autoDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.auto}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.autoDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="auto" id="auto" disabled={readOnly} />
                             </Field>
@@ -392,8 +392,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="english">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.english}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.englishDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.english}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.englishDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="english" id="english" disabled={true} />
                             </Field>
@@ -401,8 +401,8 @@ export const Settings = ({
                           <FieldLabel htmlFor="french">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.home.preview.settings.french}</FieldTitle>
-                                <FieldDescription>{t.home.preview.settings.frenchDescription}</FieldDescription>
+                                <FieldTitle>{t.preview.settings.french}</FieldTitle>
+                                <FieldDescription>{t.preview.settings.frenchDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="french" id="french" disabled={true} />
                             </Field>
@@ -419,7 +419,7 @@ export const Settings = ({
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
           <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
-            {t.home.preview.settings.close}
+            {t.preview.settings.close}
           </Button>
         </SheetFooter>
       </SheetContent>
@@ -427,4 +427,4 @@ export const Settings = ({
   );
 };
 
-export default Settings;
+export default VideoSettings;

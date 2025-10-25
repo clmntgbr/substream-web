@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Logo } from "../Logo";
+import { Logo } from "../features/shared/logo";
 import { Main } from "./menu/Main";
 import { User } from "./menu/User";
 import Notifications from "./Notifications";
