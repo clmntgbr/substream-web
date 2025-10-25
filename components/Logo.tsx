@@ -14,7 +14,6 @@ export function Logo({ className, width, height }: { className?: string; width: 
   }, []);
 
   if (!mounted) {
-    // Return a placeholder during SSR to avoid hydration mismatch
     return (
       <div className={cn("relative", className)}>
         <div style={{ width, height }} className="bg-transparent" />
