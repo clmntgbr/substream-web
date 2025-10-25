@@ -208,23 +208,46 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         formData.append("optionId", option.id);
         formData.append("duration", durationSeconds?.toString() || "");
 
+        if (thumbnail) {
+          if (thumbnail.startsWith("data:")) {
+            const response = await fetch(thumbnail);
+            const blob = await response.blob();
+            formData.append("thumbnail", blob, "thumbnail.jpg");
+          } else {
+            const response = await fetch(thumbnail);
+            const blob = await response.blob();
+            formData.append("thumbnail", blob, "thumbnail.jpg");
+          }
+        }
+
         response = await fetch("/api/streams/video", {
           method: "POST",
           credentials: "include",
           body: formData,
         });
       } else if (url) {
+        const requestBody: {
+          url: string;
+          optionId: string;
+          name: string;
+          thumbnail_url?: string;
+        } = {
+          url: url,
+          optionId: option.id,
+          name: videoTitle,
+        };
+
+        if (thumbnail) {
+          requestBody.thumbnail_url = thumbnail;
+        }
+
         response = await fetch("/api/streams/url", {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            url: url,
-            optionId: option.id,
-            name: videoTitle,
-          }),
+          body: JSON.stringify(requestBody),
         });
       } else {
         toast.error("No file or URL provided");
@@ -235,14 +258,11 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         const data = (await response.json()) as { message?: string };
         getStreams();
 
-        // Clean up states
         if (onUploadSuccess) {
           onUploadSuccess();
         }
 
         onOpenChange(false);
-
-        router.push(`/${lang}/process`);
         toast.success("Video uploaded successfully!", {
           description: data.message || "Your video is now being processed.",
         });

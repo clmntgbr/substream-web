@@ -14,6 +14,7 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
 
     const formData = await req.formData();
 
+    // The formData now includes the thumbnail if provided from the frontend
     const backendResponse = await fetch(`${BACKEND_API_URL}/streams/video`, {
       method: "POST",
       headers: {
@@ -26,10 +27,7 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as {
         error?: string;
       };
-      return NextResponse.json(
-        { error: errorData.error || "Failed to upload video" },
-        { status: backendResponse.status },
-      );
+      return NextResponse.json({ error: errorData.error || "Failed to upload video" }, { status: backendResponse.status });
     }
 
     const data = (await backendResponse.json()) as Stream;
@@ -40,10 +38,7 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
       stream: streamData,
     });
   } catch {
-    return NextResponse.json(
-      { error: "Failed to upload video" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to upload video" }, { status: 500 });
   }
 }
 

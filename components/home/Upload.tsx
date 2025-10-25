@@ -13,12 +13,9 @@ export default function Upload() {
   const [url, setUrl] = useState<string>("");
   const [urlInput, setUrlInput] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsProcessing(true);
     const files = event.target.files;
     if (!files) return;
 
@@ -35,7 +32,6 @@ export default function Upload() {
     });
 
     event.target.value = "";
-    setIsProcessing(false);
   };
 
   const handlePreviewClose = (open: boolean) => {
@@ -55,13 +51,11 @@ export default function Upload() {
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -72,7 +66,6 @@ export default function Upload() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false);
 
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
@@ -142,7 +135,6 @@ export default function Upload() {
         />
         <Button
           onClick={() => {
-            setIsProcessing(true);
             try {
               YoutubeUrlSchema.parse(urlInput);
               setUrl(urlInput);
@@ -152,8 +144,6 @@ export default function Upload() {
               toast.error("Invalid YouTube URL", {
                 description: "Please enter a valid YouTube URL",
               });
-            } finally {
-              setIsProcessing(false);
             }
           }}
         >
