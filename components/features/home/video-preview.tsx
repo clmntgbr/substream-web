@@ -7,7 +7,6 @@ import { useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
@@ -22,12 +21,9 @@ interface PreviewProps {
 }
 
 export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
-  const t = useTranslations();
+  const translations = useTranslations();
   const { createOption } = useOptions();
   const { searchStreams } = useStreams();
-  const router = useRouter();
-  const params = useParams();
-  const lang = (params.lang as string) || "en";
   const [isUploading, setIsUploading] = useState(false);
   const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
@@ -463,7 +459,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                     }px ${subtitleShadowColor}`,
                   }}
                 >
-                  {t.home.preview.subtitle}
+                  {translations.home.preview.subtitle}
                 </p>
               </div>
             </div>
@@ -473,7 +469,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
               <div className="flex justify-center gap-3 mx-auto">
                 <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
                   <VideoSettingsIcon className="h-3 w-3 mr-1" />
-                  {t.home.preview.settings.settings}
+                  {translations.home.preview.settings.settings}
                   <KbdGroup>
                     <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
@@ -484,7 +480,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                       ⌘ + e
                     </Kbd>
                   </KbdGroup>
-                  {t.home.preview.settings.process}
+                  {translations.home.preview.settings.process}
                   {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
                 </Button>
               </div>
