@@ -3,25 +3,19 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { Option } from "./types";
 
-// Context type
 interface OptionContextType {
   isLoading: boolean;
   error: string | null;
   createOption: (optionData: Partial<Option>) => Promise<Option | null>;
 }
 
-// Create context
 const OptionContext = createContext<OptionContextType | undefined>(undefined);
 
-// Provider component
 export function OptionProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Create option
   const createOption = useCallback(async (optionData: Partial<Option>) => {
-    console.log("createOption");
-    console.log(optionData);
     setIsLoading(true);
     setError(null);
     try {

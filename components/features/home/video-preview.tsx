@@ -24,7 +24,7 @@ interface PreviewProps {
 export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
   const t = useFeatureTranslations("home");
   const { createOption } = useOptions();
-  const { getStreams } = useStreams();
+  const { searchStreams } = useStreams();
   const router = useRouter();
   const params = useParams();
   const lang = (params.lang as string) || "en";
@@ -358,7 +358,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
 
       if (response.ok) {
         const data = (await response.json()) as { message?: string };
-        getStreams();
+        searchStreams();
 
         if (onUploadSuccess) {
           onUploadSuccess();

@@ -1,5 +1,5 @@
 import { useAuth } from "@/lib/auth-context";
-import { StreamQueryParams, useStreams } from "@/lib/stream";
+import { StreamSearchParams, useStreams } from "@/lib/stream";
 import { useFeatureTranslations } from "@/lib/use-feature-translations";
 import { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
@@ -10,10 +10,10 @@ import { VideoQueueToolbar } from "./queue/video-queue-toolbar";
 
 export function Process() {
   const { user } = useAuth();
-  const { state, getStreams, pageCount } = useStreams();
+  const { state, searchStreams, pageCount } = useStreams();
   const { lang } = useParams();
   const t = useFeatureTranslations("home");
-  const currentParamsRef = useRef<StreamQueryParams>({});
+  const currentParamsRef = useRef<StreamSearchParams>({});
 
   const columns = useMemo(() => getColumns(t, lang as string), [t, lang]);
 
@@ -24,9 +24,9 @@ export function Process() {
         page: pagination.pageIndex + 1,
       };
       currentParamsRef.current = params;
-      getStreams(params);
+      searchStreams(params);
     },
-    [getStreams]
+    [searchStreams]
   );
 
   const handleSortingChange = useCallback(
@@ -41,9 +41,9 @@ export function Process() {
         delete params.sortOrder;
       }
       currentParamsRef.current = params;
-      getStreams(params);
+      searchStreams(params);
     },
-    [getStreams]
+    [searchStreams]
   );
 
   const handleColumnFiltersChange = useCallback(
@@ -51,20 +51,20 @@ export function Process() {
       const params = { ...currentParamsRef.current };
 
       delete params.search;
-      delete params.status;
+      delete params.statusFilter;
 
       filters.forEach((filter) => {
         if (filter.id === "originalFileName" || filter.id === "fileName") {
           params.search = String(filter.value);
         } else if (filter.id === "status") {
-          params.status = String(filter.value);
+          params.statusFilter = [String(filter.value)];
         }
       });
 
       currentParamsRef.current = params;
-      getStreams(params);
+      searchStreams(params);
     },
-    [getStreams]
+    [searchStreams]
   );
 
   return (

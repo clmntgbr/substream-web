@@ -19,7 +19,6 @@ export default function ResetPage() {
 
   const handleReset = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(email);
   };
 
   return (
