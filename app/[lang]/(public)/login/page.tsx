@@ -167,7 +167,7 @@ export default function LoginPage() {
                     <span className="w-full border-t"></span>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">{t.login.orContinueWith}</span>
+                    <span className="bg-background px-2 text-muted-foreground">{t.auth.login.orContinueWith}</span>
                   </div>
                 </div>
 
@@ -185,7 +185,7 @@ export default function LoginPage() {
                         />
                         <InputGroupAddon align="block-start">
                           <Label htmlFor="email" className="text-foreground">
-                            {t.login.email}
+                            {t.auth.login.email}
                           </Label>
                           <Tooltip>
                             <TooltipTrigger asChild className="hover:bg-transparent">
@@ -212,7 +212,7 @@ export default function LoginPage() {
                         />
                         <InputGroupAddon align="block-start">
                           <Label htmlFor="password" className="text-foreground">
-                            {t.login.password}
+                            {t.auth.login.password}
                           </Label>
                           <Tooltip>
                             <TooltipTrigger asChild className="hover:bg-transparent">
@@ -231,7 +231,7 @@ export default function LoginPage() {
                       <div className="relative flex items-center">
                         <div className="flex-grow">
                           <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : t.login.continue} <CheckCheck />
+                            {isLoading ? <Spinner className="size-4" /> : t.auth.login.continue} <CheckCheck />
                           </Button>
                         </div>
                       </div>
