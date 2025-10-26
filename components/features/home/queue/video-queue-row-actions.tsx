@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
-import { useFeatureTranslations } from "@/lib/use-feature-translations";
+import { useFeatureTranslations } from "@/lib/use-feature-translations-simple";
 import { Row } from "@tanstack/react-table";
 import { BrainCircuit, Download, FileText, MoreVertical, Trash2, Settings2 as VideoSettings2Icon, Settings as VideoSettingsIcon } from "lucide-react";
 import { useState } from "react";
