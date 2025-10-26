@@ -51,6 +51,7 @@
   "home": {
     "title": "Home",
     "queue": {
+      "filterByStatus": "Filter by Status",
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",
         "streamNotAvailable": "This is not available for download yet",

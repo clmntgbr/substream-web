@@ -25,7 +25,7 @@ export function VideoQueueList() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center mb-6 gap-4">
         <VideoQueueFilter onFilterChange={handleFilterChange} />
       </div>
 
