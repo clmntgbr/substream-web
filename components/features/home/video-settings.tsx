@@ -4,7 +4,7 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLeg
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { useFeatureTranslations } from "@/lib/use-feature-translations-simple";
+import { useTranslations } from "@/lib/use-translations";
 import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
 import { SubtitleColorPicker } from "../shared/misc/subtitle-color-picker";
 import { SubtitleSizeInput } from "../shared/misc/subtitle-size-input";
@@ -80,14 +80,14 @@ export const VideoSettings = ({
   language,
   setLanguage,
 }: VideoSettingsProps) => {
-  const t = useFeatureTranslations("home");
+  const translations = useTranslations();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col">
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
-          <SheetTitle>{t?.preview?.settings?.title || "Video & subtitle settings"}</SheetTitle>
-          <SheetDescription>{t?.preview?.settings?.description || "Configure the appearance and format of the subtitles"}</SheetDescription>
+          <SheetTitle>{translations.home.preview.settings.title}</SheetTitle>
+          <SheetDescription>{translations.home.preview.settings.description}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
@@ -98,7 +98,7 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <FormInputIcon className="size-4" />
-                      {t.preview.settings.fontAndSize}
+                      {translations.home.preview.settings.fontAndSize}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -108,8 +108,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.arial}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.arialDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.arial}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.arialDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Arial" id="arial" disabled={readOnly} />
                             </Field>
@@ -117,8 +117,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="timesNewRoman">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.timesNewRoman}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.timesNewRomanDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.timesNewRoman}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.timesNewRomanDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Times New Roman" id="timesNewRoman" disabled={readOnly} />
                             </Field>
@@ -126,8 +126,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="courierNew">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.courierNew}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.courierNewDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.courierNew}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.courierNewDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="Courier New" id="courierNew" disabled={readOnly} />
                             </Field>
@@ -141,8 +141,8 @@ export const VideoSettings = ({
                           min={0}
                           max={100}
                           step={1}
-                          description={t.preview.settings.sizeDescription}
-                          label={t.preview.settings.size}
+                          description={translations.home.preview.settings.sizeDescription}
+                          label={translations.home.preview.settings.size}
                           unit="px"
                           disabled={readOnly}
                         />
@@ -159,20 +159,20 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <PaletteIcon className="size-4" />
-                      {t.preview.settings.colors}
+                      {translations.home.preview.settings.colors}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>{t.preview.settings.color}</FieldTitle>
+                      <FieldTitle>{translations.home.preview.settings.color}</FieldTitle>
                       <SubtitleColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.preview.settings.outlineColor}</FieldTitle>
+                      <FieldTitle>{translations.home.preview.settings.outlineColor}</FieldTitle>
                       <SubtitleColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>{t.preview.settings.shadowColor}</FieldTitle>
+                      <FieldTitle>{translations.home.preview.settings.shadowColor}</FieldTitle>
                       <SubtitleColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
                     </Field>
                   </FieldGroup>
@@ -186,21 +186,21 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <Text className="size-4" />
-                      {t.preview.settings.textStyle}
+                      {translations.home.preview.settings.textStyle}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="bold">{t.preview.settings.bold}</FieldLabel>
-                        <FieldDescription>{t.preview.settings.boldDescription}</FieldDescription>
+                        <FieldLabel htmlFor="bold">{translations.home.preview.settings.bold}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.boldDescription}</FieldDescription>
                       </FieldContent>
                       <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} className="cursor-pointer" />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="italic">{t.preview.settings.italic}</FieldLabel>
-                        <FieldDescription>{t.preview.settings.italicDescription}</FieldDescription>
+                        <FieldLabel htmlFor="italic">{translations.home.preview.settings.italic}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.italicDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="italic"
@@ -212,8 +212,8 @@ export const VideoSettings = ({
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="underline">{t.preview.settings.underline}</FieldLabel>
-                        <FieldDescription>{t.preview.settings.underlineDescription}</FieldDescription>
+                        <FieldLabel htmlFor="underline">{translations.home.preview.settings.underline}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.underlineDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="underline"
@@ -233,7 +233,7 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <WandSparkles className="size-4" />
-                      {t.preview.settings.effects}
+                      {translations.home.preview.settings.effects}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -244,8 +244,8 @@ export const VideoSettings = ({
                         min={0}
                         max={4}
                         step={1}
-                        label={t.preview.settings.outlineThickness}
-                        description={t.preview.settings.outlineThicknessDescription}
+                        label={translations.home.preview.settings.outlineThickness}
+                        description={translations.home.preview.settings.outlineThicknessDescription}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -257,8 +257,8 @@ export const VideoSettings = ({
                         max={4}
                         min={0}
                         step={1}
-                        description={t.preview.settings.shadowDescription}
-                        label={t.preview.settings.shadow}
+                        description={translations.home.preview.settings.shadowDescription}
+                        label={translations.home.preview.settings.shadow}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -273,7 +273,7 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <VideoIcon className="size-4" />
-                      {t.preview.settings.videoSettings}
+                      {translations.home.preview.settings.videoSettings}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -283,8 +283,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.original}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.originalDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.original}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.originalDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="original" id="original" disabled={readOnly} />
                             </Field>
@@ -292,8 +292,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="zoomed_916">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.zoomed_916}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.zoomed_916Description}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.zoomed_916}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.zoomed_916Description}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="zoomed_916" id="zoomed_916" disabled={readOnly} />
                             </Field>
@@ -301,8 +301,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="normal_916_with_borders">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.normal_916_with_borders}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.normal_916_with_borders}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" disabled={readOnly} />
                             </Field>
@@ -317,8 +317,8 @@ export const VideoSettings = ({
                         max={100}
                         min={0}
                         step={1}
-                        description={t.preview.settings.chunkNumberDescription}
-                        label={t.preview.settings.chunkNumber}
+                        description={translations.home.preview.settings.chunkNumberDescription}
+                        label={translations.home.preview.settings.chunkNumber}
                         unit="  parts"
                         disabled={readOnly}
                       />
@@ -330,8 +330,8 @@ export const VideoSettings = ({
                         max={200}
                         min={0}
                         step={1}
-                        description={t.preview.settings.yAxisAlignmentDescription}
-                        label={t.preview.settings.yAxisAlignment}
+                        description={translations.home.preview.settings.yAxisAlignmentDescription}
+                        label={translations.home.preview.settings.yAxisAlignment}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -346,7 +346,7 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <BrainCircuit className="size-4" />
-                      {t.preview.settings.aiSettings}
+                      {translations.home.preview.settings.aiSettings}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -355,8 +355,8 @@ export const VideoSettings = ({
                         <FieldGroup>
                           <Field orientation="horizontal">
                             <FieldContent>
-                              <FieldLabel htmlFor="isResume">{t.preview.settings.isResume}</FieldLabel>
-                              <FieldDescription>{t.preview.settings.isResumeDescription}</FieldDescription>
+                              <FieldLabel htmlFor="isResume">{translations.home.preview.settings.isResume}</FieldLabel>
+                              <FieldDescription>{translations.home.preview.settings.isResumeDescription}</FieldDescription>
                             </FieldContent>
                             <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
                           </Field>
@@ -373,7 +373,7 @@ export const VideoSettings = ({
                   <FieldLegend>
                     <span className="flex items-center gap-2">
                       <LanguagesIcon className="size-4" />
-                      {t.preview.settings.language}
+                      {translations.home.preview.settings.language}
                     </span>
                   </FieldLegend>
                   <FieldGroup>
@@ -383,8 +383,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="auto">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.auto}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.autoDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.auto}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.autoDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="auto" id="auto" disabled={readOnly} />
                             </Field>
@@ -392,8 +392,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="english">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.english}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.englishDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.english}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.englishDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="english" id="english" disabled={true} />
                             </Field>
@@ -401,8 +401,8 @@ export const VideoSettings = ({
                           <FieldLabel htmlFor="french">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>{t.preview.settings.french}</FieldTitle>
-                                <FieldDescription>{t.preview.settings.frenchDescription}</FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.french}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.frenchDescription}</FieldDescription>
                               </FieldContent>
                               <RadioGroupItem value="french" id="french" disabled={true} />
                             </Field>
@@ -419,7 +419,7 @@ export const VideoSettings = ({
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
           <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
-            {t.preview.settings.close}
+            {translations.home.preview.settings.close}
           </Button>
         </SheetFooter>
       </SheetContent>

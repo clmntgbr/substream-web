@@ -16,7 +16,7 @@ interface VideoQueueFilterProps {
 export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const translations = useTranslations();
+  const t = useTranslations();
 
   const handleStatusToggle = (status: string) => {
     const newStatuses = selectedStatuses.includes(status) ? selectedStatuses.filter((s) => s !== status) : [...selectedStatuses, status];
@@ -39,7 +39,7 @@ export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
             className="h-8 border-dashed cursor-pointer hover:bg-accent hover:text-accent-foreground bg-white dark:bg-input"
           >
             <PlusCircle />
-            {translations.home.queue.filterByStatus}
+            {t.home.queue.filterByStatus}
             {selectedStatuses.length > 0 && (
               <>
                 <Separator orientation="vertical" className="mx-2 h-4" />
@@ -49,7 +49,7 @@ export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
                 <div className="hidden gap-1 lg:flex">
                   {selectedStatuses.length > 2 ? (
                     <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                      {selectedStatuses.length} selected
+                      {t.home.queue.filterByStatus} {selectedStatuses.length}
                     </Badge>
                   ) : (
                     VideoQueueStatuses.filter((status: { value: string }) => selectedStatuses.includes(status.value)).map(
@@ -110,7 +110,7 @@ export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
             handleClearFilters();
           }}
         >
-          Reset
+          {t.home.queue.resetFilters}
           <X />
         </Button>
       )}

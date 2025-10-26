@@ -41,6 +41,7 @@
       "privacyPolicy": "Privacy Policy"
     },
     "oauth": {
+      "lastUsed": "Last used",
       "authenticationFailed": "Authentication failed. Please try again.",
       "loading": {
         "title": "Authenticating...",
@@ -52,6 +53,7 @@
     "title": "Home",
     "queue": {
       "filterByStatus": "Filter by Status",
+      "resetFilters": "Reset Filters",
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",
         "streamNotAvailable": "This is not available for download yet",

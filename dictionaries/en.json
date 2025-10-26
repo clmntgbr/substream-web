@@ -42,6 +42,7 @@
     },
     "oauth": {
       "authenticationFailed": "Authentication failed. Please try again.",
+      "lastUsed": "Last used",
       "loading": {
         "title": "Authenticating...",
         "description": "Please wait while we complete your authentication"
@@ -52,6 +53,7 @@
     "title": "Home",
     "queue": {
       "filterByStatus": "Filter by Status",
+      "resetFilters": "Reset Filters",
       "actions": {
         "subtitleNotAvailable": "Subtitle is not available for download",
         "streamNotAvailable": "This is not available for download yet",

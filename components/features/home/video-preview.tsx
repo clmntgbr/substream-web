@@ -4,7 +4,7 @@ import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Option, useOptions } from "@/lib/option";
 import { useStreams } from "@/lib/stream";
-import { useFeatureTranslations } from "@/lib/use-feature-translations-simple";
+import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ interface PreviewProps {
 }
 
 export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
-  const t = useFeatureTranslations("home");
+  const t = useTranslations();
   const { createOption } = useOptions();
   const { searchStreams } = useStreams();
   const router = useRouter();
@@ -463,7 +463,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                     }px ${subtitleShadowColor}`,
                   }}
                 >
-                  {t?.home?.preview?.subtitle || "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+                  {t.home.preview.subtitle}
                 </p>
               </div>
             </div>
@@ -473,7 +473,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
               <div className="flex justify-center gap-3 mx-auto">
                 <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
                   <VideoSettingsIcon className="h-3 w-3 mr-1" />
-                  {t?.home?.preview?.settings?.settings || "Settings"}
+                  {t.home.preview.settings.settings}
                   <KbdGroup>
                     <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
@@ -484,7 +484,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                       ⌘ + e
                     </Kbd>
                   </KbdGroup>
-                  {t?.home?.preview?.settings?.process || "Process"}
+                  {t.home.preview.settings.process}
                   {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
                 </Button>
               </div>
