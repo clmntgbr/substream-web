@@ -7,7 +7,7 @@ export function VideoQueuePagination() {
 
   const handlePageChange = (pageIndex: number) => {
     getStreams({
-      page: pageIndex + 1, // Convert to 1-based page
+      page: pageIndex + 1,
     });
   };
 
