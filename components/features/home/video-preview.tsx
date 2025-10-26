@@ -153,7 +153,9 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         author_name: string;
       };
 
-      setThumbnail(data.thumbnail_url);
+      // Process thumbnail to remove black bars
+      const processedThumbnail = await processThumbnail(data.thumbnail_url);
+      setThumbnail(processedThumbnail);
       setVideoTitle(data.title);
       setDuration("--:--");
       setFileSize("-- MB");
@@ -164,6 +166,106 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
       setDuration("--:--");
       setFileSize("-- MB");
     }
+  };
+
+  const processThumbnail = async (thumbnailUrl: string): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = document.createElement("img");
+      img.crossOrigin = "anonymous";
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          resolve(thumbnailUrl);
+          return;
+        }
+
+        // Set canvas size to original image size
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+
+        // Get image data to detect black bars
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // Find top and bottom black bars
+        let topBar = 0;
+        let bottomBar = canvas.height;
+
+        // Check top bar
+        for (let y = 0; y < canvas.height; y++) {
+          let isBlackRow = true;
+          for (let x = 0; x < canvas.width; x++) {
+            const index = (y * canvas.width + x) * 4;
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+
+            // Check if pixel is not black (allowing some tolerance)
+            if (r > 20 || g > 20 || b > 20) {
+              isBlackRow = false;
+              break;
+            }
+          }
+          if (!isBlackRow) {
+            topBar = y;
+            break;
+          }
+        }
+
+        // Check bottom bar
+        for (let y = canvas.height - 1; y >= 0; y--) {
+          let isBlackRow = true;
+          for (let x = 0; x < canvas.width; x++) {
+            const index = (y * canvas.width + x) * 4;
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+
+            // Check if pixel is not black (allowing some tolerance)
+            if (r > 20 || g > 20 || b > 20) {
+              isBlackRow = false;
+              break;
+            }
+          }
+          if (!isBlackRow) {
+            bottomBar = y;
+            break;
+          }
+        }
+
+        // If we found black bars, crop the image
+        if (topBar > 0 || bottomBar < canvas.height) {
+          const croppedHeight = bottomBar - topBar + 1;
+          const croppedCanvas = document.createElement("canvas");
+          const croppedCtx = croppedCanvas.getContext("2d");
+
+          if (croppedCtx) {
+            croppedCanvas.width = canvas.width;
+            croppedCanvas.height = croppedHeight;
+
+            croppedCtx.drawImage(canvas, 0, topBar, canvas.width, croppedHeight, 0, 0, canvas.width, croppedHeight);
+
+            resolve(croppedCanvas.toDataURL("image/jpeg", 0.9));
+            return;
+          }
+        }
+
+        // If no black bars found, return original
+        resolve(thumbnailUrl);
+      };
+
+      img.onerror = () => {
+        resolve(thumbnailUrl);
+      };
+
+      img.src = thumbnailUrl;
+    });
   };
 
   const handleProcess = async () => {
@@ -230,7 +332,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
           url: string;
           optionId: string;
           name: string;
-          thumbnail_url?: string;
+          thumbnail_file?: string;
         } = {
           url: url,
           optionId: option.id,
@@ -238,7 +340,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         };
 
         if (thumbnail) {
-          requestBody.thumbnail_url = thumbnail;
+          requestBody.thumbnail_file = thumbnail;
         }
 
         response = await fetch("/api/streams/url", {

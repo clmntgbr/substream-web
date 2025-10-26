@@ -87,7 +87,7 @@ export default function Upload() {
     }
   };
   return (
-    <div className="flex flex-col gap-2 w-2xl mx-auto h-[89vh] justify-center">
+    <div className="flex flex-col gap-2 w-2xl mx-auto h-[80vh] justify-center">
       <div className="relative mb-4 flex flex-col items-center px-4 text-center md:mb-6">
         <div className="flex w-full flex-col items-center justify-center gap-2"></div>
         <h1 className="mb-2 flex items-center gap-1 text-3xl font-bold leading-none text-foreground sm:text-3xl md:mb-2.5 md:gap-0 md:text-5xl">
