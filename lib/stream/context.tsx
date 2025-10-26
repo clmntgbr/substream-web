@@ -12,6 +12,7 @@ export interface StreamSearchParams {
   statusFilter?: string[];
   page?: number;
   itemsPerPage?: number;
+  search?: string;
 }
 
 interface StreamContextType {
@@ -60,6 +61,10 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       }
 
       queryParams.append("statusFilter[]", "!deleted");
+
+      if (params?.search && params.search.trim()) {
+        queryParams.append("search", params.search.trim());
+      }
 
       const response = await apiClient.get(`/api/search/streams?${queryParams.toString()}`);
 

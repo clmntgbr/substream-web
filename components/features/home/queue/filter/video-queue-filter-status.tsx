@@ -5,15 +5,22 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "@/lib/use-translations";
 import { cn } from "@/lib/utils";
-import { Check, PlusCircle, X } from "lucide-react";
-import { useState } from "react";
-import { VideoQueueStatuses } from "./video-queue-statuses";
+import { Check, PlusCircle } from "lucide-react";
+import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import { VideoQueueStatuses } from "../video-queue-statuses";
 
-interface VideoQueueFilterProps {
+interface VideoQueueFilterStatusProps {
   onFilterChange: (status: string[] | undefined) => void;
 }
 
-export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
+export interface VideoQueueFilterStatusRef {
+  reset: () => void;
+}
+
+export const VideoQueueFilterStatus = forwardRef<VideoQueueFilterStatusRef, VideoQueueFilterStatusProps>(function VideoQueueFilterStatus(
+  { onFilterChange },
+  ref
+) {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const t = useTranslations();
@@ -28,6 +35,19 @@ export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
     setSelectedStatuses([]);
     onFilterChange(undefined);
   };
+
+  const reset = useCallback(() => {
+    setSelectedStatuses([]);
+    onFilterChange(undefined);
+  }, [onFilterChange]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [reset]
+  );
 
   return (
     <>
@@ -102,18 +122,6 @@ export function VideoQueueFilter({ onFilterChange }: VideoQueueFilterProps) {
           </Command>
         </PopoverContent>
       </Popover>
-      {selectedStatuses.length > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            handleClearFilters();
-          }}
-        >
-          {t.home.queue.resetFilters}
-          <X />
-        </Button>
-      )}
     </>
   );
-}
+});
