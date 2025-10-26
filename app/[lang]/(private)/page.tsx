@@ -1,13 +1,13 @@
 "use client";
 
-import { VideoQueueCards } from "@/components/features/home/queue/video-queue-cards";
+import { VideoQueueList } from "@/components/features/home/queue/video-queue-list";
 import VideoUpload from "@/components/features/home/video-upload";
 
 const HomePage = () => {
   return (
     <>
       <VideoUpload />
-      <VideoQueueCards />
+      <VideoQueueList />
     </>
   );
 };

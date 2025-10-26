@@ -13,7 +13,7 @@ interface DetailsProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const Details = ({ stream, open, onOpenChange }: DetailsProps) => {
+export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
   const { getResume } = useStreams();
   const [resume, setResume] = useState<string>("");
   const [isLoadingResume, setIsLoadingResume] = useState(false);
@@ -92,4 +92,4 @@ export const Details = ({ stream, open, onOpenChange }: DetailsProps) => {
   );
 };
 
-export default Details;
+export default VideoDetails;

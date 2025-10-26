@@ -9,7 +9,7 @@ import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIco
 import { SubtitleColorPicker } from "../shared/misc/subtitle-color-picker";
 import { SubtitleSizeInput } from "../shared/misc/subtitle-size-input";
 
-interface SettingsProps {
+interface VideoSettingsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   subtitleFont: string;
@@ -79,7 +79,7 @@ export const VideoSettings = ({
   setIsResume,
   language,
   setLanguage,
-}: SettingsProps) => {
+}: VideoSettingsProps) => {
   const t = useFeatureTranslations("home");
 
   return (

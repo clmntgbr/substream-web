@@ -1,17 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { Table } from "@tanstack/react-table";
+import { useStreams } from "@/lib/stream";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
-interface VideoQueuePaginationProps<TData> {
-  table: Table<TData>;
-}
+export function VideoQueuePagination() {
+  const { currentPage, pageCount, getStreams } = useStreams();
 
-export function VideoQueuePagination<TData>({ table }: VideoQueuePaginationProps<TData>) {
-  const currentPage = table.getState().pagination.pageIndex + 1;
-  const pageCount = table.getPageCount();
+  const handlePageChange = (pageIndex: number) => {
+    getStreams({
+      page: pageIndex + 1, // Convert to 1-based page
+    });
+  };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mt-6">
       <div className="text-muted-foreground flex-1 text-sm"></div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
@@ -22,8 +23,8 @@ export function VideoQueuePagination<TData>({ table }: VideoQueuePaginationProps
             variant="outline"
             size="icon"
             className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-input"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => handlePageChange(0)}
+            disabled={currentPage <= 1}
           >
             <span className="sr-only">Go to first page</span>
             <ChevronsLeft />
@@ -32,8 +33,8 @@ export function VideoQueuePagination<TData>({ table }: VideoQueuePaginationProps
             variant="outline"
             size="icon"
             className="size-8 cursor-pointer bg-white dark:bg-input"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => handlePageChange(currentPage - 2)}
+            disabled={currentPage <= 1}
           >
             <span className="sr-only">Go to previous page</span>
             <ChevronLeft />
@@ -42,8 +43,8 @@ export function VideoQueuePagination<TData>({ table }: VideoQueuePaginationProps
             variant="outline"
             size="icon"
             className="size-8 cursor-pointer bg-white dark:bg-input"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => handlePageChange(currentPage)}
+            disabled={currentPage >= pageCount}
           >
             <span className="sr-only">Go to next page</span>
             <ChevronRight />
@@ -52,8 +53,8 @@ export function VideoQueuePagination<TData>({ table }: VideoQueuePaginationProps
             variant="outline"
             size="icon"
             className="hidden size-8 lg:flex cursor-pointer bg-white dark:bg-input"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
+            onClick={() => handlePageChange(pageCount - 1)}
+            disabled={currentPage >= pageCount}
           >
             <span className="sr-only">Go to last page</span>
             <ChevronsRight />
