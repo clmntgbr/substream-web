@@ -1,9 +1,9 @@
 "use client";
 
-import { GitHubSVG } from "@/components/misc/GitHubSVG";
-import { GoogleSVG } from "@/components/misc/GoogleSVG";
-import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
-import { LastUsedBadge } from "@/components/oauth/LastUsedBadge";
+import { GitHubSVG } from "@/components/features/auth/misc/GitHubSVG";
+import { GoogleSVG } from "@/components/features/auth/misc/GoogleSVG";
+import { LinkedInSVG } from "@/components/features/auth/misc/LinkedInSVG";
+import { LastUsedBadge } from "@/components/features/auth/oauth/LastUsedBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
@@ -160,7 +160,7 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "google" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <GoogleSVG />
@@ -175,7 +175,7 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "github" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <GitHubSVG />
@@ -190,7 +190,7 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     variant="outline"
                     className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
+                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <LinkedInSVG />

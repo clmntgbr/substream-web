@@ -9,25 +9,19 @@ export async function POST(request: NextRequest) {
     const { code, state } = body;
 
     if (!code) {
-      return NextResponse.json(
-        { error: "Missing required parameters" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
-    const backendResponse = await fetch(
-      `${BACKEND_API_URL}/oauth/google/exchange-token`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code,
-          state,
-        }),
+    const backendResponse = await fetch(`${BACKEND_API_URL}/oauth/google/exchange-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        code,
+        state,
+      }),
+    });
 
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json().catch(() => ({}));
@@ -49,17 +43,11 @@ export async function POST(request: NextRequest) {
     };
 
     if (!response.token) {
-      return NextResponse.json(
-        { error: "No token received from backend" },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: "No token received from backend" }, { status: 500 });
     }
 
     const { token, user } = response;
 
-    console.log("Backend user response:", JSON.stringify(user, null, 2));
-
-    // Get complete user data from backend
     const meResponse = await fetch(`${BACKEND_API_URL}/api/me`, {
       method: "GET",
       headers: {
@@ -90,9 +78,6 @@ export async function POST(request: NextRequest) {
 
     return userResponse;
   } catch {
-    return NextResponse.json(
-      { error: "Token exchange failed. Please check your backend connection." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Token exchange failed. Please check your backend connection." }, { status: 500 });
   }
 }

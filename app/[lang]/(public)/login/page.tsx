@@ -1,9 +1,9 @@
 "use client";
 
-import { GitHubSVG } from "@/components/misc/GitHubSVG";
-import { GoogleSVG } from "@/components/misc/GoogleSVG";
-import { LinkedInSVG } from "@/components/misc/LinkedInSVG";
-import { LastUsedBadge } from "@/components/oauth/LastUsedBadge";
+import { GitHubSVG } from "@/components/features/auth/misc/GitHubSVG";
+import { GoogleSVG } from "@/components/features/auth/misc/GoogleSVG";
+import { LinkedInSVG } from "@/components/features/auth/misc/LinkedInSVG";
+import { LastUsedBadge } from "@/components/features/auth/oauth/LastUsedBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
@@ -18,6 +18,7 @@ import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useTranslations } from "@/lib/use-translations";
 import { loginSchema, type LoginFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -121,8 +122,8 @@ export default function LoginPage() {
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "google" ? "border border-affirmative-primary shadow-none" : ""
+                    className={`relative flex w-full space-x-2 h-8 hover:bg-muted/70 bg-muted/30 dark:bg-background rounded-md px-4 py-2 ${
+                      lastUsedProvider === "google" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <GoogleSVG />
@@ -136,8 +137,8 @@ export default function LoginPage() {
                     onClick={handleGitHubLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "github" ? "border border-affirmative-primary shadow-none" : ""
+                    className={`relative flex w-full space-x-2 h-8 hover:bg-muted/70 bg-muted/30 dark:bg-background rounded-md px-4 py-2 ${
+                      lastUsedProvider === "github" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <GitHubSVG />
@@ -151,8 +152,8 @@ export default function LoginPage() {
                     onClick={handleLinkedInLogin}
                     disabled={isLoading}
                     variant="outline"
-                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 ${
-                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary shadow-none" : ""
+                    className={`relative flex w-full space-x-2 h-8 rounded-md px-4 py-2 hover:bg-muted/70 bg-muted/30 dark:bg-background ${
+                      lastUsedProvider === "linkedin" ? "border border-affirmative-primary " : ""
                     }`}
                   >
                     <LinkedInSVG />
@@ -166,7 +167,7 @@ export default function LoginPage() {
                     <span className="w-full border-t"></span>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">{t.login.orContinueWith}</span>
+                    <span className="bg-background px-2 text-muted-foreground">{t.auth.login.orContinueWith}</span>
                   </div>
                 </div>
 
@@ -184,7 +185,7 @@ export default function LoginPage() {
                         />
                         <InputGroupAddon align="block-start">
                           <Label htmlFor="email" className="text-foreground">
-                            {t.login.email}
+                            {t.auth.login.email}
                           </Label>
                           <Tooltip>
                             <TooltipTrigger asChild className="hover:bg-transparent">
@@ -211,7 +212,7 @@ export default function LoginPage() {
                         />
                         <InputGroupAddon align="block-start">
                           <Label htmlFor="password" className="text-foreground">
-                            {t.login.password}
+                            {t.auth.login.password}
                           </Label>
                           <Tooltip>
                             <TooltipTrigger asChild className="hover:bg-transparent">
@@ -230,7 +231,7 @@ export default function LoginPage() {
                       <div className="relative flex items-center">
                         <div className="flex-grow">
                           <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : t.login.continue} <CheckCheck />
+                            {isLoading ? <Spinner className="size-4" /> : t.auth.login.continue} <CheckCheck />
                           </Button>
                         </div>
                       </div>
@@ -256,7 +257,19 @@ export default function LoginPage() {
       </div>
 
       <div className="sticky top-0 hidden h-screen rounded-xl p-4 lg:block">
-        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30"></div>
+        <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 dark:from-primary/30 dark:via-primary/20 dark:to-accent/30">
+          <Image
+            alt="LoginBanner"
+            loading="eager"
+            width="1384"
+            height="1824"
+            decoding="async"
+            data-nimg="1"
+            className="pointer-events-none block h-full w-full select-none rounded-xl object-cover dark:hidden"
+            style={{ color: "transparent" }}
+            src="/background.webp"
+          />
+        </div>
       </div>
     </div>
   );
