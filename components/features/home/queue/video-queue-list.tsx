@@ -1,6 +1,6 @@
 import { useStreams } from "@/lib/stream";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
+import { VideoQueueFilterDate, VideoQueueFilterDateRef } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
 import { VideoQueueFilterStatus, VideoQueueFilterStatusRef } from "./filter/video-queue-filter-status";
@@ -12,9 +12,12 @@ export function VideoQueueList() {
   const { state, searchStreams } = useStreams();
   const [currentStatus, setCurrentStatus] = useState<string[] | undefined>(undefined);
   const [currentSearch, setCurrentSearch] = useState<string | undefined>(undefined);
+  const [currentFromDate, setCurrentFromDate] = useState<Date | undefined>(undefined);
+  const [currentToDate, setCurrentToDate] = useState<Date | undefined>(undefined);
 
   const searchRef = useRef<VideoQueueFilterSearchRef>(null);
   const statusRef = useRef<VideoQueueFilterStatusRef>(null);
+  const dateRef = useRef<VideoQueueFilterDateRef>(null);
 
   const handleFilterChange = useCallback(
     (status: string[] | undefined) => {
@@ -22,6 +25,8 @@ export function VideoQueueList() {
       searchStreams({
         statusFilter: status && status.length > 0 ? status : undefined,
         search: currentSearch,
+        fromDate: currentFromDate,
+        toDate: currentToDate,
         page: 1,
       });
     },
@@ -34,6 +39,8 @@ export function VideoQueueList() {
       searchStreams({
         search,
         statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
+        fromDate: currentFromDate,
+        toDate: currentToDate,
         page: 1,
       });
     },
@@ -46,6 +53,23 @@ export function VideoQueueList() {
         page,
         statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
         search: currentSearch,
+        fromDate: currentFromDate,
+        toDate: currentToDate,
+      });
+    },
+    [] // Remove all dependencies to make it stable
+  );
+
+  const handleDateChange = useCallback(
+    (fromDate: Date | undefined, toDate: Date | undefined) => {
+      setCurrentFromDate(fromDate);
+      setCurrentToDate(toDate);
+      searchStreams({
+        statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
+        search: currentSearch,
+        fromDate,
+        toDate,
+        page: 1,
       });
     },
     [] // Remove all dependencies to make it stable
@@ -54,28 +78,33 @@ export function VideoQueueList() {
   const handleClearFilters = useCallback(() => {
     setCurrentStatus(undefined);
     setCurrentSearch(undefined);
+    setCurrentFromDate(undefined);
+    setCurrentToDate(undefined);
 
     searchRef.current?.reset();
     statusRef.current?.reset();
+    dateRef.current?.reset();
 
     searchStreams({
       page: 1,
     });
   }, []); // Remove searchStreams dependency
 
-  const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0);
+  const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0) || currentFromDate || currentToDate;
 
   useEffect(() => {
     const interval = setInterval(() => {
       searchStreams({
         statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
         search: currentSearch,
+        fromDate: currentFromDate,
+        toDate: currentToDate,
         page: 1,
       });
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [currentStatus, currentSearch]); // Depend on filter values only
+  }, [currentStatus, currentSearch, currentFromDate, currentToDate]); // Depend on filter values only
 
   return (
     <>
@@ -86,7 +115,7 @@ export function VideoQueueList() {
             <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
             {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
           </div>
-          <VideoQueueFilterDate />
+          <VideoQueueFilterDate ref={dateRef} onDateChange={handleDateChange} />
         </div>
       </>
 
