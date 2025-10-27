@@ -13,10 +13,23 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "localhost",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "https",
         hostname: "*",
       },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: process.env.NODE_ENV === "development",
   },
+  serverExternalPackages: [],
 };
 
 export default nextConfig;

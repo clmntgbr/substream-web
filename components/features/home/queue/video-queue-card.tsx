@@ -1,24 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Stream, useStreams } from "@/lib/stream";
 import { useTranslations } from "@/lib/use-translations";
 import { format } from "date-fns";
@@ -46,8 +30,7 @@ type VideoQueueCardProps = {
 
 export function VideoQueueCard({ stream }: VideoQueueCardProps) {
   const translations = useTranslations();
-  const { downloadStream, downloadSubtitle, downloadResume, deleteStream } =
-    useStreams();
+  const { downloadStream, downloadSubtitle, downloadResume, deleteStream } = useStreams();
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -77,10 +60,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
   };
 
   const handleDelete = async () => {
-    if (
-      stream.id &&
-      confirm(`Are you sure you want to delete "${stream.originalFileName}"?`)
-    ) {
+    if (stream.id && confirm(`Are you sure you want to delete "${stream.originalFileName}"?`)) {
       await deleteStream(stream.id);
     }
   };
@@ -101,24 +81,17 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
     }
   };
 
-  const getTitleTranslation = (
-    status: keyof typeof translations.stream.status,
-  ) => {
+  const getTitleTranslation = (status: keyof typeof translations.stream.status) => {
     return translations.stream.status[status]?.title ?? "";
   };
 
-  const getDescriptionTranslation = (
-    status: keyof typeof translations.stream.status,
-  ) => {
+  const getDescriptionTranslation = (status: keyof typeof translations.stream.status) => {
     return translations.stream.status[status]?.description ?? "";
   };
 
   return (
     <>
-      <Card
-        key={stream.id}
-        className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-4"
-      >
+      <Card key={stream.id} className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -131,66 +104,48 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]">
-            <DropdownMenuItem
-              onClick={handleDownload}
-              disabled={!stream.isDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownload} disabled={!stream.isDownloadable} className="cursor-pointer">
               <Download className="mr-2 size-4" />
               Download
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleDownloadSubtitle}
-              disabled={!stream.isSrtDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownloadSubtitle} disabled={!stream.isSrtDownloadable} className="cursor-pointer">
               <FileText className="mr-2 size-4" />
               Download subtitle
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleDownloadResume}
-              disabled={!stream.isResumeDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownloadResume} disabled={!stream.isResumeDownloadable} className="cursor-pointer">
               <BrainCircuit className="mr-2 size-4" />
               Download resume
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleViewOptions}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleViewOptions} className="cursor-pointer">
               <SettingsIcon className="mr-2 size-4" />
               View Options
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleViewDetails}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
               <Settings2Icon className="mr-2 size-4" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={handleDelete}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem variant="destructive" onClick={handleDelete} className="cursor-pointer">
               <Trash2 className="mr-2 size-4" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Image
-          src={stream.thumbnailUrl ?? ""}
-          alt={stream.originalFileName}
-          width={300}
-          height={150}
-          className="w-full h-[150px] object-cover object-center rounded-t-lg mb-4"
-        />
+        {stream.thumbnailUrl ? (
+          <Image
+            src={stream.thumbnailUrl}
+            alt={stream.originalFileName}
+            width={300}
+            height={150}
+            className="w-full h-[150px] object-cover object-center rounded-t-lg mb-4"
+          />
+        ) : (
+          <div className="w-full h-[150px] bg-muted rounded-t-lg mb-4 flex items-center justify-center">
+            <span className="text-muted-foreground text-sm">No thumbnail</span>
+          </div>
+        )}
         <CardHeader className="mb-4 gap-0">
-          <CardDescription className="text-xs text-muted-foreground">
-            {formatDate(stream.createdAt)}
-          </CardDescription>
+          <CardDescription className="text-xs text-muted-foreground">{formatDate(stream.createdAt)}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <HoverCard>
@@ -201,21 +156,11 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold">
-                  {stream.originalFileName.replace(".mp4", "")}
-                </h4>
+                <h4 className="text-sm font-semibold">{stream.originalFileName.replace(".mp4", "")}</h4>
                 <div className="flex gap-2">
-                  {stream.mimeType && (
-                    <Badge variant="outline">{stream.mimeType}</Badge>
-                  )}
-                  {stream.sizeInMegabytes && (
-                    <Badge variant="outline">
-                      {stream.sizeInMegabytes.toFixed(2)} MB
-                    </Badge>
-                  )}
-                  {stream.duration && (
-                    <Badge variant="outline">{stream.duration}</Badge>
-                  )}
+                  {stream.mimeType && <Badge variant="outline">{stream.mimeType}</Badge>}
+                  {stream.sizeInMegabytes && <Badge variant="outline">{stream.sizeInMegabytes.toFixed(2)} MB</Badge>}
+                  {stream.duration && <Badge variant="outline">{stream.duration}</Badge>}
                 </div>
               </div>
             </HoverCardContent>
@@ -223,24 +168,16 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
           <HoverCard>
             <HoverCardTrigger asChild>
               <div className="w-full flex justify-center absolute bottom-4 left-0">
-                <Badge
-                  variant="outline"
-                  className="text-muted-foreground px-1.5 cursor-pointer"
-                >
+                <Badge variant="outline" className="text-muted-foreground px-1.5 cursor-pointer">
                   {stream.isCompleted && (
                     <>
                       <CheckCircle2Icon className="size-4 text-emerald-400" />
-                      {getTitleTranslation(
-                        stream.status as keyof typeof translations.stream.status,
-                      )}
+                      {getTitleTranslation(stream.status as keyof typeof translations.stream.status)}
                     </>
                   )}
                   {stream.isFailed && (
                     <>
-                      <XCircleIcon className="size-4 text-red-500" />{" "}
-                      {getTitleTranslation(
-                        stream.status as keyof typeof translations.stream.status,
-                      )}
+                      <XCircleIcon className="size-4 text-red-500" /> {getTitleTranslation(stream.status as keyof typeof translations.stream.status)}
                     </>
                   )}
                   {stream.isProcessing && (
@@ -255,16 +192,8 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             <HoverCardContent className="w-80" side="top">
               <div className="flex justify-between gap-4">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">
-                    {getTitleTranslation(
-                      stream.status as keyof typeof translations.stream.status,
-                    )}
-                  </h4>
-                  <p className="text-sm">
-                    {getDescriptionTranslation(
-                      stream.status as keyof typeof translations.stream.status,
-                    )}
-                  </p>
+                  <h4 className="text-sm font-semibold">{getTitleTranslation(stream.status as keyof typeof translations.stream.status)}</h4>
+                  <p className="text-sm">{getDescriptionTranslation(stream.status as keyof typeof translations.stream.status)}</p>
                 </div>
               </div>
             </HoverCardContent>
@@ -272,11 +201,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
         </CardContent>
       </Card>
 
-      <VideoDetails
-        stream={stream}
-        open={detailsOpen}
-        onOpenChange={setDetailsOpen}
-      />
+      <VideoDetails stream={stream} open={detailsOpen} onOpenChange={setDetailsOpen} />
 
       <VideoSettings
         open={settingsOpen}

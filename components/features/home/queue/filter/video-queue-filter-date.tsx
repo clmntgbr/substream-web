@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ClientOnly } from "@/components/ui/client-only";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useTranslations } from "@/lib/use-translations";
 import { ChevronDownIcon } from "lucide-react";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
@@ -18,10 +15,10 @@ export interface VideoQueueFilterDateRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterDate = forwardRef<
-  VideoQueueFilterDateRef,
-  VideoQueueFilterDateProps
->(function VideoQueueFilterDate({ onDateChange }, ref) {
+export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQueueFilterDateProps>(function VideoQueueFilterDate(
+  { onDateChange },
+  ref
+) {
   const translations = useTranslations();
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
@@ -33,7 +30,7 @@ export const VideoQueueFilterDate = forwardRef<
       setFromDate(date);
       onDateChange(date, toDate);
     },
-    [onDateChange, toDate],
+    [onDateChange, toDate]
   );
 
   const handleToDateChange = useCallback(
@@ -41,7 +38,7 @@ export const VideoQueueFilterDate = forwardRef<
       setToDate(date);
       onDateChange(fromDate, date);
     },
-    [onDateChange, fromDate],
+    [onDateChange, fromDate]
   );
 
   const reset = useCallback(() => {
@@ -56,33 +53,41 @@ export const VideoQueueFilterDate = forwardRef<
     () => ({
       reset,
     }),
-    [reset],
+    [reset]
   );
 
   return (
-    <>
+    <ClientOnly
+      fallback={
+        <div className="flex gap-4">
+          <ButtonGroup>
+            <div className="flex flex-col gap-3">
+              <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
+                {fromDate ? fromDate.toLocaleDateString() : translations.home.queue.filterDate.from}
+                <ChevronDownIcon />
+              </Button>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
+                {toDate ? toDate.toLocaleDateString() : translations.home.queue.filterDate.to}
+                <ChevronDownIcon />
+              </Button>
+            </div>
+          </ButtonGroup>
+        </div>
+      }
+    >
       <div className="flex gap-4">
         <ButtonGroup>
           <div className="flex flex-col gap-3">
             <Popover open={fromOpen} onOpenChange={setFromOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date-picker-from"
-                  className="w-32 justify-between font-normal rounded-r-none"
-                >
-                  {fromDate
-                    ? fromDate.toLocaleDateString()
-                    : translations.home.queue.filterDate.from}
+                <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
+                  {fromDate ? fromDate.toLocaleDateString() : translations.home.queue.filterDate.from}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                id="date-picker-from-content"
-                className="w-auto overflow-hidden p-0"
-                align="start"
-                suppressHydrationWarning
-              >
+              <PopoverContent id="date-picker-from-content" className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={fromDate}
@@ -98,23 +103,12 @@ export const VideoQueueFilterDate = forwardRef<
           <div className="flex flex-col gap-3">
             <Popover open={toOpen} onOpenChange={setToOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date-picker-to"
-                  className="w-32 justify-between font-normal rounded-r-none"
-                >
-                  {toDate
-                    ? toDate.toLocaleDateString()
-                    : translations.home.queue.filterDate.to}
+                <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
+                  {toDate ? toDate.toLocaleDateString() : translations.home.queue.filterDate.to}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                id="date-picker-to-content"
-                className="w-auto overflow-hidden p-0"
-                align="start"
-                suppressHydrationWarning
-              >
+              <PopoverContent id="date-picker-to-content" className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={toDate}
@@ -129,6 +123,6 @@ export const VideoQueueFilterDate = forwardRef<
           </div>
         </ButtonGroup>
       </div>
-    </>
+    </ClientOnly>
   );
 });
