@@ -1,4 +1,10 @@
-import { EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { useTranslations } from "@/lib/use-translations";
 import { FolderArchive } from "lucide-react";
 
@@ -12,7 +18,9 @@ export function VideoQueueListEmpty() {
             <FolderArchive />
           </EmptyMedia>
           <EmptyTitle>{translations.home.empty.title}</EmptyTitle>
-          <EmptyDescription>{translations.home.empty.description}</EmptyDescription>
+          <EmptyDescription>
+            {translations.home.empty.description}
+          </EmptyDescription>
         </EmptyHeader>
       </EmptyContent>
     </>

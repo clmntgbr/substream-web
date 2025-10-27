@@ -1,7 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useStreams } from "@/lib/stream/context";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string | undefined) => void;
@@ -11,10 +17,10 @@ export interface VideoQueueFilterSearchRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
-  { onSearchChange },
-  ref
-) {
+export const VideoQueueFilterSearch = forwardRef<
+  VideoQueueFilterSearchRef,
+  VideoQueueFilterSearchProps
+>(function VideoQueueFilterSearch({ onSearchChange }, ref) {
   const [search, setSearch] = useState<string>("");
   const { searchStreams } = useStreams();
 
@@ -28,7 +34,7 @@ export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, Vide
         await searchStreams({ search: searchTerm || undefined });
       }
     },
-    [onSearchChange, searchStreams]
+    [onSearchChange, searchStreams],
   );
 
   useEffect(() => {
@@ -50,7 +56,7 @@ export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, Vide
     () => ({
       reset,
     }),
-    [reset]
+    [reset],
   );
 
   return (

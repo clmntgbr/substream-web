@@ -24,7 +24,10 @@ export default function GitHubOAuthCallbackPage() {
       const state = searchParams.get("state");
 
       if (!code) {
-        toast.error(translations.auth.oauth.authenticationFailed || "Authentication failed. Please try again.");
+        toast.error(
+          translations.auth.oauth.authenticationFailed ||
+            "Authentication failed. Please try again.",
+        );
         router.push(`/${lang}/login`);
         return;
       }
@@ -32,7 +35,10 @@ export default function GitHubOAuthCallbackPage() {
       const codeVerifier = localStorage.getItem("github_oauth_code_verifier");
 
       if (!codeVerifier) {
-        toast.error(translations.auth.oauth.authenticationFailed || "Authentication failed. Please try again.");
+        toast.error(
+          translations.auth.oauth.authenticationFailed ||
+            "Authentication failed. Please try again.",
+        );
         router.push(`/${lang}/login`);
         return;
       }
@@ -54,7 +60,10 @@ export default function GitHubOAuthCallbackPage() {
         });
 
         if (!response.ok) {
-          toast.error(translations.auth.oauth.authenticationFailed || "Authentication failed. Please try again.");
+          toast.error(
+            translations.auth.oauth.authenticationFailed ||
+              "Authentication failed. Please try again.",
+          );
           router.push(`/${lang}/login`);
           return;
         }
@@ -67,7 +76,10 @@ export default function GitHubOAuthCallbackPage() {
 
         router.push(`/${lang}`);
       } catch {
-        toast.error(translations.auth.oauth.authenticationFailed || "Authentication failed. Please try again.");
+        toast.error(
+          translations.auth.oauth.authenticationFailed ||
+            "Authentication failed. Please try again.",
+        );
         router.push(`/${lang}/login`);
       } finally {
         setIsLoading(false);
@@ -75,7 +87,12 @@ export default function GitHubOAuthCallbackPage() {
     };
 
     handleOAuthCallback();
-  }, [searchParams, router, lang, translations.auth.oauth.authenticationFailed]);
+  }, [
+    searchParams,
+    router,
+    lang,
+    translations.auth.oauth.authenticationFailed,
+  ]);
 
   if (isLoading) {
     return <Loading />;

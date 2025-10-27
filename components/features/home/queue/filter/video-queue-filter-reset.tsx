@@ -6,7 +6,9 @@ interface VideoQueueFilterResetProps {
   handleClearFilters: () => void;
 }
 
-export function VideoQueueFilterReset({ handleClearFilters }: VideoQueueFilterResetProps) {
+export function VideoQueueFilterReset({
+  handleClearFilters,
+}: VideoQueueFilterResetProps) {
   const t = useTranslations();
   return (
     <Button variant="ghost" size="sm" onClick={handleClearFilters}>

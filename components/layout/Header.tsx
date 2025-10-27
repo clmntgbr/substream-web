@@ -14,7 +14,11 @@ export function Header() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex items-center h-16">
           <div className="flex items-center gap-6">
             <div className="relative">
-              <span data-state="closed" data-slot="context-menu-trigger" className="flex flex-col gap-1.5">
+              <span
+                data-state="closed"
+                data-slot="context-menu-trigger"
+                className="flex flex-col gap-1.5"
+              >
                 <Link className="transition-opacity hover:opacity-75" href="/">
                   <Logo width={100} height={100} />
                 </Link>

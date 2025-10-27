@@ -119,14 +119,18 @@ export default function Pricing() {
             <header className="mb-12 space-y-4 text-center">
               <h1 className="text-4xl font-bold md:text-5xl">Pricing</h1>
               <p className="text-muted-foreground text-lg text-balance">
-                Upgrade to link your custom domain, track your visits, edit your content & much more.
+                Upgrade to link your custom domain, track your visits, edit your
+                content & much more.
               </p>
             </header>
 
             <div className="mb-12 text-center">
               <div className="bg-muted inline-flex items-center rounded-full p-1">
                 <button
-                  className={cn("rounded-full px-6 py-2 text-sm font-medium transition-colors", !isYearly ? "bg-gray-200" : "text-muted-foreground")}
+                  className={cn(
+                    "rounded-full px-6 py-2 text-sm font-medium transition-colors",
+                    !isYearly ? "bg-gray-200" : "text-muted-foreground",
+                  )}
                   onClick={() => setIsYearly(false)}
                 >
                   Monthly
@@ -134,7 +138,7 @@ export default function Pricing() {
                 <button
                   className={cn(
                     "rounded-full px-6 py-2 text-sm font-medium transition-colors",
-                    isYearly ? "bg-black text-white" : "text-muted-foreground"
+                    isYearly ? "bg-black text-white" : "text-muted-foreground",
                   )}
                   onClick={() => setIsYearly(true)}
                 >
@@ -147,7 +151,10 @@ export default function Pricing() {
               {plans.map((plan) => (
                 <div
                   key={plan.name}
-                  className={cn("bg-muted relative flex flex-col rounded-xl border p-6", plan.isPopular && "border-2 border-[#8a2be2] shadow-xl")}
+                  className={cn(
+                    "bg-muted relative flex flex-col rounded-xl border p-6",
+                    plan.isPopular && "border-2 border-[#8a2be2] shadow-xl",
+                  )}
                 >
                   {plan.isPopular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#8a2be2] px-3 py-1 text-xs font-semibold text-white">
@@ -155,7 +162,9 @@ export default function Pricing() {
                     </div>
                   )}
                   <h2 className="mb-2 text-2xl font-semibold">{plan.name}</h2>
-                  <p className="text-muted-foreground mb-4 text-sm">{plan.description}</p>
+                  <p className="text-muted-foreground mb-4 text-sm">
+                    {plan.description}
+                  </p>
 
                   {plan.discount && (
                     <div
@@ -163,7 +172,7 @@ export default function Pricing() {
                         "absolute top-6 right-6 rounded-full px-2 py-1 text-xs font-semibold",
                         plan.name === "Tiny" && "bg-background text-[#007bff]",
                         plan.name === "Solo" && "bg-background text-[#8a2be2]",
-                        plan.name === "Pro" && "bg-background text-[#ffc107]"
+                        plan.name === "Pro" && "bg-background text-[#ffc107]",
                       )}
                     >
                       {plan.discount}
@@ -171,11 +180,24 @@ export default function Pricing() {
                   )}
 
                   <div className="mb-6 flex items-baseline">
-                    <span className="text-5xl font-bold">${plan.name === "Free" ? 0 : isYearly ? plan.priceYearly : plan.priceMonthly}</span>
-                    <span className="text-muted-foreground text-xl">{plan.name === "Free" ? "/mo" : isYearly ? "/yr" : "/mo"}</span>
+                    <span className="text-5xl font-bold">
+                      $
+                      {plan.name === "Free"
+                        ? 0
+                        : isYearly
+                          ? plan.priceYearly
+                          : plan.priceMonthly}
+                    </span>
+                    <span className="text-muted-foreground text-xl">
+                      {plan.name === "Free" ? "/mo" : isYearly ? "/yr" : "/mo"}
+                    </span>
                   </div>
                   <p className="text-muted-foreground mb-6 text-sm">
-                    {plan.name === "Free" ? plan.billedYearlyText : isYearly ? plan.billedYearlyText : "Billed monthly"}
+                    {plan.name === "Free"
+                      ? plan.billedYearlyText
+                      : isYearly
+                        ? plan.billedYearlyText
+                        : "Billed monthly"}
                   </p>
 
                   <Button className={cn("font-medium", plan.buttonColorClass)}>
@@ -203,10 +225,15 @@ export default function Pricing() {
 
                     {plan.additionalFeatures.length > 0 && (
                       <>
-                        <h3 className="mt-6 mb-3 text-sm font-semibold">Additional Features:</h3>
+                        <h3 className="mt-6 mb-3 text-sm font-semibold">
+                          Additional Features:
+                        </h3>
                         <ul className="text-muted-foreground space-y-3 text-left">
                           {plan.additionalFeatures.map((feature, index) => (
-                            <li key={index} className="flex items-center text-sm">
+                            <li
+                              key={index}
+                              className="flex items-center text-sm"
+                            >
                               {feature.included ? (
                                 <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
                               ) : (

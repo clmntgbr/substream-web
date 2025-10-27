@@ -1,7 +1,20 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@/components/ui/field";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Stream, useStreams } from "@/lib/stream";
 import { Clock, Film, HardDrive, X } from "lucide-react";
@@ -34,7 +47,11 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
   }, [open, stream.id, getResume]);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-w-[100vw] h-screen w-screen p-0 border-0" hideCloseButton>
+      <SheetContent
+        side="bottom"
+        className="max-w-[100vw] h-screen w-screen p-0 border-0"
+        hideCloseButton
+      >
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <Button
             variant="ghost"
@@ -69,13 +86,19 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
                   <FieldLabel htmlFor="resume">Resume</FieldLabel>
                   <Textarea
                     id="resume"
-                    placeholder={isLoadingResume ? "Loading resume..." : "No resume available"}
+                    placeholder={
+                      isLoadingResume
+                        ? "Loading resume..."
+                        : "No resume available"
+                    }
                     value={resume}
                     readOnly
                     rows={20}
                     className="font-mono text-sm"
                   />
-                  <FieldDescription>AI-generated summary of the video content.</FieldDescription>
+                  <FieldDescription>
+                    AI-generated summary of the video content.
+                  </FieldDescription>
                 </Field>
               </FieldGroup>
             </FieldSet>
@@ -83,7 +106,11 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
         </div>
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
-          <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
+          <Button
+            variant="default"
+            onClick={() => onOpenChange(false)}
+            className="cursor-pointer"
+          >
             Close
           </Button>
         </SheetFooter>

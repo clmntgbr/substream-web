@@ -28,7 +28,10 @@ async function uploadUrlHandler(req: AuthenticatedRequest) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as {
         error?: string;
       };
-      return NextResponse.json({ error: errorData.error || "Failed to create stream from URL" }, { status: backendResponse.status });
+      return NextResponse.json(
+        { error: errorData.error || "Failed to create stream from URL" },
+        { status: backendResponse.status },
+      );
     }
 
     const data = (await backendResponse.json()) as Stream;
@@ -37,7 +40,10 @@ async function uploadUrlHandler(req: AuthenticatedRequest) {
       stream: data,
     });
   } catch {
-    return NextResponse.json({ error: "Failed to create stream from URL" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create stream from URL" },
+      { status: 500 },
+    );
   }
 }
 
