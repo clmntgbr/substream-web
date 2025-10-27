@@ -1,9 +1,11 @@
 import { useStreams } from "@/lib/stream";
 import { useCallback, useRef, useState } from "react";
+import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
 import { VideoQueueFilterStatus, VideoQueueFilterStatusRef } from "./filter/video-queue-filter-status";
 import { VideoQueueCard } from "./video-queue-card";
+import { VideoQueueListEmpty } from "./video-queue-list-empty";
 import { VideoQueuePagination } from "./video-queue-pagination";
 
 export function VideoQueueList() {
@@ -23,7 +25,7 @@ export function VideoQueueList() {
         page: 1,
       });
     },
-    [searchStreams, currentSearch]
+    [] // Remove all dependencies to make it stable
   );
 
   const handleSearchChange = useCallback(
@@ -35,7 +37,7 @@ export function VideoQueueList() {
         page: 1,
       });
     },
-    [searchStreams, currentStatus]
+    [] // Remove all dependencies to make it stable
   );
 
   const handlePageChange = useCallback(
@@ -46,7 +48,7 @@ export function VideoQueueList() {
         search: currentSearch,
       });
     },
-    [searchStreams, currentStatus, currentSearch]
+    [] // Remove all dependencies to make it stable
   );
 
   const handleClearFilters = useCallback(() => {
@@ -59,25 +61,50 @@ export function VideoQueueList() {
     searchStreams({
       page: 1,
     });
-  }, [searchStreams]);
+  }, []); // Remove searchStreams dependency
 
   const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0);
+
+  // Auto-reload streams every 30 seconds - TEMPORARILY DISABLED
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     // Use a callback approach to get fresh values
+  //     searchStreams({
+  //       statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
+  //       search: currentSearch,
+  //       page: 1,
+  //     });
+  //   }, 30000);
+
+  //   return () => clearInterval(interval);
+  // }, [currentStatus, currentSearch]); // Depend on filter values only
 
   return (
     <>
       {state.streams.length > 0 && (
-        <div className="flex items-center mb-6 gap-4">
-          <VideoQueueFilterSearch ref={searchRef} onSearchChange={handleSearchChange} />
-          <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
-          {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
+        <>
+          <div className="flex items-center justify-between mb-6 gap-4">
+            <div className="flex items-center gap-4">
+              <VideoQueueFilterSearch ref={searchRef} onSearchChange={handleSearchChange} />
+              <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
+              {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
+            </div>
+            <VideoQueueFilterDate />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            {state.streams.map((stream) => (
+              <VideoQueueCard key={stream.id} stream={stream} />
+            ))}
+          </div>
+          <VideoQueuePagination onPageChange={handlePageChange} />
+        </>
+      )}
+
+      {state.streams.length === 0 && (
+        <div className="flex justify-center items-center h-full">
+          <VideoQueueListEmpty />
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {state.streams.map((stream) => (
-          <VideoQueueCard key={stream.id} stream={stream} />
-        ))}
-      </div>
-      {state.streams.length > 0 && <VideoQueuePagination onPageChange={handlePageChange} />}
     </>
   );
 }

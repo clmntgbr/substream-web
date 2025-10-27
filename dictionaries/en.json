@@ -50,6 +50,10 @@
     }
   },
   "home": {
+    "empty": {
+      "title": "No videos in the queue yet",
+      "description": "You haven't created any videos in the queue yet. Get started by creating your first video."
+    },
     "title": "Home",
     "queue": {
       "filterByStatus": "Filter by Status",
