@@ -56,6 +56,10 @@
     },
     "title": "Home",
     "queue": {
+      "filterDate": {
+        "from": "From",
+        "to": "To"
+      },
       "filterByStatus": "Filter by Status",
       "resetFilters": "Reset Filters",
       "actions": {
