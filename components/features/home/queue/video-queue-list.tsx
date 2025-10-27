@@ -1,5 +1,5 @@
 import { useStreams } from "@/lib/stream";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
@@ -65,32 +65,33 @@ export function VideoQueueList() {
 
   const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0);
 
-  // Auto-reload streams every 30 seconds - TEMPORARILY DISABLED
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     // Use a callback approach to get fresh values
-  //     searchStreams({
-  //       statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
-  //       search: currentSearch,
-  //       page: 1,
-  //     });
-  //   }, 30000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      searchStreams({
+        statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
+        search: currentSearch,
+        page: 1,
+      });
+    }, 30000);
 
-  //   return () => clearInterval(interval);
-  // }, [currentStatus, currentSearch]); // Depend on filter values only
+    return () => clearInterval(interval);
+  }, [currentStatus, currentSearch]); // Depend on filter values only
 
   return (
     <>
+      <>
+        <div className="flex items-center justify-between mb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <VideoQueueFilterSearch ref={searchRef} onSearchChange={handleSearchChange} />
+            <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
+            {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
+          </div>
+          <VideoQueueFilterDate />
+        </div>
+      </>
+
       {state.streams.length > 0 && (
         <>
-          <div className="flex items-center justify-between mb-6 gap-4">
-            <div className="flex items-center gap-4">
-              <VideoQueueFilterSearch ref={searchRef} onSearchChange={handleSearchChange} />
-              <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
-              {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
-            </div>
-            <VideoQueueFilterDate />
-          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {state.streams.map((stream) => (
               <VideoQueueCard key={stream.id} stream={stream} />
