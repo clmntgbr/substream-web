@@ -8,8 +8,6 @@ import { cn } from "@/lib/utils";
 import { Logo } from "../features/shared/logo";
 
 interface NavFooterProps extends React.HTMLAttributes<HTMLElement> {
-  logoSrc?: string;
-  companyName?: string;
   description?: string;
   usefulLinks?: { label: string; href: string }[];
   socialLinks?: { label: string; href: string; icon: React.ReactNode }[];
@@ -18,8 +16,6 @@ interface NavFooterProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function NavFooter({
-  logoSrc,
-  companyName = "Datally Inc.",
   description = "Empowering businesses with intelligent financial solutions, designed for the future of finance.",
   usefulLinks = [
     { label: "Products", href: "#" },

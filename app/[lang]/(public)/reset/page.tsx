@@ -2,10 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription } from "@/components/ui/field";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useTranslations } from "@/lib/use-translations";
 import { CheckCheck, HelpCircle } from "lucide-react";
 import Link from "next/link";
@@ -33,7 +42,9 @@ export default function ResetPage() {
                     <span className="w-full border-t"></span>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">{t.auth.login.orContinueWith}</span>
+                    <span className="bg-background px-2 text-muted-foreground">
+                      {t.auth.login.orContinueWith}
+                    </span>
                   </div>
                 </div>
 
@@ -54,13 +65,23 @@ export default function ResetPage() {
                             {t.auth.login.email}
                           </Label>
                           <Tooltip>
-                            <TooltipTrigger asChild className="hover:bg-transparent">
-                              <InputGroupButton variant="ghost" aria-label="Help" className="ml-auto rounded-full" size="icon-xs">
+                            <TooltipTrigger
+                              asChild
+                              className="hover:bg-transparent"
+                            >
+                              <InputGroupButton
+                                variant="ghost"
+                                aria-label="Help"
+                                className="ml-auto rounded-full"
+                                size="icon-xs"
+                              >
                                 <HelpCircle />
                               </InputGroupButton>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>We&apos;ll use this to send you notifications</p>
+                              <p>
+                                We&apos;ll use this to send you notifications
+                              </p>
                             </TooltipContent>
                           </Tooltip>
                         </InputGroupAddon>
@@ -69,8 +90,17 @@ export default function ResetPage() {
                     <div className="flex flex-col gap-3">
                       <div className="relative flex items-center">
                         <div className="flex-grow">
-                          <Button type="submit" disabled={isLoading} className="w-full h-8 rounded-md px-4 py-2">
-                            {isLoading ? <Spinner className="size-4" /> : t.auth.login.continue} <CheckCheck />
+                          <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full h-8 rounded-md px-4 py-2"
+                          >
+                            {isLoading ? (
+                              <Spinner className="size-4" />
+                            ) : (
+                              t.auth.login.continue
+                            )}{" "}
+                            <CheckCheck />
                           </Button>
                         </div>
                       </div>
@@ -78,13 +108,18 @@ export default function ResetPage() {
                       <div className="text-center text-base font-normal">
                         <span className="text-sm text-muted-foreground">
                           Don&apos;t have an account?{" "}
-                          <Link href="/register" className="text-sm text-primary underline">
+                          <Link
+                            href="/register"
+                            className="text-sm text-primary underline"
+                          >
                             Create your account
                           </Link>
                         </span>
                       </div>
                       <FieldDescription className="px-6 text-center pt-5">
-                        By clicking login, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                        By clicking login, you agree to our{" "}
+                        <a href="#">Terms of Service</a> and{" "}
+                        <a href="#">Privacy Policy</a>.
                       </FieldDescription>
                     </div>
                   </div>
