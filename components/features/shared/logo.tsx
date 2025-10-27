@@ -5,15 +5,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export function Logo({
-  className,
-  width,
-  height,
-}: {
-  className?: string;
-  width: number;
-  height: number;
-}) {
+export function Logo({ className, width, height }: { className?: string; width: number; height: number }) {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -31,12 +23,7 @@ export function Logo({
 
   return (
     <div className={cn("relative", className)}>
-      <Image
-        src={theme === "dark" ? "/logo-white.svg" : "/logo-black.svg"}
-        alt="Logo"
-        width={width}
-        height={height}
-      />
+      <Image src={theme === "dark" ? "/logo-white.svg" : "/logo-black.svg"} alt="Logo" width={width} height={height} />
     </div>
   );
 }
