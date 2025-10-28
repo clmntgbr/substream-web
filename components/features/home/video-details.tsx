@@ -1,20 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Stream, useStreams } from "@/lib/stream";
 import { Clock, Film, HardDrive, X } from "lucide-react";
@@ -47,21 +34,17 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
   }, [open, stream.id, getResume]);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="max-w-[100vw] h-screen w-screen p-0 border-0"
-        hideCloseButton
-      >
+      <SheetContent side="bottom" className="max-w-[100vw] h-screen w-screen p-0 border-0" hideCloseButton>
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => onOpenChange(false)}
-            className="absolute right-4 h-11 w-11 rounded-xl bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
+            className="absolute right-4 h-11 w-11 rounded-full bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-black dark:text-white hover:text-black dark:hover:text-white backdrop-blur-md border border-black/20 dark:border-white/10 transition-all duration-200 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed z-50"
           >
             <X className="h-5 w-5" />
           </Button>
-          <SheetTitle>{stream.originalFileName}</SheetTitle>
+          <SheetTitle>{stream.originalFileName.replace(".mp4", "")}</SheetTitle>
           <SheetDescription className="flex flex-row gap-2">
             <Badge variant="outline">
               <Film className="h-3 w-3 mr-1" />
@@ -86,19 +69,13 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
                   <FieldLabel htmlFor="resume">Resume</FieldLabel>
                   <Textarea
                     id="resume"
-                    placeholder={
-                      isLoadingResume
-                        ? "Loading resume..."
-                        : "No resume available"
-                    }
+                    placeholder={isLoadingResume ? "Loading resume..." : "No resume available"}
                     value={resume}
                     readOnly
                     rows={20}
                     className="font-mono text-sm"
                   />
-                  <FieldDescription>
-                    AI-generated summary of the video content.
-                  </FieldDescription>
+                  <FieldDescription>AI-generated summary of the video content.</FieldDescription>
                 </Field>
               </FieldGroup>
             </FieldSet>
@@ -106,11 +83,7 @@ export const VideoDetails = ({ stream, open, onOpenChange }: DetailsProps) => {
         </div>
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
-          <Button
-            variant="default"
-            onClick={() => onOpenChange(false)}
-            className="cursor-pointer"
-          >
+          <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
             Close
           </Button>
         </SheetFooter>

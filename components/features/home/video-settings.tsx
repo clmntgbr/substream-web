@@ -1,35 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-  FieldTitle,
-} from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { useTranslations } from "@/lib/use-translations";
-import {
-  BrainCircuit,
-  FormInputIcon,
-  LanguagesIcon,
-  PaletteIcon,
-  Text,
-  VideoIcon,
-  WandSparkles,
-} from "lucide-react";
+import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
 import { SubtitleColorPicker } from "../shared/misc/subtitle-color-picker";
 import { SubtitleSizeInput } from "../shared/misc/subtitle-size-input";
 
@@ -108,20 +84,15 @@ export const VideoSettings = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col"
-      >
+      <SheetContent side="right" className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col">
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <SheetTitle>{translations.home.preview.settings.title}</SheetTitle>
-          <SheetDescription>
-            {translations.home.preview.settings.description}
-          </SheetDescription>
+          <SheetDescription>{translations.home.preview.settings.description}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
-          <div className="w-full max-w-md space-y-4">
-            <Card className="">
+          <div className="w-full space-y-4">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -133,75 +104,32 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup
-                          defaultValue={subtitleFont}
-                          onValueChange={(value) => setSubtitleFont(value)}
-                          disabled={readOnly}
-                        >
+                        <RadioGroup defaultValue={subtitleFont} onValueChange={(value) => setSubtitleFont(value)} disabled={readOnly}>
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {translations.home.preview.settings.arial}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .arialDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.arial}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.arialDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="Arial"
-                                id="arial"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="Arial" id="arial" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="timesNewRoman">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {
-                                    translations.home.preview.settings
-                                      .timesNewRoman
-                                  }
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .timesNewRomanDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.timesNewRoman}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.timesNewRomanDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="Times New Roman"
-                                id="timesNewRoman"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="Times New Roman" id="timesNewRoman" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="courierNew">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {
-                                    translations.home.preview.settings
-                                      .courierNew
-                                  }
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .courierNewDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.courierNew}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.courierNewDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="Courier New"
-                                id="courierNew"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="Courier New" id="courierNew" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -213,9 +141,7 @@ export const VideoSettings = ({
                           min={0}
                           max={100}
                           step={1}
-                          description={
-                            translations.home.preview.settings.sizeDescription
-                          }
+                          description={translations.home.preview.settings.sizeDescription}
                           label={translations.home.preview.settings.size}
                           unit="px"
                           disabled={readOnly}
@@ -227,7 +153,7 @@ export const VideoSettings = ({
               </CardContent>
             </Card>
 
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -238,41 +164,23 @@ export const VideoSettings = ({
                   </FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>
-                        {translations.home.preview.settings.color}
-                      </FieldTitle>
-                      <SubtitleColorPicker
-                        background={subtitleColor}
-                        setBackground={setSubtitleColor}
-                        disabled={readOnly}
-                      />
+                      <FieldTitle>{translations.home.preview.settings.color}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>
-                        {translations.home.preview.settings.outlineColor}
-                      </FieldTitle>
-                      <SubtitleColorPicker
-                        background={subtitleOutlineColor}
-                        setBackground={setSubtitleOutlineColor}
-                        disabled={readOnly}
-                      />
+                      <FieldTitle>{translations.home.preview.settings.outlineColor}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
                     </Field>
                     <Field>
-                      <FieldTitle>
-                        {translations.home.preview.settings.shadowColor}
-                      </FieldTitle>
-                      <SubtitleColorPicker
-                        background={subtitleShadowColor}
-                        setBackground={setSubtitleShadowColor}
-                        disabled={readOnly}
-                      />
+                      <FieldTitle>{translations.home.preview.settings.shadowColor}</FieldTitle>
+                      <SubtitleColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
               </CardContent>
             </Card>
 
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -284,29 +192,15 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="bold">
-                          {translations.home.preview.settings.bold}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {translations.home.preview.settings.boldDescription}
-                        </FieldDescription>
+                        <FieldLabel htmlFor="bold">{translations.home.preview.settings.bold}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.boldDescription}</FieldDescription>
                       </FieldContent>
-                      <Switch
-                        id="bold"
-                        checked={subtitleBold}
-                        onCheckedChange={setSubtitleBold}
-                        disabled={readOnly}
-                        className="cursor-pointer"
-                      />
+                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} className="cursor-pointer" />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="italic">
-                          {translations.home.preview.settings.italic}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {translations.home.preview.settings.italicDescription}
-                        </FieldDescription>
+                        <FieldLabel htmlFor="italic">{translations.home.preview.settings.italic}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.italicDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="italic"
@@ -318,15 +212,8 @@ export const VideoSettings = ({
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldLabel htmlFor="underline">
-                          {translations.home.preview.settings.underline}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {
-                            translations.home.preview.settings
-                              .underlineDescription
-                          }
-                        </FieldDescription>
+                        <FieldLabel htmlFor="underline">{translations.home.preview.settings.underline}</FieldLabel>
+                        <FieldDescription>{translations.home.preview.settings.underlineDescription}</FieldDescription>
                       </FieldContent>
                       <Switch
                         id="underline"
@@ -340,7 +227,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -357,13 +244,8 @@ export const VideoSettings = ({
                         min={0}
                         max={4}
                         step={1}
-                        label={
-                          translations.home.preview.settings.outlineThickness
-                        }
-                        description={
-                          translations.home.preview.settings
-                            .outlineThicknessDescription
-                        }
+                        label={translations.home.preview.settings.outlineThickness}
+                        description={translations.home.preview.settings.outlineThicknessDescription}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -375,9 +257,7 @@ export const VideoSettings = ({
                         max={4}
                         min={0}
                         step={1}
-                        description={
-                          translations.home.preview.settings.shadowDescription
-                        }
+                        description={translations.home.preview.settings.shadowDescription}
                         label={translations.home.preview.settings.shadow}
                         unit="px"
                         disabled={readOnly}
@@ -387,7 +267,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -399,75 +279,32 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup
-                          defaultValue={format}
-                          onValueChange={(value) => setFormat(value)}
-                          disabled={readOnly}
-                        >
+                        <RadioGroup defaultValue={format} onValueChange={(value) => setFormat(value)} disabled={readOnly}>
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {translations.home.preview.settings.original}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .originalDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.original}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.originalDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="original"
-                                id="original"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="original" id="original" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="zoomed_916">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {
-                                    translations.home.preview.settings
-                                      .zoomed_916
-                                  }
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .zoomed_916Description
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.zoomed_916}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.zoomed_916Description}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="zoomed_916"
-                                id="zoomed_916"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="zoomed_916" id="zoomed_916" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="normal_916_with_borders">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {
-                                    translations.home.preview.settings
-                                      .normal_916_with_borders
-                                  }
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .normal_916_with_bordersDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.normal_916_with_borders}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.normal_916_with_bordersDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="normal_916_with_borders"
-                                id="normal_916_with_borders"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -480,10 +317,7 @@ export const VideoSettings = ({
                         max={100}
                         min={0}
                         step={1}
-                        description={
-                          translations.home.preview.settings
-                            .chunkNumberDescription
-                        }
+                        description={translations.home.preview.settings.chunkNumberDescription}
                         label={translations.home.preview.settings.chunkNumber}
                         unit="  parts"
                         disabled={readOnly}
@@ -496,13 +330,8 @@ export const VideoSettings = ({
                         max={200}
                         min={0}
                         step={1}
-                        description={
-                          translations.home.preview.settings
-                            .yAxisAlignmentDescription
-                        }
-                        label={
-                          translations.home.preview.settings.yAxisAlignment
-                        }
+                        description={translations.home.preview.settings.yAxisAlignmentDescription}
+                        label={translations.home.preview.settings.yAxisAlignment}
                         unit="px"
                         disabled={readOnly}
                       />
@@ -511,7 +340,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -526,23 +355,10 @@ export const VideoSettings = ({
                         <FieldGroup>
                           <Field orientation="horizontal">
                             <FieldContent>
-                              <FieldLabel htmlFor="isResume">
-                                {translations.home.preview.settings.isResume}
-                              </FieldLabel>
-                              <FieldDescription>
-                                {
-                                  translations.home.preview.settings
-                                    .isResumeDescription
-                                }
-                              </FieldDescription>
+                              <FieldLabel htmlFor="isResume">{translations.home.preview.settings.isResume}</FieldLabel>
+                              <FieldDescription>{translations.home.preview.settings.isResumeDescription}</FieldDescription>
                             </FieldContent>
-                            <Switch
-                              id="isResume"
-                              checked={isResume}
-                              onCheckedChange={setIsResume}
-                              disabled={readOnly}
-                              className="cursor-pointer"
-                            />
+                            <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
                           </Field>
                         </FieldGroup>
                       </FieldSet>
@@ -551,7 +367,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="">
+            <Card className="dark:bg-transparent dark:border-none">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -563,69 +379,32 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup
-                          defaultValue={language}
-                          onValueChange={(value) => setLanguage(value)}
-                          disabled={readOnly}
-                        >
+                        <RadioGroup defaultValue={language} onValueChange={(value) => setLanguage(value)} disabled={readOnly}>
                           <FieldLabel htmlFor="auto">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {translations.home.preview.settings.auto}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .autoDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.auto}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.autoDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="auto"
-                                id="auto"
-                                disabled={readOnly}
-                              />
+                              <RadioGroupItem value="auto" id="auto" disabled={readOnly} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="english">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {translations.home.preview.settings.english}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .englishDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.english}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.englishDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="english"
-                                id="english"
-                                disabled={true}
-                              />
+                              <RadioGroupItem value="english" id="english" disabled={true} />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="french">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>
-                                  {translations.home.preview.settings.french}
-                                </FieldTitle>
-                                <FieldDescription>
-                                  {
-                                    translations.home.preview.settings
-                                      .frenchDescription
-                                  }
-                                </FieldDescription>
+                                <FieldTitle>{translations.home.preview.settings.french}</FieldTitle>
+                                <FieldDescription>{translations.home.preview.settings.frenchDescription}</FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem
-                                value="french"
-                                id="french"
-                                disabled={true}
-                              />
+                              <RadioGroupItem value="french" id="french" disabled={true} />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -639,11 +418,7 @@ export const VideoSettings = ({
         </div>
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
-          <Button
-            variant="default"
-            onClick={() => onOpenChange(false)}
-            className="cursor-pointer"
-          >
+          <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
             {translations.home.preview.settings.close}
           </Button>
         </SheetFooter>
