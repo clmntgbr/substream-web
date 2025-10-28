@@ -12,6 +12,8 @@ export interface Notification {
 
 export interface NotificationState {
   notifications: Notification[];
+  readNotifications: Notification[];
+  unreadNotifications: Notification[];
   isLoading: boolean;
   error: string | null;
 }

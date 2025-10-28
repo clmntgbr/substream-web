@@ -17,6 +17,8 @@ export interface NotificationContextType {
   searchNotifications: (params?: NotificationSearchParams) => Promise<void>;
   markReadNotification: (id: string) => Promise<void>;
   clearError: () => void;
+  unreadCount: number;
+  readCount: number;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const searchNotifications = useCallback(async (params?: NotificationSearchParams) => {
     try {
+      console.log("🔔 Fetching notifications...");
       dispatch({ type: "SET_LOADING", payload: true });
 
       const searchParams = new URLSearchParams();
@@ -33,11 +36,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       if (params?.itemsPerPage) searchParams.set("limit", params.itemsPerPage.toString());
 
       const response = await apiClient.get(`/api/search/notifications?${searchParams.toString()}`);
+      console.log("🔔 Notifications response:", response);
 
       if (response) {
         dispatch({ type: "SEARCH_NOTIFICATIONS", payload: response as unknown as Notification[] });
+        console.log("🔔 Notifications dispatched to state");
       }
     } catch (error) {
+      console.error("🔔 Error fetching notifications:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to fetch notifications";
       dispatch({ type: "SET_ERROR", payload: errorMessage });
       toast.error(errorMessage);
@@ -46,7 +52,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const markReadNotification = useCallback(async (id: string) => {
     try {
-      await apiClient.put(`/notifications/${id}/read`, { isRead: true });
+      await apiClient.put(`/api/notifications/${id}/read`, { isRead: true });
       dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to mark notification as read";
@@ -78,6 +84,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     searchNotifications,
     markReadNotification,
     clearError,
+    unreadCount: state.unreadNotifications.length,
+    readCount: state.readNotifications.length,
   };
 
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;

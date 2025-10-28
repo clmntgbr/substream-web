@@ -3,6 +3,8 @@ import { NotificationAction, NotificationState } from "./types";
 // Initial state
 export const initialState: NotificationState = {
   notifications: [],
+  readNotifications: [],
+  unreadNotifications: [],
   isLoading: false,
   error: null,
 };
@@ -11,17 +13,27 @@ export const initialState: NotificationState = {
 export function notificationReducer(state: NotificationState, action: NotificationAction): NotificationState {
   switch (action.type) {
     case "SEARCH_NOTIFICATIONS":
+      const notifications = Array.isArray(action.payload) ? action.payload : [];
+      const readNotifications = notifications.filter((n) => n.isRead);
+      const unreadNotifications = notifications.filter((n) => !n.isRead);
       return {
         ...state,
-        notifications: action.payload,
+        notifications,
+        readNotifications,
+        unreadNotifications,
         error: null,
       };
     case "MARK_READ_NOTIFICATION":
+      const updatedNotifications = state.notifications.map((notification) =>
+        notification.id === action.payload ? { ...notification, isRead: true } : notification
+      );
+      const updatedReadNotifications = updatedNotifications.filter((n) => n.isRead);
+      const updatedUnreadNotifications = updatedNotifications.filter((n) => !n.isRead);
       return {
         ...state,
-        notifications: state.notifications.map((notification) =>
-          notification.id === action.payload ? { ...notification, isRead: true } : notification
-        ),
+        notifications: updatedNotifications,
+        readNotifications: updatedReadNotifications,
+        unreadNotifications: updatedUnreadNotifications,
         error: null,
       };
     case "SET_LOADING":

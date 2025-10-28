@@ -1,63 +1,12 @@
 "use client";
 
 import { BellIcon } from "lucide-react";
-import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ClientOnly } from "@/components/ui/client-only";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
-const initialNotifications = [
-  {
-    id: 1,
-    user: "Chris Tompson",
-    action: "requested review on",
-    target: "PR #42: Feature implementation",
-    timestamp: "15 minutes ago",
-    unread: true,
-  },
-  {
-    id: 2,
-    user: "Emma Davis",
-    action: "shared",
-    target: "New component library",
-    timestamp: "45 minutes ago",
-    unread: true,
-  },
-  {
-    id: 3,
-    user: "James Wilson",
-    action: "assigned you to",
-    target: "API integration task",
-    timestamp: "4 hours ago",
-    unread: false,
-  },
-  {
-    id: 4,
-    user: "Alex Morgan",
-    action: "replied to your comment in",
-    target: "Authentication flow",
-    timestamp: "12 hours ago",
-    unread: false,
-  },
-  {
-    id: 5,
-    user: "Sarah Chen",
-    action: "commented on",
-    target: "Dashboard redesign",
-    timestamp: "2 days ago",
-    unread: false,
-  },
-  {
-    id: 6,
-    user: "Miky Derya",
-    action: "mentioned you in",
-    target: "coss.com open graph image",
-    timestamp: "2 weeks ago",
-    unread: false,
-  },
-];
+import { formatNotificationTimestamp, useNotifications } from "@/lib/notification";
 
 function Dot({ className }: { className?: string }) {
   return (
@@ -68,21 +17,14 @@ function Dot({ className }: { className?: string }) {
 }
 
 export default function NotificationList() {
-  const [notifications, setNotifications] = useState(initialNotifications);
-  const unreadCount = notifications.filter((n) => n.unread).length;
+  const { state, unreadCount, markReadNotification } = useNotifications();
+  const { notifications, isLoading, error } = state;
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        unread: false,
-      }))
-    );
+  const handleNotificationClick = (id: string) => {
+    markReadNotification(id);
   };
 
-  const handleNotificationClick = (id: number) => {
-    setNotifications(notifications.map((notification) => (notification.id === id ? { ...notification, unread: false } : notification)));
-  };
+  console.log(notifications, state);
 
   return (
     <ClientOnly
@@ -107,35 +49,47 @@ export default function NotificationList() {
         <PopoverContent id="notifications-content" className="w-80 p-1">
           <div className="flex items-baseline justify-between gap-4 px-3 py-2">
             <div className="text-sm font-semibold">Notifications</div>
-            {unreadCount > 0 && (
-              <button className="text-xs font-medium hover:underline" onClick={handleMarkAllAsRead}>
-                Mark all as read
-              </button>
-            )}
+            {unreadCount > 0 && <span className="text-xs text-muted-foreground">{unreadCount} unread</span>}
           </div>
           <div role="separator" aria-orientation="horizontal" className="-mx-1 my-1 h-px bg-border"></div>
-          {notifications.map((notification) => (
-            <div key={notification.id} className="rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent">
-              <div className="relative flex items-start pe-3">
-                <div className="flex-1 space-y-1">
-                  <button
-                    className="text-left text-foreground/80 after:absolute after:inset-0"
-                    onClick={() => handleNotificationClick(notification.id)}
-                  >
-                    <span className="font-medium text-foreground hover:underline">{notification.user}</span> {notification.action}{" "}
-                    <span className="font-medium text-foreground hover:underline">{notification.target}</span>.
-                  </button>
-                  <div className="text-xs text-muted-foreground">{notification.timestamp}</div>
-                </div>
-                {notification.unread && (
-                  <div className="absolute end-0 self-center">
-                    <span className="sr-only">Unread</span>
-                    <Dot />
-                  </div>
-                )}
-              </div>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-sm text-muted-foreground">Loading notifications...</div>
             </div>
-          ))}
+          ) : error ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-sm text-destructive">Error loading notifications</div>
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-sm text-muted-foreground">No notifications</div>
+            </div>
+          ) : (
+            notifications.map((notification, index) => (
+              <div key={notification.id || `notification-${index}`} className="rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent">
+                <div className="relative flex items-start pe-3">
+                  <div className="flex-1 space-y-1">
+                    <button
+                      className="text-left text-foreground/80 after:absolute after:inset-0"
+                      onClick={() => notification.id && handleNotificationClick(notification.id)}
+                    >
+                      <div className="font-medium text-foreground hover:underline">{notification.title}</div>
+                      <div className="text-sm text-muted-foreground">{notification.message}</div>
+                      {notification.contextMessage && <div className="text-xs text-muted-foreground mt-1">{notification.contextMessage}</div>}
+                    </button>
+                    <div className="text-xs text-muted-foreground">{formatNotificationTimestamp(notification.createdAt)}</div>
+                  </div>
+                  {!notification.isRead && (
+                    <div className="absolute end-0 self-center">
+                      <span className="sr-only">Unread</span>
+                      <Dot />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </PopoverContent>
       </Popover>
     </ClientOnly>

@@ -16,14 +16,17 @@ interface BackendApiResponse {
 
 async function searchNotificationsHandler(req: AuthenticatedRequest) {
   try {
+    console.log("🔔 API: Search notifications handler called");
     const sessionToken = req.sessionToken;
 
     if (!sessionToken) {
+      console.log("🔔 API: No session token");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
     const queryString = searchParams.toString();
+    console.log("🔔 API: Backend URL:", `${BACKEND_API_URL}/search/notifications?${queryString}`);
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/search/notifications?${queryString}`, {
       method: "GET",
@@ -32,6 +35,8 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
         "Content-Type": "application/ld+json",
       },
     });
+
+    console.log("🔔 API: Backend response status:", backendResponse.status);
 
     if (!backendResponse.ok) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as {
