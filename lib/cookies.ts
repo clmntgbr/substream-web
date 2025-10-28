@@ -26,9 +26,7 @@ export function getLastUsedProvider(): SocialProvider | null {
   if (typeof document === "undefined") return null; // SSR safety
 
   const cookies = document.cookie.split(";");
-  const providerCookie = cookies.find((cookie) =>
-    cookie.trim().startsWith(`${LAST_USED_PROVIDER_COOKIE}=`),
-  );
+  const providerCookie = cookies.find((cookie) => cookie.trim().startsWith(`${LAST_USED_PROVIDER_COOKIE}=`));
 
   if (!providerCookie) return null;
 

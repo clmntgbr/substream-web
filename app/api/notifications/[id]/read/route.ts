@@ -3,11 +3,10 @@ import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-async function markNotificationAsReadHandler(req: AuthenticatedRequest) {
+async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const sessionToken = req.sessionToken;
-    const url = new URL(req.url);
-    const id = url.pathname.split("/").pop();
+    const { id } = await params;
 
     if (!sessionToken) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -17,11 +16,14 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest) {
       return NextResponse.json({ error: "Missing notification ID" }, { status: 400 });
     }
 
+    console.log(`${BACKEND_API_URL}/notifications/${id}/read`);
+    console.log(JSON.stringify({ isRead: true }));
+
     const backendResponse = await fetch(`${BACKEND_API_URL}/notifications/${id}/read`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/merge-patch+json",
       },
       body: JSON.stringify({ isRead: true }),
     });
@@ -40,4 +42,6 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest) {
   }
 }
 
-export const PUT = authMiddleware(markNotificationAsReadHandler);
+export async function PATCH(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
+  return authMiddleware((authenticatedReq) => markNotificationAsReadHandler(authenticatedReq, context))(req);
+}

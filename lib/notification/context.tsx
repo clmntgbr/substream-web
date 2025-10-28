@@ -21,6 +21,7 @@ interface NotificationContextType {
   state: NotificationState;
   searchNotifications: (params?: NotificationSearchParams) => Promise<void>;
   refreshNotifications: (params?: NotificationSearchParams) => Promise<void>;
+  markReadNotification: (id: string) => Promise<void>;
   totalItems: number;
   currentPage: number;
   pageCount: number;
@@ -119,6 +120,31 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     [searchNotifications]
   );
 
+  const markReadNotification = useCallback(async (id: string) => {
+    try {
+      const response = await apiClient.patch(
+        `/api/notifications/${id}/read`,
+        { isRead: true },
+        { headers: { "Content-Type": "application/merge-patch+json" } }
+      );
+
+      if (response.ok) {
+        dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
+        toast.success("Notification marked as read");
+      } else {
+        const errorData = (await response.json()) as { error?: string };
+        toast.error("Failed to mark notification as read", {
+          description: errorData.error || "An error occurred",
+        });
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to mark notification as read";
+      toast.error("Failed to mark notification as read", {
+        description: errorMessage,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     // Don't load notifications on public routes
     const isPublicRoute =
@@ -139,6 +165,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         state,
         searchNotifications,
         refreshNotifications,
+        markReadNotification,
         totalItems,
         currentPage,
         pageCount,
