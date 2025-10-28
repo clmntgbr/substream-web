@@ -49,6 +49,12 @@
       }
     }
   },
+  "notifications": {
+    "stream_success": "Your video has been successfully processed",
+    "stream_success_message": "Your video has been successfully processed. You can now download or use your content.",
+    "stream_failed": "Your video processing failed",
+    "stream_failed_message": "Your video processing failed. Please try again."
+  },
   "home": {
     "empty": {
       "title": "No videos in the queue yet",

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatNotificationTimestamp, useNotifications } from "@/lib/notification";
+import { useTranslations } from "@/lib/use-translations";
 
 function Dot({ className }: { className?: string }) {
   return (
@@ -17,6 +18,7 @@ function Dot({ className }: { className?: string }) {
 
 export default function NotificationList() {
   const { state, markReadNotification } = useNotifications();
+  const translations = useTranslations();
   const { notifications, isLoading, error, unreadNotifications } = state;
   const unreadCount = unreadNotifications.length;
 
@@ -43,6 +45,8 @@ export default function NotificationList() {
           </div>
           <div role="separator" aria-orientation="horizontal" className="-mx-1 my-1 h-px bg-border"></div>
 
+          {notifications.length === 0 && <div className="text-center text-sm text-muted-foreground p-4">No notifications found</div>}
+
           {notifications.map((notification, index) => (
             <div
               key={notification.id || `notification-${index}`}
@@ -52,9 +56,10 @@ export default function NotificationList() {
               <div className="relative flex items-start pe-3">
                 <div className="flex-1 space-y-1">
                   <div className="text-left text-foreground/80 after:absolute after:inset-0">
-                    <div className="font-medium text-foreground hover:underline">{notification.title}</div>
-                    <div className="text-sm text-muted-foreground">{notification.message}</div>
-                    {notification.contextMessage && <div className="text-xs text-muted-foreground mt-1">{notification.contextMessage}</div>}
+                    <div className="font-medium text-foreground hover:underline">{notification.contextMessage}</div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      {translations.notifications[notification.message as keyof typeof translations.notifications]}
+                    </div>
                   </div>
                   <div className="text-xs text-muted-foreground">{formatNotificationTimestamp(notification.createdAt)}</div>
                 </div>
