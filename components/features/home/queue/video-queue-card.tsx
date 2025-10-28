@@ -150,7 +150,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
         <CardContent className="flex flex-col gap-4 overflow-hidden">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <CardTitle className="line-clamp-3 font-medium hover:underline cursor-pointer text-xs mb-10">
+              <CardTitle className="font-medium hover:underline cursor-pointer text-xs mb-10">
                 {stream.originalFileName.replace(".mp4", "")}
               </CardTitle>
             </HoverCardTrigger>
