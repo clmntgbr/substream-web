@@ -12,7 +12,7 @@ export const initialState: NotificationState = {
 // Reducer function
 export function notificationReducer(state: NotificationState, action: NotificationAction): NotificationState {
   switch (action.type) {
-    case "SEARCH_NOTIFICATIONS":
+    case "SET_NOTIFICATIONS":
       const notifications = Array.isArray(action.payload) ? action.payload : [];
       const readNotifications = notifications.filter((n) => n.isRead);
       const unreadNotifications = notifications.filter((n) => !n.isRead);

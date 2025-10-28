@@ -19,7 +19,7 @@ export interface NotificationState {
 }
 
 export type NotificationAction =
-  | { type: "SEARCH_NOTIFICATIONS"; payload: Notification[] }
+  | { type: "SET_NOTIFICATIONS"; payload: Notification[] }
   | { type: "MARK_READ_NOTIFICATION"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
