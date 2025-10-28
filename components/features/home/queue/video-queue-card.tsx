@@ -91,7 +91,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
 
   return (
     <>
-      <Card key={stream.id} className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-4">
+      <Card key={stream.id} className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -147,7 +147,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
         <CardHeader className="mb-4 gap-0">
           <CardDescription className="text-xs text-muted-foreground">{formatDate(stream.createdAt)}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-4 overflow-hidden">
           <HoverCard>
             <HoverCardTrigger asChild>
               <CardTitle className="line-clamp-3 font-medium hover:underline cursor-pointer text-xs mb-10">
@@ -167,8 +167,11 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
           </HoverCard>
           <HoverCard>
             <HoverCardTrigger asChild>
-              <div className="w-full flex justify-center absolute bottom-4 left-0">
-                <Badge variant="outline" className="text-muted-foreground px-1.5 cursor-pointer">
+              <div className="w-full flex justify-center absolute bottom-0 left-0">
+                <Badge
+                  variant="outline"
+                  className="text-muted-foreground px-1.5 cursor-pointer w-full border-b-0 border-l-0 border-r-0 py-2 rounded-none"
+                >
                   {stream.isCompleted && (
                     <>
                       <CheckCircle2Icon className="size-4 text-emerald-400" />
