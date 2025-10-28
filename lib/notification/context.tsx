@@ -130,7 +130,6 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
       if (response.ok) {
         dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
-        toast.success("Notification marked as read");
       } else {
         const errorData = (await response.json()) as { error?: string };
         toast.error("Failed to mark notification as read", {

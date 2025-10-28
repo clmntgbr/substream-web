@@ -3,6 +3,7 @@
 import { formatNotificationTimestamp, Notification, useNotifications } from "@/lib/notification";
 import { useTranslations } from "@/lib/use-translations";
 import { Dot } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface NotificationCardProps {
   notification: Notification;
@@ -10,9 +11,10 @@ interface NotificationCardProps {
 export function NotificationCard({ notification }: NotificationCardProps) {
   const { markReadNotification } = useNotifications();
   const translations = useTranslations();
-
+  const router = useRouter();
   const handleNotificationClick = (id: string) => {
-    markReadNotification(id);
+    // markReadNotification(id);
+    router.push(`/stream/${notification.contextId}`);
   };
 
   return (
