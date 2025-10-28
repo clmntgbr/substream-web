@@ -16,9 +16,6 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
       return NextResponse.json({ error: "Missing notification ID" }, { status: 400 });
     }
 
-    console.log(`${BACKEND_API_URL}/notifications/${id}/read`);
-    console.log(JSON.stringify({ isRead: true }));
-
     const backendResponse = await fetch(`${BACKEND_API_URL}/notifications/${id}/read`, {
       method: "PATCH",
       headers: {

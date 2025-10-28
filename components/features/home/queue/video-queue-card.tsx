@@ -19,9 +19,9 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { VideoDetails } from "../video-details";
 import VideoSettings from "../video-settings";
 
 type VideoQueueCardProps = {
@@ -31,7 +31,7 @@ type VideoQueueCardProps = {
 export function VideoQueueCard({ stream }: VideoQueueCardProps) {
   const translations = useTranslations();
   const { downloadStream, downloadSubtitle, downloadResume, deleteStream } = useStreams();
-
+  const router = useRouter();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -67,10 +67,6 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
 
   const handleViewOptions = () => {
     setSettingsOpen(true);
-  };
-
-  const handleViewDetails = () => {
-    setDetailsOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -120,7 +116,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
               <SettingsIcon className="mr-2 size-4" />
               View Options
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
+            <DropdownMenuItem onClick={() => router.push(`/stream/${stream.id}`)} className="cursor-pointer">
               <Settings2Icon className="mr-2 size-4" />
               View Details
             </DropdownMenuItem>
@@ -203,8 +199,6 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
           </HoverCard>
         </CardContent>
       </Card>
-
-      <VideoDetails stream={stream} open={detailsOpen} onOpenChange={setDetailsOpen} />
 
       <VideoSettings
         open={settingsOpen}

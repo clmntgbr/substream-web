@@ -110,7 +110,7 @@ export function VideoQueueList() {
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStatus, currentSearch, currentFromDate, currentToDate]); // Depend on filter values only
+  }, [currentStatus, currentSearch, currentFromDate, currentToDate]);
 
   return (
     <>
