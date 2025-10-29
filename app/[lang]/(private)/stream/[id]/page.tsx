@@ -3,7 +3,11 @@
 import { useStreams } from "@/lib/stream";
 import { use, useEffect } from "react";
 
-export default function StreamPage({ params }: { params: Promise<{ id: string }> }) {
+export default function StreamPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const { getStream, state } = useStreams();
 

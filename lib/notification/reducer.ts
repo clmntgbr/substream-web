@@ -10,7 +10,10 @@ export const initialState: NotificationState = {
 };
 
 // Reducer function
-export function notificationReducer(state: NotificationState, action: NotificationAction): NotificationState {
+export function notificationReducer(
+  state: NotificationState,
+  action: NotificationAction,
+): NotificationState {
   switch (action.type) {
     case "SET_NOTIFICATIONS":
       const notifications = Array.isArray(action.payload) ? action.payload : [];
@@ -25,10 +28,16 @@ export function notificationReducer(state: NotificationState, action: Notificati
       };
     case "MARK_READ_NOTIFICATION":
       const updatedNotifications = state.notifications.map((notification) =>
-        notification.id === action.payload ? { ...notification, isRead: true } : notification
+        notification.id === action.payload
+          ? { ...notification, isRead: true }
+          : notification,
       );
-      const updatedReadNotifications = updatedNotifications.filter((n) => n.isRead);
-      const updatedUnreadNotifications = updatedNotifications.filter((n) => !n.isRead);
+      const updatedReadNotifications = updatedNotifications.filter(
+        (n) => n.isRead,
+      );
+      const updatedUnreadNotifications = updatedNotifications.filter(
+        (n) => !n.isRead,
+      );
       return {
         ...state,
         notifications: updatedNotifications,

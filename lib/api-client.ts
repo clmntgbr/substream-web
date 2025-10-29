@@ -11,7 +11,10 @@ interface ApiClientOptions extends RequestInit {
 class ApiClient {
   private baseUrl: string = "";
 
-  async request<T = unknown>(url: string, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async request<T = unknown>(
+    url: string,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     const { skipAuthRedirect, ...fetchOptions } = options;
 
     try {
@@ -21,7 +24,10 @@ class ApiClient {
       });
 
       // Handle 401 Unauthorized and 403 Forbidden - redirect to login
-      if ((response.status === 401 || response.status === 403) && !skipAuthRedirect) {
+      if (
+        (response.status === 401 || response.status === 403) &&
+        !skipAuthRedirect
+      ) {
         toast.error("Session expired. Please log in again.");
 
         // Get current language from URL or default to 'en'
@@ -47,11 +53,18 @@ class ApiClient {
     }
   }
 
-  async get<T = unknown>(url: string, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async get<T = unknown>(
+    url: string,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, { ...options, method: "GET" });
   }
 
-  async post<T = unknown>(url: string, data?: unknown, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async post<T = unknown>(
+    url: string,
+    data?: unknown,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, {
       ...options,
       method: "POST",
@@ -63,7 +76,11 @@ class ApiClient {
     });
   }
 
-  async put<T = unknown>(url: string, data?: unknown, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async put<T = unknown>(
+    url: string,
+    data?: unknown,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, {
       ...options,
       method: "PUT",
@@ -75,7 +92,11 @@ class ApiClient {
     });
   }
 
-  async patch<T = unknown>(url: string, data?: unknown, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, {
       ...options,
       method: "PATCH",
@@ -87,7 +108,10 @@ class ApiClient {
     });
   }
 
-  async delete<T = unknown>(url: string, options: ApiClientOptions = {}): Promise<ApiResponse<T>> {
+  async delete<T = unknown>(
+    url: string,
+    options: ApiClientOptions = {},
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, { ...options, method: "DELETE" });
   }
 }

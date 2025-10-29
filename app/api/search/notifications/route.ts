@@ -25,19 +25,25 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
     const { searchParams } = new URL(req.url);
     const queryString = searchParams.toString();
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/search/notifications?${queryString}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/ld+json",
+    const backendResponse = await fetch(
+      `${BACKEND_API_URL}/search/notifications?${queryString}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          "Content-Type": "application/ld+json",
+        },
       },
-    });
+    );
 
     if (!backendResponse.ok) {
       const errorData = (await backendResponse.json().catch(() => ({}))) as {
         error?: string;
       };
-      return NextResponse.json({ error: errorData.error || "Failed to search notifications" }, { status: backendResponse.status });
+      return NextResponse.json(
+        { error: errorData.error || "Failed to search notifications" },
+        { status: backendResponse.status },
+      );
     }
 
     const data = (await backendResponse.json()) as BackendApiResponse;
@@ -50,7 +56,10 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to search notifications" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to search notifications" },
+      { status: 500 },
+    );
   }
 }
 

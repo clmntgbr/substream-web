@@ -35,7 +35,9 @@ export function NavFooter({
 }: NavFooterProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   const handleSubscribe = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -74,7 +76,10 @@ export function NavFooter({
           <ul className="space-y-2">
             {usefulLinks.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-primary">
+                <a
+                  href={link.href}
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
                   {link.label}
                 </a>
               </li>
@@ -125,15 +130,20 @@ export function NavFooter({
               </Button>
             </div>
             {/* Advanced Animation Overlay */}
-            {(subscriptionStatus === "success" || subscriptionStatus === "error") && (
+            {(subscriptionStatus === "success" ||
+              subscriptionStatus === "error") && (
               <div
                 key={subscriptionStatus} // Re-trigger animation on status change
                 className="animate-in fade-in absolute inset-0 flex items-center justify-center rounded-lg bg-background/80 text-center backdrop-blur-sm"
               >
                 {subscriptionStatus === "success" ? (
-                  <span className="font-semibold text-green-500">Subscribed! 🎉</span>
+                  <span className="font-semibold text-green-500">
+                    Subscribed! 🎉
+                  </span>
                 ) : (
-                  <span className="font-semibold text-destructive">Failed. Try again.</span>
+                  <span className="font-semibold text-destructive">
+                    Failed. Try again.
+                  </span>
                 )}
               </div>
             )}
