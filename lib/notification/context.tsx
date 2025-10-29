@@ -1,6 +1,7 @@
 "use client";
 
 import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/lib/auth-context";
 import { MercureMessage, useMercure } from "@/lib/mercure";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -37,6 +38,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const [pageCount, setPageCount] = React.useState(1);
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const { user } = useAuth();
 
   // Determine if we're on a public route
   const isPublicRoute =
@@ -157,24 +159,24 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   // Handle Mercure messages for notification updates
   const handleMercureMessage = useCallback(
     (message: MercureMessage) => {
-      console.log("Received Mercure notification:", message);
-
       const notificationData = message.data as Notification;
 
       switch (message.type) {
         case "notification.created":
-          // Refresh notifications when a new one is created
           searchNotifications();
           break;
 
         case "notification.updated":
-          // Update notification in the list
           if (notificationData.id) {
             dispatch({
               type: "MARK_READ_NOTIFICATION",
               payload: notificationData.id,
             });
           }
+          break;
+
+        case "notifications.refresh":
+          searchNotifications();
           break;
 
         default:
@@ -184,17 +186,16 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     [searchNotifications]
   );
 
+  // Build user-specific topic: /users/{userId}/search/notifications
+  const mercureTopic = user?.id ? `/users/${user.id}/search/notifications` : null;
+
   // Connect to Mercure for real-time notification updates
   useMercure({
-    topics: ["/notifications"], // Subscribe to all notification updates
+    topics: mercureTopic ? [mercureTopic] : [],
     onMessage: handleMercureMessage,
-    onError: (error) => {
-      console.error("Mercure notification connection error:", error);
-    },
-    onOpen: () => {
-      console.log("Connected to Mercure for notification updates");
-    },
-    enabled: !isPublicRoute && isAuthenticated,
+    onError: () => {},
+    onOpen: () => {},
+    enabled: !isPublicRoute && isAuthenticated && !!mercureTopic,
   });
 
   useEffect(() => {

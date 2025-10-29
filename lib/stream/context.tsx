@@ -1,6 +1,7 @@
 "use client";
 
 import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/lib/auth-context";
 import { MercureMessage, useMercure } from "@/lib/mercure";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -44,6 +45,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const [pageCount, setPageCount] = React.useState(1);
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const { user } = useAuth();
 
   const isPublicRoute =
     pathname?.endsWith("/login") ||
@@ -67,12 +69,15 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Build user-specific topic: /users/{userId}/search/streams
+  const mercureTopic = user?.id ? `/users/${user.id}/search/streams` : null;
+
   useMercure({
-    topics: ["/search/streams"],
+    topics: mercureTopic ? [mercureTopic] : [],
     onMessage: handleMercureMessage,
     onError: () => {},
     onOpen: () => {},
-    enabled: !isPublicRoute && isAuthenticated,
+    enabled: !isPublicRoute && isAuthenticated && !!mercureTopic,
   });
 
   const searchStreams = useCallback(async (params?: StreamSearchParams) => {

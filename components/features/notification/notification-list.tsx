@@ -35,7 +35,7 @@ export default function NotificationList() {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent id="notifications-content" className="w-80 p-1 min-h-[165px]">
+        <PopoverContent id="notifications-content" className="w-80 p-1 min-h-[165px] min-w-[400px]">
           <div className="flex items-baseline justify-between gap-4 px-3 py-2">
             <div className="text-sm font-semibold">Notifications</div>
             {unreadCount > 0 && <span className="text-xs text-muted-foreground">{unreadCount} unread</span>}
