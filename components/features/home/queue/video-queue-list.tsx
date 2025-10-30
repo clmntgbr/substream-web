@@ -1,5 +1,5 @@
 import { useStreams } from "@/lib/stream";
-import { useCallback, useRef, useState } from "react";
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
 import { VideoQueueFilterDate, VideoQueueFilterDateRef } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
@@ -8,7 +8,11 @@ import { VideoQueueCard } from "./video-queue-card";
 import { VideoQueueListEmpty } from "./video-queue-list-empty";
 import { VideoQueuePagination } from "./video-queue-pagination";
 
-export function VideoQueueList() {
+export interface VideoQueueListRef {
+  resetFilters: () => void;
+}
+
+export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
   const { state, searchStreams } = useStreams();
   const [currentStatus, setCurrentStatus] = useState<string[] | undefined>(undefined);
   const [currentSearch, setCurrentSearch] = useState<string | undefined>(undefined);
@@ -95,6 +99,10 @@ export function VideoQueueList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    resetFilters: handleClearFilters,
+  }));
+
   const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0) || currentFromDate || currentToDate;
 
   return (
@@ -128,4 +136,6 @@ export function VideoQueueList() {
       )}
     </>
   );
-}
+});
+
+VideoQueueList.displayName = "VideoQueueList";
