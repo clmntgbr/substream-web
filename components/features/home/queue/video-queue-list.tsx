@@ -1,5 +1,6 @@
 import { useStreams } from "@/lib/stream";
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { VideoQueueFilterDate, VideoQueueFilterDateRef } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
@@ -13,97 +14,126 @@ export interface VideoQueueListRef {
 }
 
 export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
-  const { state, searchStreams } = useStreams();
-  const [currentStatus, setCurrentStatus] = useState<string[] | undefined>(undefined);
-  const [currentSearch, setCurrentSearch] = useState<string | undefined>(undefined);
-  const [currentFromDate, setCurrentFromDate] = useState<Date | undefined>(undefined);
-  const [currentToDate, setCurrentToDate] = useState<Date | undefined>(undefined);
+  const { state, searchStreams, refreshCounter } = useStreams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const searchRef = useRef<VideoQueueFilterSearchRef>(null);
   const statusRef = useRef<VideoQueueFilterStatusRef>(null);
   const dateRef = useRef<VideoQueueFilterDateRef>(null);
+  const searchStreamsRef = useRef(searchStreams);
+
+  useEffect(() => {
+    searchStreamsRef.current = searchStreams;
+  }, [searchStreams]);
+
+  const updateUrl = useCallback(
+    (updates: Record<string, string | string[] | undefined>) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        params.delete(key);
+        if (value !== undefined) {
+          if (Array.isArray(value)) {
+            value.forEach((v) => params.append(key, v));
+          } else {
+            if (key === "page" && value === "1") {
+              return;
+            }
+            params.set(key, value);
+          }
+        }
+      });
+
+      const urlString = params.toString();
+      router.push(urlString ? `?${urlString}` : "?", { scroll: false });
+    },
+    [router, searchParams]
+  );
 
   const handleFilterChange = useCallback(
     (status: string[] | undefined) => {
-      setCurrentStatus(status);
-      searchStreams({
-        statusFilter: status && status.length > 0 ? status : undefined,
-        search: currentSearch,
-        fromDate: currentFromDate,
-        toDate: currentToDate,
-        page: 1,
-      });
+      updateUrl({ status, page: "1" });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [updateUrl]
   );
 
   const handleSearchChange = useCallback(
     (search: string | undefined) => {
-      setCurrentSearch(search);
-      searchStreams({
-        search,
-        statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
-        fromDate: currentFromDate,
-        toDate: currentToDate,
-        page: 1,
-      });
+      updateUrl({ search, page: "1" });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [updateUrl]
   );
 
   const handlePageChange = useCallback(
     (page: number) => {
-      searchStreams({
-        page,
-        statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
-        search: currentSearch,
-        fromDate: currentFromDate,
-        toDate: currentToDate,
-      });
+      updateUrl({ page: page.toString() });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [updateUrl]
   );
 
   const handleDateChange = useCallback(
     (fromDate: Date | undefined, toDate: Date | undefined) => {
-      setCurrentFromDate(fromDate);
-      setCurrentToDate(toDate);
-      searchStreams({
-        statusFilter: currentStatus && currentStatus.length > 0 ? currentStatus : undefined,
-        search: currentSearch,
-        fromDate,
-        toDate,
-        page: 1,
+      updateUrl({
+        fromDate: fromDate?.toISOString(),
+        toDate: toDate?.toISOString(),
+        page: "1",
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [updateUrl]
   );
 
   const handleClearFilters = useCallback(() => {
-    setCurrentStatus(undefined);
-    setCurrentSearch(undefined);
-    setCurrentFromDate(undefined);
-    setCurrentToDate(undefined);
-
     searchRef.current?.reset();
     statusRef.current?.reset();
     dateRef.current?.reset();
-
-    searchStreams({
-      page: 1,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    router.push("?", { scroll: false });
+  }, [router]);
 
   useImperativeHandle(ref, () => ({
     resetFilters: handleClearFilters,
   }));
 
-  const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0) || currentFromDate || currentToDate;
+  const paramsString = searchParams.toString();
+
+  useEffect(() => {
+    const status = searchParams.getAll("status");
+    const search = searchParams.get("search");
+    const fromDate = searchParams.get("fromDate");
+    const toDate = searchParams.get("toDate");
+    const page = Number(searchParams.get("page")) || 1;
+
+    searchStreamsRef.current({
+      statusFilter: status.length > 0 ? status : undefined,
+      search: search || undefined,
+      fromDate: fromDate ? new Date(fromDate) : undefined,
+      toDate: toDate ? new Date(toDate) : undefined,
+      page,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsString]);
+
+  useEffect(() => {
+    if (refreshCounter > 0) {
+      const status = searchParams.getAll("status");
+      const search = searchParams.get("search");
+      const fromDate = searchParams.get("fromDate");
+      const toDate = searchParams.get("toDate");
+      const page = Number(searchParams.get("page")) || 1;
+
+      searchStreamsRef.current({
+        statusFilter: status.length > 0 ? status : undefined,
+        search: search || undefined,
+        fromDate: fromDate ? new Date(fromDate) : undefined,
+        toDate: toDate ? new Date(toDate) : undefined,
+        page,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshCounter]);
+
+  const hasActiveFilters =
+    searchParams.has("search") || searchParams.getAll("status").length > 0 || searchParams.has("fromDate") || searchParams.has("toDate");
 
   return (
     <>

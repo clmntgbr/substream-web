@@ -1,13 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useStreams } from "@/lib/stream/context";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { useSearchParams } from "next/navigation";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string | undefined) => void;
@@ -17,25 +11,36 @@ export interface VideoQueueFilterSearchRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterSearch = forwardRef<
-  VideoQueueFilterSearchRef,
-  VideoQueueFilterSearchProps
->(function VideoQueueFilterSearch({ onSearchChange }, ref) {
+export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
+  { onSearchChange },
+  ref
+) {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState<string>("");
-  const { searchStreams } = useStreams();
+  const [initialized, setInitialized] = useState(false);
+  const onSearchChangeRef = useRef(onSearchChange);
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const handleSearch = useCallback(
-    async (searchTerm: string) => {
-      // Only search if we have at least 3 characters or if the search is empty (to clear)
-      if (searchTerm.length >= 3 || searchTerm.length === 0) {
-        onSearchChange(searchTerm || undefined);
-        await searchStreams({ search: searchTerm || undefined });
+  useEffect(() => {
+    if (!initialized) {
+      const searchFromUrl = searchParams.get("search");
+      if (searchFromUrl) {
+        setSearch(searchFromUrl);
       }
-    },
-    [onSearchChange, searchStreams],
-  );
+      setInitialized(true);
+    }
+  }, [searchParams, initialized]);
+
+  useEffect(() => {
+    onSearchChangeRef.current = onSearchChange;
+  }, [onSearchChange]);
+
+  const handleSearch = useCallback((searchTerm: string) => {
+    if (searchTerm.length >= 3 || searchTerm.length === 0) {
+      onSearchChangeRef.current(searchTerm || undefined);
+    }
+  }, []);
 
   useEffect(() => {
     handleSearch(debouncedSearch);
@@ -43,20 +48,20 @@ export const VideoQueueFilterSearch = forwardRef<
 
   const handleClearSearch = () => {
     setSearch("");
-    onSearchChange(undefined);
+    onSearchChangeRef.current(undefined);
   };
 
   const reset = useCallback(() => {
     setSearch("");
-    onSearchChange(undefined);
-  }, [onSearchChange]);
+    onSearchChangeRef.current(undefined);
+  }, []);
 
   useImperativeHandle(
     ref,
     () => ({
       reset,
     }),
-    [reset],
+    [reset]
   );
 
   return (

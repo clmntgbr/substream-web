@@ -9,11 +9,7 @@ import { toast } from "sonner";
 import { YoutubeUrlSchema } from "../shared/misc/youtube-url-validation";
 import VideoPreview from "./video-preview";
 
-interface UploadProps {
-  onUploadSuccess?: () => void;
-}
-
-export default function Upload({ onUploadSuccess }: UploadProps) {
+export default function Upload() {
   const [url, setUrl] = useState<string>("");
   const [urlInput, setUrlInput] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -50,7 +46,6 @@ export default function Upload({ onUploadSuccess }: UploadProps) {
     setSelectedFile(null);
     setUrl("");
     setUrlInput("");
-    onUploadSuccess?.();
   };
 
   const handleDragEnter = (e: React.DragEvent) => {

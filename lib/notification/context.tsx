@@ -188,14 +188,23 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     [searchNotifications]
   );
 
-  const mercureTopic = user?.id ? `/users/${user.id}/search/notifications` : null;
+  const mercureTopics = React.useMemo(() => {
+    return user?.id ? [`/users/${user.id}/search/notifications`] : [];
+  }, [user?.id]);
+
+  const handleMercureError = useCallback(() => {}, []);
+  const handleMercureOpen = useCallback(() => {}, []);
+
+  const mercureEnabled = React.useMemo(() => {
+    return !isPublicRoute && isAuthenticated && mercureTopics.length > 0;
+  }, [isPublicRoute, isAuthenticated, mercureTopics]);
 
   useMercure({
-    topics: mercureTopic ? [mercureTopic] : [],
+    topics: mercureTopics,
     onMessage: handleMercureMessage,
-    onError: () => {},
-    onOpen: () => {},
-    enabled: !isPublicRoute && isAuthenticated && !!mercureTopic,
+    onError: handleMercureError,
+    onOpen: handleMercureOpen,
+    enabled: mercureEnabled,
   });
 
   useEffect(() => {

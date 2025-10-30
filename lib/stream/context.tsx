@@ -2,7 +2,7 @@
 
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
-import { MercureMessage, useMercure } from "@/lib/mercure";
+import { useMercure } from "@/lib/mercure";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
@@ -34,6 +34,7 @@ interface StreamContextType {
   totalItems: number;
   currentPage: number;
   pageCount: number;
+  refreshCounter: number;
 }
 
 const StreamContext = createContext<StreamContextType | undefined>(undefined);
@@ -43,6 +44,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const [totalItems, setTotalItems] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageCount, setPageCount] = React.useState(1);
+  const [refreshCounter, setRefreshCounter] = React.useState(0);
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const { user } = useAuth();
@@ -54,30 +56,29 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     pathname?.endsWith("/reset") ||
     pathname?.includes("/oauth");
 
-  const searchStreamsRef = React.useRef<((params?: StreamSearchParams) => Promise<void>) | null>(null);
   const lastSearchParamsRef = React.useRef<StreamSearchParams | undefined>(undefined);
 
-  const handleMercureMessage = useCallback((message: MercureMessage) => {
-    switch (message.type) {
-      case "streams.refresh":
-        if (searchStreamsRef.current) {
-          searchStreamsRef.current(lastSearchParamsRef.current);
-        }
-        break;
-
-      default:
-        console.log("Unknown Mercure message type:", message.type);
-    }
+  const handleMercureMessage = useCallback(() => {
+    setRefreshCounter((prev) => prev + 1);
   }, []);
 
-  const mercureTopic = user?.id ? `/users/${user.id}/search/streams` : null;
+  const mercureTopics = React.useMemo(() => {
+    return user?.id ? [`/users/${user.id}/search/streams`] : [];
+  }, [user?.id]);
+
+  const handleMercureError = useCallback(() => {}, []);
+  const handleMercureOpen = useCallback(() => {}, []);
+
+  const mercureEnabled = React.useMemo(() => {
+    return !isPublicRoute && isAuthenticated && mercureTopics.length > 0;
+  }, [isPublicRoute, isAuthenticated, mercureTopics]);
 
   useMercure({
-    topics: mercureTopic ? [mercureTopic] : [],
+    topics: mercureTopics,
     onMessage: handleMercureMessage,
-    onError: () => {},
-    onOpen: () => {},
-    enabled: !isPublicRoute && isAuthenticated && !!mercureTopic,
+    onError: handleMercureError,
+    onOpen: handleMercureOpen,
+    enabled: mercureEnabled,
   });
 
   const searchStreams = useCallback(async (params?: StreamSearchParams) => {
@@ -486,40 +487,35 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     [searchStreams]
   );
 
-  React.useEffect(() => {
-    searchStreamsRef.current = searchStreams;
-  }, [searchStreams]);
-
   useEffect(() => {
     if (!isPublicRoute) {
-      searchStreams().then(() => {
-        setIsAuthenticated(true);
-      });
+      setIsAuthenticated(true);
     }
-  }, [searchStreams, pathname, isPublicRoute]);
+  }, [isPublicRoute]);
 
-  return (
-    <StreamContext.Provider
-      value={{
-        state,
-        searchStreams,
-        getStream,
-        createStream,
-        updateStream,
-        deleteStream,
-        downloadStream,
-        downloadSubtitle,
-        downloadResume,
-        getResume,
-        refreshStreams,
-        totalItems,
-        currentPage,
-        pageCount,
-      }}
-    >
-      {children}
-    </StreamContext.Provider>
+  const contextValue = React.useMemo(
+    () => ({
+      state,
+      searchStreams,
+      getStream,
+      createStream,
+      updateStream,
+      deleteStream,
+      downloadStream,
+      downloadSubtitle,
+      downloadResume,
+      getResume,
+      refreshStreams,
+      totalItems,
+      currentPage,
+      pageCount,
+      refreshCounter,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state, totalItems, currentPage, pageCount, refreshCounter]
   );
+
+  return <StreamContext.Provider value={contextValue}>{children}</StreamContext.Provider>;
 }
 
 export function useStreams() {
