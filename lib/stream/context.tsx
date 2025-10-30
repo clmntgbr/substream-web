@@ -55,12 +55,13 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     pathname?.includes("/oauth");
 
   const searchStreamsRef = React.useRef<((params?: StreamSearchParams) => Promise<void>) | null>(null);
+  const lastSearchParamsRef = React.useRef<StreamSearchParams | undefined>(undefined);
 
   const handleMercureMessage = useCallback((message: MercureMessage) => {
     switch (message.type) {
       case "streams.refresh":
         if (searchStreamsRef.current) {
-          searchStreamsRef.current();
+          searchStreamsRef.current(lastSearchParamsRef.current);
         }
         break;
 
@@ -69,7 +70,6 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Build user-specific topic: /users/{userId}/search/streams
   const mercureTopic = user?.id ? `/users/${user.id}/search/streams` : null;
 
   useMercure({
@@ -82,6 +82,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
 
   const searchStreams = useCallback(async (params?: StreamSearchParams) => {
     dispatch({ type: "SET_LOADING", payload: true });
+    lastSearchParamsRef.current = params;
 
     try {
       const queryParams = new URLSearchParams();

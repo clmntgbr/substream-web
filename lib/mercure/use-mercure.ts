@@ -3,11 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MercureOptions } from "./types";
 
-/**
- * Custom hook to connect to Mercure Hub and listen to Server-Sent Events
- * @param options - Configuration options for Mercure connection
- * @returns Connection status and control functions
- */
 export function useMercure({ topics, onMessage, onError, onOpen, enabled = true }: MercureOptions) {
   const eventSourceRef = useRef<EventSource | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -15,15 +10,13 @@ export function useMercure({ topics, onMessage, onError, onOpen, enabled = true 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
-  const baseReconnectDelay = 1000; // Start with 1 second
+  const baseReconnectDelay = 1000;
 
   const connect = () => {
-    // Don't connect if disabled or no topics
     if (!enabled || topics.length === 0) {
       return;
     }
 
-    // Don't connect if already connected
     if (eventSourceRef.current?.readyState === EventSource.OPEN) {
       return;
     }
@@ -35,13 +28,11 @@ export function useMercure({ topics, onMessage, onError, onOpen, enabled = true 
     }
 
     try {
-      // Build the URL with topics as query parameters
       const url = new URL(mercureUrl);
       topics.forEach((topic) => {
         url.searchParams.append("topic", topic);
       });
 
-      // Create EventSource connection
       const eventSource = new EventSource(url.toString(), {
         withCredentials: true,
       });
@@ -68,11 +59,9 @@ export function useMercure({ topics, onMessage, onError, onOpen, enabled = true 
         setIsConnected(false);
         onError?.(error);
 
-        // Close the current connection
         eventSource.close();
         eventSourceRef.current = null;
 
-        // Attempt reconnection with exponential backoff
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           setIsReconnecting(true);
           const delay = baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current);
@@ -110,8 +99,6 @@ export function useMercure({ topics, onMessage, onError, onOpen, enabled = true 
 
   useEffect(() => {
     connect();
-
-    // Cleanup on unmount
     return () => {
       disconnect();
     };

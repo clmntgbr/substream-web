@@ -48,8 +48,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     pathname?.endsWith("/reset") ||
     pathname?.includes("/oauth");
 
+  const lastSearchParamsRef = React.useRef<NotificationSearchParams | undefined>(undefined);
+
   const searchNotifications = useCallback(async (params?: NotificationSearchParams) => {
     dispatch({ type: "SET_LOADING", payload: true });
+    lastSearchParamsRef.current = params;
 
     try {
       const queryParams = new URLSearchParams();
@@ -156,14 +159,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     }
   }, []);
 
-  // Handle Mercure messages for notification updates
   const handleMercureMessage = useCallback(
     (message: MercureMessage) => {
       const notificationData = message.data as Notification;
 
       switch (message.type) {
         case "notification.created":
-          searchNotifications();
+          searchNotifications(lastSearchParamsRef.current);
           break;
 
         case "notification.updated":
@@ -176,7 +178,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           break;
 
         case "notifications.refresh":
-          searchNotifications();
+          searchNotifications(lastSearchParamsRef.current);
           break;
 
         default:
@@ -186,10 +188,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     [searchNotifications]
   );
 
-  // Build user-specific topic: /users/{userId}/search/notifications
   const mercureTopic = user?.id ? `/users/${user.id}/search/notifications` : null;
 
-  // Connect to Mercure for real-time notification updates
   useMercure({
     topics: mercureTopic ? [mercureTopic] : [],
     onMessage: handleMercureMessage,
@@ -199,10 +199,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   });
 
   useEffect(() => {
-    // Don't load notifications on public routes
     if (!isPublicRoute) {
       searchNotifications().then(() => {
-        // Set authenticated flag after successful notifications load
         setIsAuthenticated(true);
       });
     }

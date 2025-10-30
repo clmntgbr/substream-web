@@ -31,7 +31,7 @@ export function VideoQueueList() {
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Remove all dependencies to make it stable
+    []
   );
 
   const handleSearchChange = useCallback(
@@ -46,7 +46,7 @@ export function VideoQueueList() {
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Remove all dependencies to make it stable
+    []
   );
 
   const handlePageChange = useCallback(
@@ -60,7 +60,7 @@ export function VideoQueueList() {
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Remove all dependencies to make it stable
+    []
   );
 
   const handleDateChange = useCallback(
@@ -76,7 +76,7 @@ export function VideoQueueList() {
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Remove all dependencies to make it stable
+    []
   );
 
   const handleClearFilters = useCallback(() => {
@@ -93,12 +93,9 @@ export function VideoQueueList() {
       page: 1,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Remove searchStreams dependency
+  }, []);
 
   const hasActiveFilters = currentSearch || (currentStatus && currentStatus.length > 0) || currentFromDate || currentToDate;
-
-  // Polling is no longer needed - Mercure handles real-time updates
-  // The stream context automatically updates when Mercure events are received
 
   return (
     <>
