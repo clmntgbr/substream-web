@@ -5,8 +5,7 @@ import { ClientOnly } from "@/components/ui/client-only";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useTranslations } from "@/lib/use-translations";
 import { ChevronDownIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterDateProps {
   onDateChange: (from: Date | undefined, to: Date | undefined) => void;
@@ -16,41 +15,45 @@ export interface VideoQueueFilterDateRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQueueFilterDateProps>(function VideoQueueFilterDate(
+function getInitialDates() {
+  if (typeof window === "undefined") return { from: undefined, to: undefined };
+  const params = new URLSearchParams(window.location.search);
+  const fromStr = params.get("from");
+  const toStr = params.get("to");
+  return {
+    from: fromStr ? new Date(fromStr) : undefined,
+    to: toStr ? new Date(toStr) : undefined,
+  };
+}
+
+const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQueueFilterDateProps>(function VideoQueueFilterDate(
   { onDateChange },
   ref
 ) {
-  const searchParams = useSearchParams();
   const translations = useTranslations();
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  // To avoid hydration mismatch, initialize as undefined on first client render,
+  // then set from/to after mount using window.location.
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
-  const [initialized, setInitialized] = useState(false);
   const onDateChangeRef = useRef(onDateChange);
-
-  useEffect(() => {
-    if (!initialized) {
-      const fromStr = searchParams.get("from");
-      const toStr = searchParams.get("to");
-      if (fromStr) {
-        setFrom(new Date(fromStr));
-      }
-      if (toStr) {
-        setTo(new Date(toStr));
-      }
-      setInitialized(true);
-    }
-  }, [searchParams, initialized]);
 
   useEffect(() => {
     onDateChangeRef.current = onDateChange;
   }, [onDateChange]);
 
+  useEffect(() => {
+    const { from: initFrom, to: initTo } = getInitialDates();
+    setFrom(initFrom);
+    setTo(initTo);
+  }, []);
+
   const handleFromChange = useCallback(
     (date: Date | undefined) => {
       setFrom(date);
       onDateChangeRef.current(date, to);
+      setTimeout(() => setFromOpen(false), 0);
     },
     [to]
   );
@@ -59,6 +62,7 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
     (date: Date | undefined) => {
       setTo(date);
       onDateChangeRef.current(from, date);
+      setTimeout(() => setToOpen(false), 0);
     },
     [from]
   );
@@ -109,15 +113,7 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
                 </Button>
               </PopoverTrigger>
               <PopoverContent id="date-picker-from-content" className="w-auto overflow-hidden p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={from}
-                  captionLayout="dropdown"
-                  onSelect={(date) => {
-                    handleFromChange(date);
-                    setFromOpen(false);
-                  }}
-                />
+                <Calendar mode="single" selected={from} captionLayout="dropdown" onSelect={handleFromChange} />
               </PopoverContent>
             </Popover>
           </div>
@@ -130,15 +126,7 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
                 </Button>
               </PopoverTrigger>
               <PopoverContent id="date-picker-to-content" className="w-auto overflow-hidden p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={to}
-                  captionLayout="dropdown"
-                  onSelect={(date) => {
-                    handleToChange(date);
-                    setToOpen(false);
-                  }}
-                />
+                <Calendar mode="single" selected={to} captionLayout="dropdown" onSelect={handleToChange} />
               </PopoverContent>
             </Popover>
           </div>
@@ -147,3 +135,5 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
     </ClientOnly>
   );
 });
+
+export const VideoQueueFilterDate = memo(VideoQueueFilterDateComponent);

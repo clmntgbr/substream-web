@@ -46,7 +46,7 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
       });
 
       const urlString = params.toString();
-      router.push(urlString ? `?${urlString}` : "?", { scroll: false });
+      router.replace(urlString ? `?${urlString}` : "?", { scroll: false });
     },
     [router, searchParams]
   );

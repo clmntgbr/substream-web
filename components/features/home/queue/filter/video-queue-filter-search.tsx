@@ -1,7 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useSearchParams } from "next/navigation";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string | undefined) => void;
@@ -11,26 +10,20 @@ export interface VideoQueueFilterSearchRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
+function getInitialSearch() {
+  if (typeof window === "undefined") return "";
+  const params = new URLSearchParams(window.location.search);
+  return params.get("search") || "";
+}
+
+const VideoQueueFilterSearchComponent = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
   { onSearchChange },
   ref
 ) {
-  const searchParams = useSearchParams();
-  const [search, setSearch] = useState<string>("");
-  const [initialized, setInitialized] = useState(false);
+  const [search, setSearch] = useState<string>(() => getInitialSearch());
   const onSearchChangeRef = useRef(onSearchChange);
 
   const debouncedSearch = useDebounce(search, 500);
-
-  useEffect(() => {
-    if (!initialized) {
-      const searchFromUrl = searchParams.get("search");
-      if (searchFromUrl) {
-        setSearch(searchFromUrl);
-      }
-      setInitialized(true);
-    }
-  }, [searchParams, initialized]);
 
   useEffect(() => {
     onSearchChangeRef.current = onSearchChange;
@@ -84,3 +77,5 @@ export const VideoQueueFilterSearch = forwardRef<VideoQueueFilterSearchRef, Vide
     </div>
   );
 });
+
+export const VideoQueueFilterSearch = memo(VideoQueueFilterSearchComponent);

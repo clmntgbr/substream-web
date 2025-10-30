@@ -7,8 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "@/lib/use-translations";
 import { cn } from "@/lib/utils";
 import { Check, PlusCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { VideoQueueStatuses } from "../video-queue-statuses";
 
 interface VideoQueueFilterStatusProps {
@@ -19,22 +18,20 @@ export interface VideoQueueFilterStatusRef {
   reset: () => void;
 }
 
-export const VideoQueueFilterStatus = forwardRef<VideoQueueFilterStatusRef, VideoQueueFilterStatusProps>(function VideoQueueFilterStatus(
+function getInitialStatuses() {
+  if (typeof window === "undefined") return [];
+  const params = new URLSearchParams(window.location.search);
+  return params.getAll("status");
+}
+
+const VideoQueueFilterStatusComponent = forwardRef<VideoQueueFilterStatusRef, VideoQueueFilterStatusProps>(function VideoQueueFilterStatus(
   { onFilterChange },
   ref
 ) {
-  const searchParams = useSearchParams();
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>(() => getInitialStatuses());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const translations = useTranslations();
   const onFilterChangeRef = useRef(onFilterChange);
-
-  useEffect(() => {
-    const statusFromUrl = searchParams.getAll("status");
-    if (statusFromUrl.length > 0) {
-      setSelectedStatuses(statusFromUrl);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     onFilterChangeRef.current = onFilterChange;
@@ -166,3 +163,5 @@ export const VideoQueueFilterStatus = forwardRef<VideoQueueFilterStatusRef, Vide
     </ClientOnly>
   );
 });
+
+export const VideoQueueFilterStatus = memo(VideoQueueFilterStatusComponent);
