@@ -1,10 +1,25 @@
 import { useStreams } from "@/lib/stream";
 import { useRouter, useSearchParams } from "next/navigation";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
-import { VideoQueueFilterDate, VideoQueueFilterDateRef } from "./filter/video-queue-filter-date";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
+import {
+  VideoQueueFilterDate,
+  VideoQueueFilterDateRef,
+} from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
-import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
-import { VideoQueueFilterStatus, VideoQueueFilterStatusRef } from "./filter/video-queue-filter-status";
+import {
+  VideoQueueFilterSearch,
+  VideoQueueFilterSearchRef,
+} from "./filter/video-queue-filter-search";
+import {
+  VideoQueueFilterStatus,
+  VideoQueueFilterStatusRef,
+} from "./filter/video-queue-filter-status";
 import { VideoQueueCard } from "./video-queue-card";
 import { VideoQueueListEmpty } from "./video-queue-list-empty";
 import { VideoQueuePagination } from "./video-queue-pagination";
@@ -48,28 +63,28 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
       const urlString = params.toString();
       router.replace(urlString ? `?${urlString}` : "?", { scroll: false });
     },
-    [router, searchParams]
+    [router, searchParams],
   );
 
   const handleFilterChange = useCallback(
     (status: string[] | undefined) => {
       updateUrl({ status, page: "1" });
     },
-    [updateUrl]
+    [updateUrl],
   );
 
   const handleSearchChange = useCallback(
     (search: string | undefined) => {
       updateUrl({ search, page: "1" });
     },
-    [updateUrl]
+    [updateUrl],
   );
 
   const handlePageChange = useCallback(
     (page: number) => {
       updateUrl({ page: page.toString() });
     },
-    [updateUrl]
+    [updateUrl],
   );
 
   const handleDateChange = useCallback(
@@ -80,7 +95,7 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
         page: "1",
       });
     },
-    [updateUrl]
+    [updateUrl],
   );
 
   const handleClearFilters = useCallback(() => {
@@ -133,16 +148,27 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
   }, [refreshCounter]);
 
   const hasActiveFilters =
-    searchParams.has("search") || searchParams.getAll("status").length > 0 || searchParams.has("from") || searchParams.has("to");
+    searchParams.has("search") ||
+    searchParams.getAll("status").length > 0 ||
+    searchParams.has("from") ||
+    searchParams.has("to");
 
   return (
     <>
       <>
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
-            <VideoQueueFilterSearch ref={searchRef} onSearchChange={handleSearchChange} />
-            <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} />
-            {hasActiveFilters && <VideoQueueFilterReset handleClearFilters={handleClearFilters} />}
+            <VideoQueueFilterSearch
+              ref={searchRef}
+              onSearchChange={handleSearchChange}
+            />
+            <VideoQueueFilterStatus
+              ref={statusRef}
+              onFilterChange={handleFilterChange}
+            />
+            {hasActiveFilters && (
+              <VideoQueueFilterReset handleClearFilters={handleClearFilters} />
+            )}
           </div>
           <VideoQueueFilterDate ref={dateRef} onDateChange={handleDateChange} />
         </div>

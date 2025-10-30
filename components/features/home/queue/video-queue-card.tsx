@@ -1,3 +1,4 @@
+import Status from "@/components/Status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,15 +25,12 @@ import { useTranslations } from "@/lib/use-translations";
 import { format } from "date-fns";
 import {
   BrainCircuit,
-  CheckCircle2Icon,
   Download,
   FileText,
-  Loader2Icon,
   MoreVertical,
   Settings2Icon,
   SettingsIcon,
   Trash2,
-  XCircleIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -225,33 +223,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
           <HoverCard>
             <HoverCardTrigger asChild>
               <div className="w-full flex justify-center absolute bottom-0 left-0">
-                <Badge
-                  variant="outline"
-                  className="text-muted-foreground px-1.5 cursor-pointer w-full border-b-0 border-l-0 border-r-0 py-2 rounded-none"
-                >
-                  {stream.isCompleted && (
-                    <>
-                      <CheckCircle2Icon className="size-4 text-emerald-400" />
-                      {getTitleTranslation(
-                        stream.status as keyof typeof translations.stream.status,
-                      )}
-                    </>
-                  )}
-                  {stream.isFailed && (
-                    <>
-                      <XCircleIcon className="size-4 text-red-500" />{" "}
-                      {getTitleTranslation(
-                        stream.status as keyof typeof translations.stream.status,
-                      )}
-                    </>
-                  )}
-                  {stream.isProcessing && (
-                    <>
-                      <Loader2Icon className="size-4 animate-spin text-blue-400" />
-                      {getTitleTranslation("in_process")}
-                    </>
-                  )}
-                </Badge>
+                <Status stream={stream} />
               </div>
             </HoverCardTrigger>
             <HoverCardContent className="w-80" side="top">

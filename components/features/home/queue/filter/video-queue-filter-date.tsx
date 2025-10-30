@@ -2,10 +2,22 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Calendar } from "@/components/ui/calendar";
 import { ClientOnly } from "@/components/ui/client-only";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useTranslations } from "@/lib/use-translations";
 import { ChevronDownIcon } from "lucide-react";
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 interface VideoQueueFilterDateProps {
   onDateChange: (from: Date | undefined, to: Date | undefined) => void;
@@ -26,10 +38,10 @@ function getInitialDates() {
   };
 }
 
-const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQueueFilterDateProps>(function VideoQueueFilterDate(
-  { onDateChange },
-  ref
-) {
+const VideoQueueFilterDateComponent = forwardRef<
+  VideoQueueFilterDateRef,
+  VideoQueueFilterDateProps
+>(function VideoQueueFilterDate({ onDateChange }, ref) {
   const translations = useTranslations();
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
@@ -55,7 +67,7 @@ const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQ
       onDateChangeRef.current(date, to);
       setTimeout(() => setFromOpen(false), 0);
     },
-    [to]
+    [to],
   );
 
   const handleToChange = useCallback(
@@ -64,7 +76,7 @@ const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQ
       onDateChangeRef.current(from, date);
       setTimeout(() => setToOpen(false), 0);
     },
-    [from]
+    [from],
   );
 
   const reset = useCallback(() => {
@@ -78,7 +90,7 @@ const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQ
     () => ({
       reset,
     }),
-    [reset]
+    [reset],
   );
 
   return (
@@ -87,14 +99,26 @@ const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQ
         <div className="flex gap-4">
           <ButtonGroup>
             <div className="flex flex-col gap-3">
-              <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
-                {from ? from.toLocaleDateString() : translations.home.queue.filterDate.from}
+              <Button
+                variant="outline"
+                id="date-picker-from"
+                className="w-32 justify-between font-normal rounded-r-none"
+              >
+                {from
+                  ? from.toLocaleDateString()
+                  : translations.home.queue.filterDate.from}
                 <ChevronDownIcon />
               </Button>
             </div>
             <div className="flex flex-col gap-3">
-              <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
-                {to ? to.toLocaleDateString() : translations.home.queue.filterDate.to}
+              <Button
+                variant="outline"
+                id="date-picker-to"
+                className="w-32 justify-between font-normal rounded-r-none"
+              >
+                {to
+                  ? to.toLocaleDateString()
+                  : translations.home.queue.filterDate.to}
                 <ChevronDownIcon />
               </Button>
             </div>
@@ -107,26 +131,56 @@ const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQ
           <div className="flex flex-col gap-3">
             <Popover open={fromOpen} onOpenChange={setFromOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
-                  {from ? from.toLocaleDateString() : translations.home.queue.filterDate.from}
+                <Button
+                  variant="outline"
+                  id="date-picker-from"
+                  className="w-32 justify-between font-normal rounded-r-none"
+                >
+                  {from
+                    ? from.toLocaleDateString()
+                    : translations.home.queue.filterDate.from}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent id="date-picker-from-content" className="w-auto overflow-hidden p-0" align="start">
-                <Calendar mode="single" selected={from} captionLayout="dropdown" onSelect={handleFromChange} />
+              <PopoverContent
+                id="date-picker-from-content"
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={from}
+                  captionLayout="dropdown"
+                  onSelect={handleFromChange}
+                />
               </PopoverContent>
             </Popover>
           </div>
           <div className="flex flex-col gap-3">
             <Popover open={toOpen} onOpenChange={setToOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
-                  {to ? to.toLocaleDateString() : translations.home.queue.filterDate.to}
+                <Button
+                  variant="outline"
+                  id="date-picker-to"
+                  className="w-32 justify-between font-normal rounded-r-none"
+                >
+                  {to
+                    ? to.toLocaleDateString()
+                    : translations.home.queue.filterDate.to}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent id="date-picker-to-content" className="w-auto overflow-hidden p-0" align="start">
-                <Calendar mode="single" selected={to} captionLayout="dropdown" onSelect={handleToChange} />
+              <PopoverContent
+                id="date-picker-to-content"
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={to}
+                  captionLayout="dropdown"
+                  onSelect={handleToChange}
+                />
               </PopoverContent>
             </Popover>
           </div>
