@@ -15,8 +15,8 @@ export interface NotificationSearchParams {
   page?: number;
   itemsPerPage?: number;
   search?: string;
-  fromDate?: Date;
-  toDate?: Date;
+  from?: Date;
+  to?: Date;
 }
 
 interface NotificationContextType {
@@ -76,15 +76,15 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         queryParams.append("search", params.search.trim());
       }
 
-      if (params?.fromDate) {
-        queryParams.append("createdAt[after]", params.fromDate.toISOString());
+      if (params?.from) {
+        queryParams.append("createdAt[after]", params.from.toISOString());
       }
 
-      if (params?.toDate) {
+      if (params?.to) {
         // Add one day to include the entire selected day
-        const toDatePlusOne = new Date(params.toDate);
-        toDatePlusOne.setDate(toDatePlusOne.getDate() + 1);
-        queryParams.append("createdAt[before]", toDatePlusOne.toISOString());
+        const toPlusOne = new Date(params.to);
+        toPlusOne.setDate(toPlusOne.getDate() + 1);
+        queryParams.append("createdAt[before]", toPlusOne.toISOString());
       }
 
       const response = await apiClient.get(`/api/search/notifications?${queryParams.toString()}`);

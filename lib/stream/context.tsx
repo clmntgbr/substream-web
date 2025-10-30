@@ -15,8 +15,8 @@ export interface StreamSearchParams {
   page?: number;
   itemsPerPage?: number;
   search?: string;
-  fromDate?: Date;
-  toDate?: Date;
+  from?: Date;
+  to?: Date;
 }
 
 interface StreamContextType {
@@ -107,14 +107,14 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         queryParams.append("search", params.search.trim());
       }
 
-      if (params?.fromDate) {
-        queryParams.append("createdAt[after]", params.fromDate.toISOString());
+      if (params?.from) {
+        queryParams.append("createdAt[after]", params.from.toISOString());
       }
 
-      if (params?.toDate) {
-        const toDatePlusOne = new Date(params.toDate);
-        toDatePlusOne.setDate(toDatePlusOne.getDate() + 1);
-        queryParams.append("createdAt[before]", toDatePlusOne.toISOString());
+      if (params?.to) {
+        const toPlusOne = new Date(params.to);
+        toPlusOne.setDate(toPlusOne.getDate() + 1);
+        queryParams.append("createdAt[before]", toPlusOne.toISOString());
       }
 
       const response = await apiClient.get(`/api/search/streams?${queryParams.toString()}`);

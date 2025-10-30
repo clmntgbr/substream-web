@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterDateProps {
-  onDateChange: (fromDate: Date | undefined, toDate: Date | undefined) => void;
+  onDateChange: (from: Date | undefined, to: Date | undefined) => void;
 }
 
 export interface VideoQueueFilterDateRef {
@@ -24,20 +24,20 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
   const translations = useTranslations();
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
-  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
-  const [toDate, setToDate] = useState<Date | undefined>(undefined);
+  const [from, setFrom] = useState<Date | undefined>(undefined);
+  const [to, setTo] = useState<Date | undefined>(undefined);
   const [initialized, setInitialized] = useState(false);
   const onDateChangeRef = useRef(onDateChange);
 
   useEffect(() => {
     if (!initialized) {
-      const fromDateStr = searchParams.get("fromDate");
-      const toDateStr = searchParams.get("toDate");
-      if (fromDateStr) {
-        setFromDate(new Date(fromDateStr));
+      const fromStr = searchParams.get("from");
+      const toStr = searchParams.get("to");
+      if (fromStr) {
+        setFrom(new Date(fromStr));
       }
-      if (toDateStr) {
-        setToDate(new Date(toDateStr));
+      if (toStr) {
+        setTo(new Date(toStr));
       }
       setInitialized(true);
     }
@@ -47,25 +47,25 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
     onDateChangeRef.current = onDateChange;
   }, [onDateChange]);
 
-  const handleFromDateChange = useCallback(
+  const handleFromChange = useCallback(
     (date: Date | undefined) => {
-      setFromDate(date);
-      onDateChangeRef.current(date, toDate);
+      setFrom(date);
+      onDateChangeRef.current(date, to);
     },
-    [toDate]
+    [to]
   );
 
-  const handleToDateChange = useCallback(
+  const handleToChange = useCallback(
     (date: Date | undefined) => {
-      setToDate(date);
-      onDateChangeRef.current(fromDate, date);
+      setTo(date);
+      onDateChangeRef.current(from, date);
     },
-    [fromDate]
+    [from]
   );
 
   const reset = useCallback(() => {
-    setFromDate(undefined);
-    setToDate(undefined);
+    setFrom(undefined);
+    setTo(undefined);
     onDateChangeRef.current(undefined, undefined);
   }, []); // Remove onDateChange dependency to avoid re-creation
 
@@ -84,13 +84,13 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
           <ButtonGroup>
             <div className="flex flex-col gap-3">
               <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
-                {fromDate ? fromDate.toLocaleDateString() : translations.home.queue.filterDate.from}
+                {from ? from.toLocaleDateString() : translations.home.queue.filterDate.from}
                 <ChevronDownIcon />
               </Button>
             </div>
             <div className="flex flex-col gap-3">
               <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
-                {toDate ? toDate.toLocaleDateString() : translations.home.queue.filterDate.to}
+                {to ? to.toLocaleDateString() : translations.home.queue.filterDate.to}
                 <ChevronDownIcon />
               </Button>
             </div>
@@ -104,17 +104,17 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
             <Popover open={fromOpen} onOpenChange={setFromOpen} modal={false}>
               <PopoverTrigger asChild>
                 <Button variant="outline" id="date-picker-from" className="w-32 justify-between font-normal rounded-r-none">
-                  {fromDate ? fromDate.toLocaleDateString() : translations.home.queue.filterDate.from}
+                  {from ? from.toLocaleDateString() : translations.home.queue.filterDate.from}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
               <PopoverContent id="date-picker-from-content" className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={fromDate}
+                  selected={from}
                   captionLayout="dropdown"
                   onSelect={(date) => {
-                    handleFromDateChange(date);
+                    handleFromChange(date);
                     setFromOpen(false);
                   }}
                 />
@@ -125,17 +125,17 @@ export const VideoQueueFilterDate = forwardRef<VideoQueueFilterDateRef, VideoQue
             <Popover open={toOpen} onOpenChange={setToOpen} modal={false}>
               <PopoverTrigger asChild>
                 <Button variant="outline" id="date-picker-to" className="w-32 justify-between font-normal rounded-r-none">
-                  {toDate ? toDate.toLocaleDateString() : translations.home.queue.filterDate.to}
+                  {to ? to.toLocaleDateString() : translations.home.queue.filterDate.to}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
               <PopoverContent id="date-picker-to-content" className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={toDate}
+                  selected={to}
                   captionLayout="dropdown"
                   onSelect={(date) => {
-                    handleToDateChange(date);
+                    handleToChange(date);
                     setToOpen(false);
                   }}
                 />

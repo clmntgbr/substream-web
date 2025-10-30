@@ -73,10 +73,10 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
   );
 
   const handleDateChange = useCallback(
-    (fromDate: Date | undefined, toDate: Date | undefined) => {
+    (from: Date | undefined, to: Date | undefined) => {
       updateUrl({
-        fromDate: fromDate?.toISOString(),
-        toDate: toDate?.toISOString(),
+        from: from?.toISOString(),
+        to: to?.toISOString(),
         page: "1",
       });
     },
@@ -99,15 +99,15 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
   useEffect(() => {
     const status = searchParams.getAll("status");
     const search = searchParams.get("search");
-    const fromDate = searchParams.get("fromDate");
-    const toDate = searchParams.get("toDate");
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
     const page = Number(searchParams.get("page")) || 1;
 
     searchStreamsRef.current({
       statusFilter: status.length > 0 ? status : undefined,
       search: search || undefined,
-      fromDate: fromDate ? new Date(fromDate) : undefined,
-      toDate: toDate ? new Date(toDate) : undefined,
+      from: from ? new Date(from) : undefined,
+      to: to ? new Date(to) : undefined,
       page,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,15 +117,15 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
     if (refreshCounter > 0) {
       const status = searchParams.getAll("status");
       const search = searchParams.get("search");
-      const fromDate = searchParams.get("fromDate");
-      const toDate = searchParams.get("toDate");
+      const from = searchParams.get("from");
+      const to = searchParams.get("to");
       const page = Number(searchParams.get("page")) || 1;
 
       searchStreamsRef.current({
         statusFilter: status.length > 0 ? status : undefined,
         search: search || undefined,
-        fromDate: fromDate ? new Date(fromDate) : undefined,
-        toDate: toDate ? new Date(toDate) : undefined,
+        from: from ? new Date(from) : undefined,
+        to: to ? new Date(to) : undefined,
         page,
       });
     }
@@ -133,7 +133,7 @@ export const VideoQueueList = forwardRef<VideoQueueListRef>((_, ref) => {
   }, [refreshCounter]);
 
   const hasActiveFilters =
-    searchParams.has("search") || searchParams.getAll("status").length > 0 || searchParams.has("fromDate") || searchParams.has("toDate");
+    searchParams.has("search") || searchParams.getAll("status").length > 0 || searchParams.has("from") || searchParams.has("to");
 
   return (
     <>
