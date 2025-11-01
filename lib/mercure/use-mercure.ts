@@ -3,13 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MercureOptions } from "./types";
 
-export function useMercure({
-  topics,
-  onMessage,
-  onError,
-  onOpen,
-  enabled = true,
-}: MercureOptions) {
+export function useMercure({ topics, onMessage, onError, onOpen, enabled = true }: MercureOptions) {
   const eventSourceRef = useRef<EventSource | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
@@ -29,7 +23,7 @@ export function useMercure({
 
     const mercureUrl = process.env.NEXT_PUBLIC_MERCURE_URL;
     if (!mercureUrl) {
-      console.error("NEXT_PUBLIC_MERCURE_URL is not defined");
+      console.log("NEXT_PUBLIC_MERCURE_URL is not defined");
       return;
     }
 
@@ -56,12 +50,12 @@ export function useMercure({
           const data = JSON.parse(event.data);
           onMessage(data);
         } catch (error) {
-          console.error("Error parsing Mercure message:", error);
+          console.log("Error parsing Mercure message:", error);
         }
       };
 
       eventSource.onerror = (error) => {
-        console.error("Mercure connection error:", error);
+        console.log("Mercure connection error:", error);
         setIsConnected(false);
         onError?.(error);
 
@@ -70,27 +64,22 @@ export function useMercure({
 
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           setIsReconnecting(true);
-          const delay =
-            baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current);
-          console.log(
-            `Attempting to reconnect to Mercure in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`,
-          );
+          const delay = baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current);
+          console.log(`Attempting to reconnect to Mercure in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`);
 
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttemptsRef.current++;
             connect();
           }, delay);
         } else {
-          console.error(
-            "Max reconnection attempts reached. Please refresh the page.",
-          );
+          console.log("Max reconnection attempts reached. Please refresh the page.");
           setIsReconnecting(false);
         }
       };
 
       eventSourceRef.current = eventSource;
     } catch (error) {
-      console.error("Error creating Mercure connection:", error);
+      console.log("Error creating Mercure connection:", error);
     }
   };
 

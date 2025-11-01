@@ -1,25 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Option, useOptions } from "@/lib/option";
 import { useTranslations } from "@/lib/use-translations";
-import {
-  Clock,
-  Film,
-  HardDrive,
-  Loader2,
-  Play,
-  Settings as VideoSettingsIcon,
-  X,
-} from "lucide-react";
+import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -34,13 +19,7 @@ interface PreviewProps {
   onUploadSuccess?: () => void;
 }
 
-export const Preview = ({
-  open,
-  onOpenChange,
-  file,
-  url,
-  onUploadSuccess,
-}: PreviewProps) => {
+export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
   const translations = useTranslations();
   const { createOption } = useOptions();
   const [isUploading, setIsUploading] = useState(false);
@@ -155,9 +134,7 @@ export const Preview = ({
 
   const handleUrl = async (url: string) => {
     try {
-      const response = await fetch(
-        `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`,
-      );
+      const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
       if (!response.ok) {
         setThumbnail(null);
         setVideoTitle("");
@@ -178,7 +155,7 @@ export const Preview = ({
       setDuration("--:--");
       setFileSize("-- MB");
     } catch (error) {
-      console.error("Failed to fetch YouTube video info:", error);
+      console.log("Failed to fetch YouTube video info:", error);
       setThumbnail(null);
       setVideoTitle("");
       setDuration("--:--");
@@ -267,17 +244,7 @@ export const Preview = ({
             croppedCanvas.width = canvas.width;
             croppedCanvas.height = croppedHeight;
 
-            croppedCtx.drawImage(
-              canvas,
-              0,
-              topBar,
-              canvas.width,
-              croppedHeight,
-              0,
-              0,
-              canvas.width,
-              croppedHeight,
-            );
+            croppedCtx.drawImage(canvas, 0, topBar, canvas.width, croppedHeight, 0, 0, canvas.width, croppedHeight);
 
             resolve(croppedCanvas.toDataURL("image/jpeg", 0.9));
             return;
@@ -400,19 +367,13 @@ export const Preview = ({
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          "An error occurred while uploading your video.";
+        const errorMessage = errorData.message || errorData.error || "An error occurred while uploading your video.";
         toast.error("Upload failed", {
           description: errorMessage,
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while uploading your video.";
+      const errorMessage = error instanceof Error ? error.message : "An error occurred while uploading your video.";
       toast.error("Upload failed", {
         description: errorMessage,
       });
@@ -431,11 +392,7 @@ export const Preview = ({
           }
         }}
       >
-        <SheetContent
-          side="top"
-          className="max-w-[100vw] h-screen w-screen"
-          hideCloseButton
-        >
+        <SheetContent side="top" className="max-w-[100vw] h-screen w-screen" hideCloseButton>
           <SheetHeader className="px-4 pt-6 pb-4 border-b">
             <Button
               variant="ghost"
@@ -480,23 +437,12 @@ export const Preview = ({
                   }}
                 />
               ) : (
-                <Image
-                  src="/default.jpg"
-                  alt="Default thumbnail"
-                  width={1920}
-                  height={1080}
-                  className="w-full h-full object-cover"
-                />
+                <Image src="/default.jpg" alt="Default thumbnail" width={1920} height={1080} className="w-full h-full object-cover" />
               )}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">
-                  HD Ready
-                </Badge>
+                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
               </div>
-              <div
-                className="absolute inset-x-0 flex items-center justify-center pointer-events-none"
-                style={{ bottom: `${yAxisAlignment}px` }}
-              >
+              <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none" style={{ bottom: `${yAxisAlignment}px` }}>
                 <p
                   className="text-center px-4 max-w-[90%]"
                   style={{
@@ -519,34 +465,21 @@ export const Preview = ({
           <SheetFooter>
             <div className="backdrop-blur-xl px-6 py-4">
               <div className="flex justify-center gap-3 mx-auto">
-                <Button
-                  onClick={() => setIsSettingsOpen(true)}
-                  variant="outline"
-                  disabled={isUploading}
-                  className="cursor-pointer"
-                >
+                <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
                   <VideoSettingsIcon className="h-3 w-3 mr-1" />
                   {translations.home.preview.settings.settings}
                   <KbdGroup>
                     <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
                 </Button>
-                <Button
-                  onClick={handleProcess}
-                  disabled={isUploading}
-                  className="cursor-pointer"
-                >
+                <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup>
                     <Kbd className="bg-black/10 backdrop-blur-md text-white border-white/20 rounded-md px-2 py-1 dark:bg-white/10 dark:border-black/20 dark:text-black">
                       ⌘ + e
                     </Kbd>
                   </KbdGroup>
                   {translations.home.preview.settings.process}
-                  {isUploading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Play className="mr-2 h-4 w-4" />
-                  )}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
                 </Button>
               </div>
             </div>
