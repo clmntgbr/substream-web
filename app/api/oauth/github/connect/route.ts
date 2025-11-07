@@ -8,15 +8,31 @@ export async function GET() {
       method: "GET",
     });
 
-    if (false === backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
-      return NextResponse.json(errorData, { status: backendResponse.status });
+    if (!backendResponse.ok) {
+      const payload = await backendResponse.json().catch(() => ({}));
+      return NextResponse.json(
+        {
+          success: false,
+          key: typeof payload.key === "string" ? payload.key : "error.server.internal",
+          params:
+            payload.params && typeof payload.params === "object"
+              ? (payload.params as Record<string, unknown>)
+              : undefined,
+        },
+        { status: backendResponse.status }
+      );
     }
 
     const data = await backendResponse.json();
 
     return NextResponse.json(data);
   } catch {
-    return NextResponse.json({ error: "Failed to get authorization URL" }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        key: "error.server.internal",
+      },
+      { status: 500 }
+    );
   }
 }

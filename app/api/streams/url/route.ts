@@ -12,8 +12,6 @@ async function uploadUrlHandler(req: AuthenticatedRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -32,16 +30,16 @@ async function uploadUrlHandler(req: AuthenticatedRequest) {
       body: JSON.stringify(body),
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -56,8 +54,7 @@ async function uploadUrlHandler(req: AuthenticatedRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to create stream from URL",
-        message: "Failed to create stream from URL",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

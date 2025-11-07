@@ -17,8 +17,6 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized - No token",
-          message: "Unauthorized - No token",
           key: "error.auth.token_missing",
         },
         { status: 401 },
@@ -41,20 +39,13 @@ export async function GET(
 
       try {
         const error = JSON.parse(errorText) as {
-          error?: string;
-          message?: string;
           key?: string;
           params?: Record<string, unknown>;
         };
         return NextResponse.json(
           {
             success: false,
-            ...error,
-            error:
-              error.error || error.message || `Download failed: ${response.status} ${response.statusText}`,
-            message:
-              error.message || error.error || `Download failed: ${response.status} ${response.statusText}`,
-            key: typeof error.key === "string" ? error.key : undefined,
+            key: typeof error.key === "string" ? error.key : "error.server.internal",
             params:
               error.params && typeof error.params === "object"
                 ? (error.params as Record<string, unknown>)
@@ -66,8 +57,7 @@ export async function GET(
         return NextResponse.json(
           {
             success: false,
-            error: `Download failed: ${response.status} ${response.statusText}`,
-            message: `Download failed: ${response.status} ${response.statusText}`,
+            key: "error.server.internal",
           },
           { status: response.status },
         );
@@ -95,8 +85,7 @@ export async function GET(
         return NextResponse.json(
           {
             success: false,
-            error: "Download timeout (exceeded 10 minutes)",
-            message: "Download timeout (exceeded 10 minutes)",
+            key: "error.stream.not_downloadable",
           },
           { status: 504 },
         );
@@ -104,8 +93,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: `Failed to download stream: ${error.message}`,
-          message: `Failed to download stream: ${error.message}`,
+          key: "error.server.internal",
         },
         { status: 500 },
       );
@@ -114,8 +102,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to download stream",
-        message: "Failed to download stream",
+        key: "error.server.internal",
       },
       { status: 500 },
     );

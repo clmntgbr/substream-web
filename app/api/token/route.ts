@@ -10,7 +10,13 @@ export async function POST(request: NextRequest) {
     const { email, password } = body;
 
     if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.validation.failed",
+        },
+        { status: 400 }
+      );
     }
 
     // Call the external backend API to authenticate
@@ -23,15 +29,15 @@ export async function POST(request: NextRequest) {
     });
 
     if (!backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -44,7 +50,13 @@ export async function POST(request: NextRequest) {
     const { token, user } = data;
 
     if (!token) {
-      return NextResponse.json({ error: "No token received from backend" }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.server.internal",
+        },
+        { status: 500 }
+      );
     }
 
     // Create response with user data
@@ -68,8 +80,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Authentication failed. Please check your backend connection.",
-        message: "Authentication failed. Please check your backend connection.",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

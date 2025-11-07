@@ -13,8 +13,6 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -29,16 +27,16 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
       },
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -55,8 +53,7 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to fetch stream",
-        message: "Failed to fetch stream",
+        key: "error.server.internal",
       },
       { status: 500 }
     );
@@ -72,8 +69,6 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -91,16 +86,16 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
       body: JSON.stringify(body),
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -117,8 +112,7 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to update stream",
-        message: "Failed to update stream",
+        key: "error.server.internal",
       },
       { status: 500 }
     );
@@ -134,8 +128,6 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -150,16 +142,16 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
       },
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -172,8 +164,7 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to delete stream",
-        message: "Failed to delete stream",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

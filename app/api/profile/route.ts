@@ -6,7 +6,13 @@ async function handler(req: AuthenticatedRequest) {
     const user = req.user;
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.auth.token_missing",
+        },
+        { status: 401 },
+      );
     }
 
     return NextResponse.json({
@@ -19,7 +25,10 @@ async function handler(req: AuthenticatedRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to get profile" },
+      {
+        success: false,
+        key: "error.server.internal",
+      },
       { status: 500 },
     );
   }

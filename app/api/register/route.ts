@@ -13,8 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Missing required fields",
-          message: "Missing required fields",
+          key: "error.validation.failed",
         },
         { status: 400 }
       );
@@ -35,8 +34,8 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
@@ -44,8 +43,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -61,8 +60,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "No token received from backend",
-          message: "No token received from backend",
+          key: "error.server.internal",
         },
         { status: 500 }
       );
@@ -89,8 +87,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Registration failed. Please check your backend connection.",
-        message: "Registration failed. Please check your backend connection.",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

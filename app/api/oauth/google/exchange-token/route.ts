@@ -9,7 +9,13 @@ export async function POST(request: NextRequest) {
     const { code, state } = body;
 
     if (!code) {
-      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.validation.failed",
+        },
+        { status: 400 }
+      );
     }
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/oauth/google/exchange-token`, {
@@ -23,9 +29,19 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    if (false === backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
-      return NextResponse.json(errorData, { status: backendResponse.status });
+    if (!backendResponse.ok) {
+      const payload = await backendResponse.json().catch(() => ({}));
+      return NextResponse.json(
+        {
+          success: false,
+          key: typeof payload.key === "string" ? payload.key : "error.server.internal",
+          params:
+            payload.params && typeof payload.params === "object"
+              ? (payload.params as Record<string, unknown>)
+              : undefined,
+        },
+        { status: backendResponse.status }
+      );
     }
 
     const response = (await backendResponse.json()) as {
@@ -43,7 +59,13 @@ export async function POST(request: NextRequest) {
     };
 
     if (!response.token) {
-      return NextResponse.json({ error: "No token received from backend" }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.server.internal",
+        },
+        { status: 500 }
+      );
     }
 
     const { token, user } = response;
@@ -78,6 +100,12 @@ export async function POST(request: NextRequest) {
 
     return userResponse;
   } catch {
-    return NextResponse.json({ error: "Token exchange failed. Please check your backend connection." }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        key: "error.server.internal",
+      },
+      { status: 500 }
+    );
   }
 }

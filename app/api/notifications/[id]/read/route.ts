@@ -12,8 +12,6 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -24,8 +22,7 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
       return NextResponse.json(
         {
           success: false,
-          error: "Missing notification ID",
-          message: "Missing notification ID",
+          key: "error.validation.failed",
         },
         { status: 400 }
       );
@@ -40,16 +37,16 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
       body: JSON.stringify({ isRead: true }),
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -61,8 +58,7 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to mark notification as read",
-        message: "Failed to mark notification as read",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

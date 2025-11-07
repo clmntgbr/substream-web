@@ -10,8 +10,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -26,16 +24,16 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -48,8 +46,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to fetch user data",
-        message: "Failed to fetch user data",
+        key: "error.server.internal",
       },
       { status: 500 }
     );

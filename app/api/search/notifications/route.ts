@@ -22,8 +22,6 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized",
-          message: "Unauthorized",
           key: "error.auth.token_missing",
         },
         { status: 401 }
@@ -41,8 +39,8 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
       },
     });
 
-    if (false === backendResponse.ok) {
-      const message = (await backendResponse.json().catch(() => ({}))) as {
+    if (!backendResponse.ok) {
+      const payload = (await backendResponse.json().catch(() => ({}))) as {
         key?: string;
         params?: Record<string, unknown>;
       };
@@ -50,8 +48,8 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
       return NextResponse.json(
         {
           success: false,
-          key: message.key,
-          params: message.params,
+          key: payload.key,
+          params: payload.params,
         },
         { status: backendResponse.status }
       );
@@ -70,8 +68,7 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to search notifications",
-        message: "Failed to search notifications",
+        key: "error.server.internal",
       },
       { status: 500 }
     );
