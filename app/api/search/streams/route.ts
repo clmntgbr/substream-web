@@ -19,7 +19,15 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
     const sessionToken = req.sessionToken;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -33,11 +41,19 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
       },
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
-      return NextResponse.json({ error: errorData.error || "Failed to search streams" }, { status: backendResponse.status });
+      return NextResponse.json(
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
+      );
     }
 
     const data = (await backendResponse.json()) as BackendApiResponse;
@@ -50,7 +66,14 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: "Failed to search streams" }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to search streams",
+        message: "Failed to search streams",
+      },
+      { status: 500 }
+    );
   }
 }
 

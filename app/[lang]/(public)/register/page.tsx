@@ -29,6 +29,7 @@ import {
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
+import { useErrorTranslator } from "@/lib/use-error-translator";
 import { useTranslations } from "@/lib/use-translations";
 import { registerSchema, type RegisterFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
@@ -48,6 +49,7 @@ export default function RegisterPage() {
   const [lastUsedProvider, setLastUsedProviderState] =
     useState<SocialProvider | null>(null);
   const t = useTranslations();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
   const router = useRouter();
   const params = useParams();
   const lang = (params.lang as string) || "en";
@@ -97,28 +99,36 @@ export default function RegisterPage() {
       );
 
       if (!response.ok) {
-        const data = (await response.json()) as {
+        const data = (await response.json().catch(() => ({}))) as {
           detail?: string;
           description?: string;
           error?: string;
+          message?: string;
+          key?: string;
+          params?: Record<string, unknown>;
           errors?: Record<string, string[]>;
         };
 
-        // Show all errors in toasts
         if (data.errors && typeof data.errors === "object") {
           Object.entries(data.errors).forEach(([, messages]) => {
             messages.forEach((message) => {
-              toast.error(message);
+              const parsed = parseErrorPayload({ message });
+              const resolved = resolveErrorMessage(parsed, message);
+              toast.error(resolved);
             });
           });
         } else {
-          // Show generic error or server error message
-          toast.error(
-            data.detail ||
-              data.description ||
-              data.error ||
-              "An error occurred",
+          const parsedError = parseErrorPayload(data);
+          const resolved = resolveErrorMessage(
+            {
+              ...parsedError,
+              message: parsedError.message ?? data.message ?? data.detail ?? data.description,
+              error: parsedError.error ?? data.error,
+              params: parsedError.params ?? data.params,
+            },
+            data.detail || data.description || data.error,
           );
+          toast.error(resolved);
         }
         setIsLoading(false);
         return;
@@ -127,8 +137,17 @@ export default function RegisterPage() {
       // Registration successful
       await refreshUser();
       router.push(`/${lang}`);
-    } catch {
-      toast.error("An error occurred during registration");
+    } catch (error) {
+      const err = error as Error & { key?: string; params?: Record<string, unknown> };
+      const resolved = resolveErrorMessage(
+        {
+          key: err.key,
+          params: err.params,
+          message: err.message,
+        },
+        err.message || getDefaultErrorMessage(),
+      );
+      toast.error(resolved);
       setIsLoading(false);
     }
   };

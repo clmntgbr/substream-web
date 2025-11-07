@@ -4,16 +4,21 @@ import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-async function getStreamHandler(
-  req: AuthenticatedRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+async function getStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/streams/${id}`, {
@@ -24,13 +29,18 @@ async function getStreamHandler(
       },
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
       return NextResponse.json(
-        { error: errorData.error || "Failed to fetch stream" },
-        { status: backendResponse.status },
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
       );
     }
 
@@ -43,22 +53,31 @@ async function getStreamHandler(
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to fetch stream" },
-      { status: 500 },
+      {
+        success: false,
+        error: "Failed to fetch stream",
+        message: "Failed to fetch stream",
+      },
+      { status: 500 }
     );
   }
 }
 
-async function updateStreamHandler(
-  req: AuthenticatedRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+async function updateStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     const body = await req.json();
@@ -72,13 +91,18 @@ async function updateStreamHandler(
       body: JSON.stringify(body),
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
       return NextResponse.json(
-        { error: errorData.error || "Failed to update stream" },
-        { status: backendResponse.status },
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
       );
     }
 
@@ -91,22 +115,31 @@ async function updateStreamHandler(
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to update stream" },
-      { status: 500 },
+      {
+        success: false,
+        error: "Failed to update stream",
+        message: "Failed to update stream",
+      },
+      { status: 500 }
     );
   }
 }
 
-async function deleteStreamHandler(
-  req: AuthenticatedRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/streams/${id}`, {
@@ -117,13 +150,18 @@ async function deleteStreamHandler(
       },
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
       return NextResponse.json(
-        { error: errorData.error || "Failed to delete stream" },
-        { status: backendResponse.status },
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
       );
     }
 
@@ -132,35 +170,24 @@ async function deleteStreamHandler(
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to delete stream" },
-      { status: 500 },
+      {
+        success: false,
+        error: "Failed to delete stream",
+        message: "Failed to delete stream",
+      },
+      { status: 500 }
     );
   }
 }
 
-export async function GET(
-  req: AuthenticatedRequest,
-  context: { params: Promise<{ id: string }> },
-) {
-  return authMiddleware((authenticatedReq) =>
-    getStreamHandler(authenticatedReq, context),
-  )(req);
+export async function GET(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
+  return authMiddleware((authenticatedReq) => getStreamHandler(authenticatedReq, context))(req);
 }
 
-export async function PATCH(
-  req: AuthenticatedRequest,
-  context: { params: Promise<{ id: string }> },
-) {
-  return authMiddleware((authenticatedReq) =>
-    updateStreamHandler(authenticatedReq, context),
-  )(req);
+export async function PATCH(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
+  return authMiddleware((authenticatedReq) => updateStreamHandler(authenticatedReq, context))(req);
 }
 
-export async function DELETE(
-  req: AuthenticatedRequest,
-  context: { params: Promise<{ id: string }> },
-) {
-  return authMiddleware((authenticatedReq) =>
-    deleteStreamHandler(authenticatedReq, context),
-  )(req);
+export async function DELETE(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
+  return authMiddleware((authenticatedReq) => deleteStreamHandler(authenticatedReq, context))(req);
 }

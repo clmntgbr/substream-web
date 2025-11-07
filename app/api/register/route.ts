@@ -11,8 +11,12 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password || !confirmPassword || !firstname || !lastname) {
       return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 },
+        {
+          success: false,
+          error: "Missing required fields",
+          message: "Missing required fields",
+        },
+        { status: 400 }
       );
     }
 
@@ -31,9 +35,20 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    if (!backendResponse.ok) {
-      const errorData = await backendResponse.json().catch(() => ({}));
-      return NextResponse.json(errorData, { status: backendResponse.status });
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
+      };
+
+      return NextResponse.json(
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
+      );
     }
 
     const data = (await backendResponse.json()) as {
@@ -44,8 +59,12 @@ export async function POST(request: NextRequest) {
 
     if (!token) {
       return NextResponse.json(
-        { error: "No token received from backend" },
-        { status: 500 },
+        {
+          success: false,
+          error: "No token received from backend",
+          message: "No token received from backend",
+        },
+        { status: 500 }
       );
     }
 
@@ -68,8 +87,12 @@ export async function POST(request: NextRequest) {
     return response;
   } catch {
     return NextResponse.json(
-      { error: "Registration failed. Please check your backend connection." },
-      { status: 500 },
+      {
+        success: false,
+        error: "Registration failed. Please check your backend connection.",
+        message: "Registration failed. Please check your backend connection.",
+      },
+      { status: 500 }
     );
   }
 }

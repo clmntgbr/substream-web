@@ -26,6 +26,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+interface BackendError extends Error {
+  key?: string;
+  params?: Record<string, unknown>;
+  errors?: Record<string, string[]>;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -111,10 +117,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = (await response.json()) as { user: User };
         setUser(data.user);
       } else {
-        const errorData = (await response.json()) as {
+        const errorData = (await response.json().catch(() => ({}))) as {
           error?: string;
           detail?: string;
           description?: string;
+          message?: string;
+          key?: string;
+          params?: Record<string, unknown>;
           errors?: Record<string, string[]>;
         };
 
@@ -125,11 +134,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Otherwise use simple error message
         const errorMessage =
+          errorData.message ||
           errorData.error ||
           errorData.detail ||
           errorData.description ||
           "Failed to login";
-        throw new Error(errorMessage);
+
+        const error = new Error(errorMessage) as BackendError;
+        if (typeof errorData.key === "string") {
+          error.key = errorData.key;
+        }
+        if (errorData.params && typeof errorData.params === "object") {
+          error.params = errorData.params as Record<string, unknown>;
+        }
+
+        throw error;
       }
     } catch (error) {
       throw error;

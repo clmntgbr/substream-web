@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Option, useOptions } from "@/lib/option";
+import { useErrorTranslator } from "@/lib/use-error-translator";
 import { useTranslations } from "@/lib/use-translations";
 import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
@@ -21,6 +22,7 @@ interface PreviewProps {
 
 export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
   const translations = useTranslations();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
   const { createOption } = useOptions();
   const [isUploading, setIsUploading] = useState(false);
   const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
@@ -50,6 +52,8 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
 
   const [isResume, setIsResume] = useState(false);
   const [language, setLanguage] = useState("auto");
+
+  const uploadFailedTitle = (translations.stream?.status?.upload_failed?.title as string | undefined) || "Upload failed";
 
   useHotkeys("meta+e", () => {
     if (url || file) {
@@ -366,14 +370,27 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
         const errorData = (await response.json().catch(() => ({}))) as {
           message?: string;
           error?: string;
+          key?: string;
+          params?: Record<string, unknown>;
         };
-        const errorMessage = errorData.message || errorData.error || "An error occurred while uploading your video.";
-        toast.error("Upload failed", {
+
+        const parsedError = parseErrorPayload(errorData);
+        const errorMessage = resolveErrorMessage(
+          {
+            ...parsedError,
+            message: parsedError.message ?? errorData.message,
+            error: parsedError.error ?? errorData.error,
+            params: parsedError.params ?? errorData.params,
+          },
+          errorData.message || errorData.error || getDefaultErrorMessage()
+        );
+
+        toast.error(uploadFailedTitle, {
           description: errorMessage,
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An error occurred while uploading your video.";
+      const errorMessage = (error instanceof Error && error.message) || getDefaultErrorMessage();
       toast.error("Upload failed", {
         description: errorMessage,
       });
@@ -437,7 +454,7 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
                   }}
                 />
               ) : (
-                <Image src="/default.jpg" alt="Default thumbnail" width={1920} height={1080} className="w-full h-full object-cover" />
+                <div className="w-full h-full bg-gray-200 animate-pulse" />
               )}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>

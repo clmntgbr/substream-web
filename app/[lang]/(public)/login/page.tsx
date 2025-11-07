@@ -28,6 +28,7 @@ import {
 import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
+import { useErrorTranslator } from "@/lib/use-error-translator";
 import { useTranslations } from "@/lib/use-translations";
 import { loginSchema, type LoginFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
@@ -44,6 +45,7 @@ export default function LoginPage() {
   const [lastUsedProvider, setLastUsedProviderState] =
     useState<SocialProvider | null>(null);
   const t = useTranslations();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
 
   useEffect(() => {
     const provider = getLastUsedProvider();
@@ -70,22 +72,40 @@ export default function LoginPage() {
     try {
       await login(email, password);
     } catch (error) {
-      const err = error as Error;
+      const err = error as Error & { key?: string; params?: Record<string, unknown> };
       try {
         const errorData = JSON.parse(err.message);
         if (errorData.errors && typeof errorData.errors === "object") {
-          // Show all field-specific errors in toasts
           Object.entries(errorData.errors).forEach(([, messages]) => {
             (messages as string[]).forEach((message: string) => {
-              toast.error(message);
+              const parsed = parseErrorPayload({ message });
+              const resolved = resolveErrorMessage(parsed, message);
+              toast.error(resolved);
             });
           });
         } else {
-          // Show generic error or server error message
-          toast.error(err.message || "Login failed");
+          const parsedError = parseErrorPayload(errorData);
+          const resolved = resolveErrorMessage(
+            {
+              ...parsedError,
+              message: parsedError.message ?? errorData.message,
+              error: parsedError.error ?? errorData.error,
+              params: parsedError.params ?? errorData.params,
+            },
+            err.message,
+          );
+          toast.error(resolved);
         }
       } catch {
-        toast.error(err.message || "Login failed");
+        const resolved = resolveErrorMessage(
+          {
+            key: err.key,
+            params: err.params,
+            message: err.message,
+          },
+          err.message || getDefaultErrorMessage(),
+        );
+        toast.error(resolved);
       }
       setIsLoading(false);
     }

@@ -9,7 +9,15 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
     const sessionToken = req.sessionToken;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     const formData = await req.formData();
@@ -23,13 +31,18 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
       body: formData,
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
       return NextResponse.json(
-        { error: errorData.error || "Failed to upload video" },
-        { status: backendResponse.status },
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
       );
     }
 
@@ -42,8 +55,12 @@ async function uploadVideoHandler(req: AuthenticatedRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to upload video" },
-      { status: 500 },
+      {
+        success: false,
+        error: "Failed to upload video",
+        message: "Failed to upload video",
+      },
+      { status: 500 }
     );
   }
 }

@@ -9,11 +9,26 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
     const { id } = await params;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Unauthorized",
+          key: "error.auth.token_missing",
+        },
+        { status: 401 }
+      );
     }
 
     if (!id) {
-      return NextResponse.json({ error: "Missing notification ID" }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Missing notification ID",
+          message: "Missing notification ID",
+        },
+        { status: 400 }
+      );
     }
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/notifications/${id}/read`, {
@@ -25,17 +40,32 @@ async function markNotificationAsReadHandler(req: AuthenticatedRequest, { params
       body: JSON.stringify({ isRead: true }),
     });
 
-    if (!backendResponse.ok) {
-      const errorData = (await backendResponse.json().catch(() => ({}))) as {
-        error?: string;
+    if (false === backendResponse.ok) {
+      const message = (await backendResponse.json().catch(() => ({}))) as {
+        key?: string;
+        params?: Record<string, unknown>;
       };
-      return NextResponse.json({ error: errorData.error || "Failed to mark notification as read" }, { status: backendResponse.status });
+      return NextResponse.json(
+        {
+          success: false,
+          key: message.key,
+          params: message.params,
+        },
+        { status: backendResponse.status }
+      );
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: "Failed to mark notification as read" }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to mark notification as read",
+        message: "Failed to mark notification as read",
+      },
+      { status: 500 }
+    );
   }
 }
 

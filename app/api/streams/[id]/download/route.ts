@@ -15,7 +15,12 @@ export async function GET(
 
     if (!backendToken) {
       return NextResponse.json(
-        { error: "Unauthorized - No token" },
+        {
+          success: false,
+          error: "Unauthorized - No token",
+          message: "Unauthorized - No token",
+          key: "error.auth.token_missing",
+        },
         { status: 401 },
       );
     }
@@ -35,12 +40,34 @@ export async function GET(
       const errorText = await response.text();
 
       try {
-        const error = JSON.parse(errorText);
-        return NextResponse.json(error, { status: response.status });
+        const error = JSON.parse(errorText) as {
+          error?: string;
+          message?: string;
+          key?: string;
+          params?: Record<string, unknown>;
+        };
+        return NextResponse.json(
+          {
+            success: false,
+            ...error,
+            error:
+              error.error || error.message || `Download failed: ${response.status} ${response.statusText}`,
+            message:
+              error.message || error.error || `Download failed: ${response.status} ${response.statusText}`,
+            key: typeof error.key === "string" ? error.key : undefined,
+            params:
+              error.params && typeof error.params === "object"
+                ? (error.params as Record<string, unknown>)
+                : undefined,
+          },
+          { status: response.status },
+        );
       } catch {
         return NextResponse.json(
           {
+            success: false,
             error: `Download failed: ${response.status} ${response.statusText}`,
+            message: `Download failed: ${response.status} ${response.statusText}`,
           },
           { status: response.status },
         );
@@ -66,18 +93,30 @@ export async function GET(
     if (error instanceof Error) {
       if (error.name === "AbortError") {
         return NextResponse.json(
-          { error: "Download timeout (exceeded 10 minutes)" },
+          {
+            success: false,
+            error: "Download timeout (exceeded 10 minutes)",
+            message: "Download timeout (exceeded 10 minutes)",
+          },
           { status: 504 },
         );
       }
       return NextResponse.json(
-        { error: `Failed to download stream: ${error.message}` },
+        {
+          success: false,
+          error: `Failed to download stream: ${error.message}`,
+          message: `Failed to download stream: ${error.message}`,
+        },
         { status: 500 },
       );
     }
 
     return NextResponse.json(
-      { error: "Failed to download stream" },
+      {
+        success: false,
+        error: "Failed to download stream",
+        message: "Failed to download stream",
+      },
       { status: 500 },
     );
   }

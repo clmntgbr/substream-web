@@ -3,6 +3,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { MercureMessage, useMercure } from "@/lib/mercure";
+import { useErrorTranslator } from "@/lib/use-error-translator";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
@@ -35,6 +36,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const { user } = useAuth();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
 
   // Determine if we're on a public route
   const isPublicRoute =
@@ -78,17 +80,40 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         setTotalItems(data.totalItems || 0);
         setPageCount(data.pageCount || 1);
       } else {
-        const errorData = (await response.json()) as { error?: string };
+        const errorData = (await response.json().catch(() => ({}))) as {
+          error?: string;
+          message?: string;
+          key?: string;
+          params?: Record<string, unknown>;
+        };
+        const parsedError = parseErrorPayload(errorData);
+        const resolvedMessage = resolveErrorMessage(
+          {
+            ...parsedError,
+            message: parsedError.message ?? errorData.message,
+            error: parsedError.error ?? errorData.error,
+            params: parsedError.params ?? errorData.params,
+          },
+          errorData.error || "Failed to search notifications",
+        );
         dispatch({
           type: "SET_ERROR",
-          payload: errorData.error || "Failed to search notifications",
+          payload: resolvedMessage,
         });
         toast.error("Search failed", {
-          description: errorData.error || "Failed to search notifications",
+          description: resolvedMessage,
         });
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to search notifications";
+      const backendError = error as (Error & { key?: string; params?: Record<string, unknown> }) | undefined;
+      const errorMessage = resolveErrorMessage(
+        {
+          key: backendError?.key,
+          params: backendError?.params,
+          message: backendError instanceof Error ? backendError.message : undefined,
+        },
+        backendError instanceof Error ? backendError.message : getDefaultErrorMessage(),
+      );
       dispatch({
         type: "SET_ERROR",
         payload: errorMessage,
@@ -119,13 +144,36 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       if (response.ok) {
         dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
       } else {
-        const errorData = (await response.json()) as { error?: string };
+        const errorData = (await response.json().catch(() => ({}))) as {
+          error?: string;
+          message?: string;
+          key?: string;
+          params?: Record<string, unknown>;
+        };
+        const parsedError = parseErrorPayload(errorData);
+        const resolvedMessage = resolveErrorMessage(
+          {
+            ...parsedError,
+            message: parsedError.message ?? errorData.message,
+            error: parsedError.error ?? errorData.error,
+            params: parsedError.params ?? errorData.params,
+          },
+          errorData.error || "Failed to mark notification as read",
+        );
         toast.error("Failed to mark notification as read", {
-          description: errorData.error || "An error occurred",
+          description: resolvedMessage,
         });
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to mark notification as read";
+      const backendError = error as (Error & { key?: string; params?: Record<string, unknown> }) | undefined;
+      const errorMessage = resolveErrorMessage(
+        {
+          key: backendError?.key,
+          params: backendError?.params,
+          message: backendError instanceof Error ? backendError.message : undefined,
+        },
+        backendError instanceof Error ? backendError.message : getDefaultErrorMessage(),
+      );
       toast.error("Failed to mark notification as read", {
         description: errorMessage,
       });
