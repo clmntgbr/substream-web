@@ -42,11 +42,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   // Determine if we're on a public route
   const isPublicRoute =
-    pathname?.endsWith("/login") ||
-    pathname?.endsWith("/register") ||
-    pathname?.endsWith("/pricing") ||
-    pathname?.endsWith("/reset") ||
-    pathname?.includes("/oauth");
+    pathname?.endsWith("/login") || pathname?.endsWith("/register") || pathname?.endsWith("/reset") || pathname?.includes("/oauth");
 
   const lastSearchParamsRef = React.useRef<NotificationSearchParams | undefined>(undefined);
 

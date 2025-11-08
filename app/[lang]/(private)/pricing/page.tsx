@@ -12,17 +12,13 @@ import { Check, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Pricing() {
-  const { getPlans, state } = usePlans();
+  const { state } = usePlans();
   const { getSubscribe } = useSubscription();
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const { user } = useAuth();
   const [interval, setInterval] = useState<"monthly" | "yearly">("monthly");
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
   const currentPlanId = user?.plan?.id;
-
-  useEffect(() => {
-    getPlans();
-  }, [getPlans]);
 
   useEffect(() => {
     const filteredPlans = state.plans.filter((plan) => plan.interval === interval || plan.interval === "both");

@@ -52,11 +52,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const getTranslation = useGetTranslation();
 
   const isPublicRoute =
-    pathname?.endsWith("/login") ||
-    pathname?.endsWith("/register") ||
-    pathname?.endsWith("/pricing") ||
-    pathname?.endsWith("/reset") ||
-    pathname?.includes("/oauth");
+    pathname?.endsWith("/login") || pathname?.endsWith("/register") || pathname?.endsWith("/reset") || pathname?.includes("/oauth");
 
   const lastSearchParamsRef = React.useRef<StreamSearchParams | undefined>(undefined);
 

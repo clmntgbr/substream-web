@@ -3,7 +3,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useGetTranslation } from "@/lib/use-get-translation";
 import * as React from "react";
-import { createContext, useCallback, useContext, useReducer } from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { toast } from "sonner";
 import { initialState, planReducer } from "./reducer";
 import { Plan, PlanState } from "./types";
@@ -57,6 +57,11 @@ export function PlanProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   }, [getTranslation]);
+
+  // Load plans on component mount
+  useEffect(() => {
+    getPlans();
+  }, [getPlans]);
 
   return (
     <PlanContext.Provider
