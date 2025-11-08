@@ -10,32 +10,36 @@ export interface BackendErrorPayload {
   params?: Record<string, unknown> | null;
 }
 
-const FALLBACK_ERROR_MESSAGE = "An unexpected error occurred. Please try again later.";
+const FALLBACK_ERROR_MESSAGE =
+  "An unexpected error occurred. Please try again later.";
 
 const sanitizeParams = (params?: Record<string, unknown> | null) => {
   if (!params || typeof params !== "object") {
     return undefined;
   }
 
-  return Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
-    if (value === undefined || value === null) {
-      acc[key] = "";
+  return Object.entries(params).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      if (value === undefined || value === null) {
+        acc[key] = "";
+        return acc;
+      }
+
+      if (typeof value === "string") {
+        acc[key] = value;
+        return acc;
+      }
+
+      try {
+        acc[key] = JSON.stringify(value);
+      } catch {
+        acc[key] = String(value);
+      }
+
       return acc;
-    }
-
-    if (typeof value === "string") {
-      acc[key] = value;
-      return acc;
-    }
-
-    try {
-      acc[key] = JSON.stringify(value);
-    } catch {
-      acc[key] = String(value);
-    }
-
-    return acc;
-  }, {});
+    },
+    {},
+  );
 };
 
 export function useErrorTranslator() {
@@ -54,7 +58,11 @@ export function useErrorTranslator() {
   }, [errorsDictionary]);
 
   const translateError = useCallback(
-    (key?: string | null, params?: Record<string, unknown> | null, fallback?: string | null) => {
+    (
+      key?: string | null,
+      params?: Record<string, unknown> | null,
+      fallback?: string | null,
+    ) => {
       if (!key) {
         return fallback ?? null;
       }
@@ -71,9 +79,15 @@ export function useErrorTranslator() {
         return template;
       }
 
-      return Object.entries(sanitizedParams).reduce((message, [paramKey, paramValue]) => {
-        return message.replace(new RegExp(`\\{${paramKey}\\}`, "g"), paramValue);
-      }, template);
+      return Object.entries(sanitizedParams).reduce(
+        (message, [paramKey, paramValue]) => {
+          return message.replace(
+            new RegExp(`\\{${paramKey}\\}`, "g"),
+            paramValue,
+          );
+        },
+        template,
+      );
     },
     [errorsDictionary],
   );
@@ -84,14 +98,24 @@ export function useErrorTranslator() {
         return fallback ?? defaultErrorMessage;
       }
 
-      const translated = translateError(error.key, error.params ?? undefined, null);
+      const translated = translateError(
+        error.key,
+        error.params ?? undefined,
+        null,
+      );
       if (translated) {
         return translated;
       }
 
-      const messageCandidates = [error.message, error.error, fallback, defaultErrorMessage];
+      const messageCandidates = [
+        error.message,
+        error.error,
+        fallback,
+        defaultErrorMessage,
+      ];
       const resolved = messageCandidates.find(
-        (candidate): candidate is string => typeof candidate === "string" && candidate.trim().length > 0,
+        (candidate): candidate is string =>
+          typeof candidate === "string" && candidate.trim().length > 0,
       );
 
       return resolved || defaultErrorMessage;
@@ -99,23 +123,29 @@ export function useErrorTranslator() {
     [defaultErrorMessage, translateError],
   );
 
-  const parseErrorPayload = useCallback((data: unknown): BackendErrorPayload => {
-    if (!data || typeof data !== "object") {
-      return {};
-    }
+  const parseErrorPayload = useCallback(
+    (data: unknown): BackendErrorPayload => {
+      if (!data || typeof data !== "object") {
+        return {};
+      }
 
-    const record = data as Record<string, unknown>;
+      const record = data as Record<string, unknown>;
 
-    return {
-      key: typeof record.key === "string" ? record.key : undefined,
-      message: typeof record.message === "string" ? record.message : undefined,
-      error: typeof record.error === "string" ? record.error : undefined,
-      params:
-        record.params && typeof record.params === "object" && record.params !== null
-          ? (record.params as Record<string, unknown>)
-          : undefined,
-    };
-  }, []);
+      return {
+        key: typeof record.key === "string" ? record.key : undefined,
+        message:
+          typeof record.message === "string" ? record.message : undefined,
+        error: typeof record.error === "string" ? record.error : undefined,
+        params:
+          record.params &&
+          typeof record.params === "object" &&
+          record.params !== null
+            ? (record.params as Record<string, unknown>)
+            : undefined,
+      };
+    },
+    [],
+  );
 
   return {
     translateError,
@@ -124,5 +154,3 @@ export function useErrorTranslator() {
     getDefaultErrorMessage: () => defaultErrorMessage,
   } as const;
 }
-
-

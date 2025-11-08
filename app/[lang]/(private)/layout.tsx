@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { NotificationProvider } from "@/lib/notification";
 import { OptionProvider } from "@/lib/option";
+import { PlanProvider } from "@/lib/plan";
 import { StreamProvider } from "@/lib/stream";
 
 export default function PrivateLayout({
@@ -23,17 +24,19 @@ export default function PrivateLayout({
         <NotificationProvider>
           <StreamProvider>
             <OptionProvider>
-              <Header />
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">
-                {children}
-              </div>
-              <NavFooter />
-              <Toaster
-                richColors
-                expand={false}
-                position="top-right"
-                closeButton
-              />
+              <PlanProvider>
+                <Header />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">
+                  {children}
+                </div>
+                <NavFooter />
+                <Toaster
+                  richColors
+                  expand={false}
+                  position="top-right"
+                  closeButton
+                />
+              </PlanProvider>
             </OptionProvider>
           </StreamProvider>
         </NotificationProvider>

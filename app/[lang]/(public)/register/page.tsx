@@ -49,7 +49,8 @@ export default function RegisterPage() {
   const [lastUsedProvider, setLastUsedProviderState] =
     useState<SocialProvider | null>(null);
   const t = useTranslations();
-  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
+    useErrorTranslator();
   const router = useRouter();
   const params = useParams();
   const lang = (params.lang as string) || "en";
@@ -122,7 +123,11 @@ export default function RegisterPage() {
           const resolved = resolveErrorMessage(
             {
               ...parsedError,
-              message: parsedError.message ?? data.message ?? data.detail ?? data.description,
+              message:
+                parsedError.message ??
+                data.message ??
+                data.detail ??
+                data.description,
               error: parsedError.error ?? data.error,
               params: parsedError.params ?? data.params,
             },
@@ -138,7 +143,10 @@ export default function RegisterPage() {
       await refreshUser();
       router.push(`/${lang}`);
     } catch (error) {
-      const err = error as Error & { key?: string; params?: Record<string, unknown> };
+      const err = error as Error & {
+        key?: string;
+        params?: Record<string, unknown>;
+      };
       const resolved = resolveErrorMessage(
         {
           key: err.key,

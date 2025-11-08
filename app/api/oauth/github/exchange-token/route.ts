@@ -14,34 +14,40 @@ export async function POST(request: NextRequest) {
           success: false,
           key: "error.validation.failed",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/oauth/github/exchange-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const backendResponse = await fetch(
+      `${BACKEND_API_URL}/oauth/github/exchange-token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          state,
+          code_verifier,
+        }),
       },
-      body: JSON.stringify({
-        code,
-        state,
-        code_verifier,
-      }),
-    });
+    );
 
     if (!backendResponse.ok) {
       const payload = await backendResponse.json().catch(() => ({}));
       return NextResponse.json(
         {
           success: false,
-          key: typeof payload.key === "string" ? payload.key : "error.server.internal",
+          key:
+            typeof payload.key === "string"
+              ? payload.key
+              : "error.server.internal",
           params:
             payload.params && typeof payload.params === "object"
               ? (payload.params as Record<string, unknown>)
               : undefined,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -65,7 +71,7 @@ export async function POST(request: NextRequest) {
           success: false,
           key: "error.server.internal",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -107,7 +113,7 @@ export async function POST(request: NextRequest) {
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

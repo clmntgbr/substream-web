@@ -48,7 +48,10 @@ export async function GET(
         return NextResponse.json(
           {
             success: false,
-            key: typeof error.key === "string" ? error.key : "error.server.internal",
+            key:
+              typeof error.key === "string"
+                ? error.key
+                : "error.server.internal",
             params:
               error.params && typeof error.params === "object"
                 ? (error.params as Record<string, unknown>)

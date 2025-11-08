@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { MercureOptions } from "./types";
 
-export function useMercure({ topics, onMessage, onError, onOpen, enabled = true }: MercureOptions) {
+export function useMercure({
+  topics,
+  onMessage,
+  onError,
+  onOpen,
+  enabled = true,
+}: MercureOptions) {
   const eventSourceRef = useRef<EventSource | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
@@ -64,15 +70,20 @@ export function useMercure({ topics, onMessage, onError, onOpen, enabled = true 
 
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           setIsReconnecting(true);
-          const delay = baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current);
-          console.log(`Attempting to reconnect to Mercure in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`);
+          const delay =
+            baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current);
+          console.log(
+            `Attempting to reconnect to Mercure in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`,
+          );
 
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttemptsRef.current++;
             connect();
           }, delay);
         } else {
-          console.log("Max reconnection attempts reached. Please refresh the page.");
+          console.log(
+            "Max reconnection attempts reached. Please refresh the page.",
+          );
           setIsReconnecting(false);
         }
       };

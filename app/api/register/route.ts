@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
           success: false,
           key: "error.validation.failed",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
           success: false,
           key: "error.server.internal",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

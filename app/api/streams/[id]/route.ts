@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-async function getStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
+async function getStreamHandler(
+  req: AuthenticatedRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
@@ -15,7 +18,7 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -38,7 +41,7 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -55,12 +58,15 @@ async function getStreamHandler(req: AuthenticatedRequest, { params }: { params:
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-async function updateStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
+async function updateStreamHandler(
+  req: AuthenticatedRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
@@ -71,7 +77,7 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -97,7 +103,7 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -114,12 +120,15 @@ async function updateStreamHandler(req: AuthenticatedRequest, { params }: { para
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { params: Promise<{ id: string }> }) {
+async function deleteStreamHandler(
+  req: AuthenticatedRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const sessionToken = req.sessionToken;
     const { id } = await params;
@@ -130,7 +139,7 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -153,7 +162,7 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -166,19 +175,34 @@ async function deleteStreamHandler(req: AuthenticatedRequest, { params }: { para
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function GET(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
-  return authMiddleware((authenticatedReq) => getStreamHandler(authenticatedReq, context))(req);
+export async function GET(
+  req: AuthenticatedRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  return authMiddleware((authenticatedReq) =>
+    getStreamHandler(authenticatedReq, context),
+  )(req);
 }
 
-export async function PATCH(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
-  return authMiddleware((authenticatedReq) => updateStreamHandler(authenticatedReq, context))(req);
+export async function PATCH(
+  req: AuthenticatedRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  return authMiddleware((authenticatedReq) =>
+    updateStreamHandler(authenticatedReq, context),
+  )(req);
 }
 
-export async function DELETE(req: AuthenticatedRequest, context: { params: Promise<{ id: string }> }) {
-  return authMiddleware((authenticatedReq) => deleteStreamHandler(authenticatedReq, context))(req);
+export async function DELETE(
+  req: AuthenticatedRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  return authMiddleware((authenticatedReq) =>
+    deleteStreamHandler(authenticatedReq, context),
+  )(req);
 }

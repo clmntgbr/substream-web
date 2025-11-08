@@ -57,7 +57,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initAuth = async () => {
       // Don't fetch profile on public routes (except mixed routes)
       const isPublicRoute =
-        pathname?.endsWith("/login") || pathname?.endsWith("/register") || pathname?.endsWith("/reset") || pathname?.includes("/oauth");
+        pathname?.endsWith("/login") ||
+        pathname?.endsWith("/register") ||
+        pathname?.endsWith("/reset") ||
+        pathname?.includes("/oauth");
 
       // Always fetch profile for mixed routes or private routes
       if (!isPublicRoute || pathname?.endsWith("/pricing")) {
@@ -72,7 +75,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isLoading) {
       const isPublicRoute =
-        pathname.endsWith("/login") || pathname.endsWith("/register") || pathname.endsWith("/reset") || pathname.includes("/oauth");
+        pathname.endsWith("/login") ||
+        pathname.endsWith("/register") ||
+        pathname.endsWith("/reset") ||
+        pathname.includes("/oauth");
 
       // Don't redirect from pricing (mixed route)
       if (!user && !isPublicRoute && !pathname.endsWith("/pricing")) {
@@ -93,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             "Content-Type": "application/ld+json",
           },
           skipAuthRedirect: true,
-        }
+        },
       );
 
       if (response.ok) {
@@ -116,7 +122,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Otherwise use simple error message
-        const errorMessage = errorData.message || errorData.error || errorData.detail || errorData.description || "Failed to login";
+        const errorMessage =
+          errorData.message ||
+          errorData.error ||
+          errorData.detail ||
+          errorData.description ||
+          "Failed to login";
 
         const error = new Error(errorMessage) as BackendError;
         if (typeof errorData.key === "string") {
@@ -145,7 +156,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, refreshUser }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

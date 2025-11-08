@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
+import { Plan } from "@/lib/plan";
+import { NextResponse } from "next/server";
+import { HydraResponse } from "../types/hydra";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-export async function GET(request: NextRequest) {
+async function createPlanHandler(req: AuthenticatedRequest) {
   try {
-    const sessionToken = request.cookies.get("session_token")?.value;
+    const sessionToken = req.sessionToken;
 
     if (!sessionToken) {
       return NextResponse.json(
@@ -16,7 +19,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/me`, {
+    console.log("getPlans");
+    const backendResponse = await fetch(`${BACKEND_API_URL}/plans`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
@@ -39,9 +43,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const user = await backendResponse.json();
+    const data = (await backendResponse.json()) as HydraResponse<Plan>;
 
-    return NextResponse.json({ user });
+    return NextResponse.json({
+      plans: data.member || [],
+    });
   } catch {
     return NextResponse.json(
       {
@@ -52,3 +58,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = authMiddleware(createPlanHandler);

@@ -24,7 +24,10 @@ export async function initiateGitHubOAuth() {
       throw new Error("Invalid response from backend");
     }
 
-    localStorage.setItem("github_oauth_code_verifier", result.data.code_verifier);
+    localStorage.setItem(
+      "github_oauth_code_verifier",
+      result.data.code_verifier,
+    );
 
     window.location.href = result.data.url;
   } catch (error) {

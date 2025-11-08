@@ -15,7 +15,8 @@ const OptionContext = createContext<OptionContextType | undefined>(undefined);
 export function OptionProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
+    useErrorTranslator();
 
   const resolveFromResponse = useCallback(
     (data: unknown, fallback: string) => {
@@ -29,8 +30,15 @@ export function OptionProvider({ children }: { children: React.ReactNode }) {
         {
           ...parsed,
           message:
-            parsed.message ?? (typeof record.message === "string" ? (record.message as string) : undefined),
-          error: parsed.error ?? (typeof record.error === "string" ? (record.error as string) : undefined),
+            parsed.message ??
+            (typeof record.message === "string"
+              ? (record.message as string)
+              : undefined),
+          error:
+            parsed.error ??
+            (typeof record.error === "string"
+              ? (record.error as string)
+              : undefined),
           params:
             parsed.params ??
             (record.params && typeof record.params === "object"

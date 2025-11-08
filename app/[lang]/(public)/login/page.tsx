@@ -45,7 +45,8 @@ export default function LoginPage() {
   const [lastUsedProvider, setLastUsedProviderState] =
     useState<SocialProvider | null>(null);
   const t = useTranslations();
-  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
+    useErrorTranslator();
 
   useEffect(() => {
     const provider = getLastUsedProvider();
@@ -72,7 +73,10 @@ export default function LoginPage() {
     try {
       await login(email, password);
     } catch (error) {
-      const err = error as Error & { key?: string; params?: Record<string, unknown> };
+      const err = error as Error & {
+        key?: string;
+        params?: Record<string, unknown>;
+      };
       try {
         const errorData = JSON.parse(err.message);
         if (errorData.errors && typeof errorData.errors === "object") {

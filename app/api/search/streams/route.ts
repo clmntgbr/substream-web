@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-interface BackendApiResponse {
+export interface BackendApiResponse {
   total_items: number;
   items_per_page: number;
   current_page: number;
@@ -24,20 +24,23 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const { searchParams } = new URL(req.url);
     const queryString = searchParams.toString();
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/search/streams?${queryString}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/ld+json",
+    const backendResponse = await fetch(
+      `${BACKEND_API_URL}/search/streams?${queryString}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          "Content-Type": "application/ld+json",
+        },
       },
-    });
+    );
 
     if (!backendResponse.ok) {
       const payload = (await backendResponse.json().catch(() => ({}))) as {
@@ -50,7 +53,7 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -69,7 +72,7 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
