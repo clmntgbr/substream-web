@@ -29,6 +29,7 @@ import { initiateGitHubOAuth } from "@/lib/oauth/github";
 import { initiateGoogleOAuth } from "@/lib/oauth/google";
 import { initiateLinkedInOAuth } from "@/lib/oauth/linkedin";
 import { useErrorTranslator } from "@/lib/use-error-translator";
+import { useGetTranslation } from "@/lib/use-get-translation";
 import { useTranslations } from "@/lib/use-translations";
 import { loginSchema, type LoginFormData } from "@/lib/validation/auth";
 import { CheckCheck, HelpCircle, InfoIcon } from "lucide-react";
@@ -47,6 +48,7 @@ export default function LoginPage() {
   const t = useTranslations();
   const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
     useErrorTranslator();
+  const getTranslation = useGetTranslation();
 
   useEffect(() => {
     const provider = getLastUsedProvider();
@@ -122,7 +124,7 @@ export default function LoginPage() {
       await initiateGoogleOAuth();
     } catch {
       setIsLoading(false);
-      toast.error("Failed to initiate Google login");
+      toast.error(getTranslation("error.auth.failed_to_initiate_google_login"));
     }
   };
 
@@ -133,7 +135,7 @@ export default function LoginPage() {
       await initiateGitHubOAuth();
     } catch {
       setIsLoading(false);
-      toast.error("Failed to initiate GitHub login");
+      toast.error(getTranslation("error.auth.failed_to_initiate_github_login"));
     }
   };
 
@@ -144,7 +146,7 @@ export default function LoginPage() {
       await initiateLinkedInOAuth();
     } catch {
       setIsLoading(false);
-      toast.error("Failed to initiate LinkedIn login");
+      toast.error(getTranslation("error.auth.failed_to_initiate_linkedin_login"));
     }
   };
 

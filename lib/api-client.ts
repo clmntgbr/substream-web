@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { getTranslation } from "./get-translation";
 
 interface ApiResponse<T = unknown> extends Response {
   json(): Promise<T>;
@@ -28,7 +29,7 @@ class ApiClient {
         (response.status === 401 || response.status === 403) &&
         !skipAuthRedirect
       ) {
-        toast.error("Session expired. Please log in again.");
+        toast.error(getTranslation("error.api.session_expired"));
 
         // Get current language from URL or default to 'en'
         const currentPath = window.location.pathname;
@@ -47,7 +48,7 @@ class ApiClient {
 
       // Handle network errors
       if (!skipAuthRedirect) {
-        toast.error("Network error. Please try again.");
+        toast.error(getTranslation("error.api.network_error"));
       }
       throw error;
     }

@@ -4,15 +4,10 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { MercureMessage, useMercure } from "@/lib/mercure";
 import { useErrorTranslator } from "@/lib/use-error-translator";
+import { useGetTranslation } from "@/lib/use-get-translation";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { toast } from "sonner";
 import { initialState, notificationReducer } from "./reducer";
 import { Notification, NotificationState } from "./types";
@@ -32,15 +27,9 @@ interface NotificationContextType {
   pageCount: number;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined,
-);
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-export function NotificationProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(notificationReducer, initialState);
   const [totalItems, setTotalItems] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -48,8 +37,8 @@ export function NotificationProvider({
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const { user } = useAuth();
-  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
-    useErrorTranslator();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
+  const getTranslation = useGetTranslation();
 
   // Determine if we're on a public route
   const isPublicRoute =
@@ -59,9 +48,7 @@ export function NotificationProvider({
     pathname?.endsWith("/reset") ||
     pathname?.includes("/oauth");
 
-  const lastSearchParamsRef = React.useRef<
-    NotificationSearchParams | undefined
-  >(undefined);
+  const lastSearchParamsRef = React.useRef<NotificationSearchParams | undefined>(undefined);
 
   const searchNotifications = useCallback(
     async (params?: NotificationSearchParams) => {
@@ -78,9 +65,7 @@ export function NotificationProvider({
         const itemsPerPage = params?.itemsPerPage || 10;
         queryParams.append("itemsPerPage", itemsPerPage.toString());
 
-        const response = await apiClient.get(
-          `/api/search/notifications?${queryParams.toString()}`,
-        );
+        const response = await apiClient.get(`/api/search/notifications?${queryParams.toString()}`);
 
         if (response.ok) {
           const data = (await response.json()) as {
@@ -112,103 +97,96 @@ export function NotificationProvider({
               error: parsedError.error ?? errorData.error,
               params: parsedError.params ?? errorData.params,
             },
-            errorData.error || "Failed to search notifications",
+            errorData.error || "Failed to search notifications"
           );
           dispatch({
             type: "SET_ERROR",
             payload: resolvedMessage,
           });
-          toast.error("Search failed", {
+          toast.error(getTranslation("error.notification.search_failed"), {
             description: resolvedMessage,
           });
         }
       } catch (error: unknown) {
-        const backendError = error as
-          | (Error & { key?: string; params?: Record<string, unknown> })
-          | undefined;
-        const errorMessage = resolveErrorMessage(
+        const backendError = error as (Error & { key?: string; params?: Record<string, unknown> }) | undefined;
+        const message = resolveErrorMessage(
           {
             key: backendError?.key,
             params: backendError?.params,
-            message:
-              backendError instanceof Error ? backendError.message : undefined,
+            message: backendError instanceof Error ? backendError.message : undefined,
           },
-          backendError instanceof Error
-            ? backendError.message
-            : getDefaultErrorMessage(),
+          backendError instanceof Error ? backendError.message : getDefaultErrorMessage()
         );
         dispatch({
           type: "SET_ERROR",
-          payload: errorMessage,
+          payload: message,
         });
-        toast.error("Search failed", {
-          description: errorMessage,
+        toast.error(getTranslation("error.notification.search_failed"), {
+          description: message,
         });
       } finally {
         dispatch({ type: "SET_LOADING", payload: false });
       }
     },
-    [],
+    [getTranslation]
   );
 
   const refreshNotifications = useCallback(
     async (params?: NotificationSearchParams) => {
       await searchNotifications(params);
     },
-    [searchNotifications],
+    [searchNotifications]
   );
 
-  const markReadNotification = useCallback(async (id: string) => {
-    try {
-      const response = await apiClient.patch(
-        `/api/notifications/${id}/read`,
-        { isRead: true },
-        { headers: { "Content-Type": "application/merge-patch+json" } },
-      );
-
-      if (response.ok) {
-        dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
-      } else {
-        const errorData = (await response.json().catch(() => ({}))) as {
-          error?: string;
-          message?: string;
-          key?: string;
-          params?: Record<string, unknown>;
-        };
-        const parsedError = parseErrorPayload(errorData);
-        const resolvedMessage = resolveErrorMessage(
-          {
-            ...parsedError,
-            message: parsedError.message ?? errorData.message,
-            error: parsedError.error ?? errorData.error,
-            params: parsedError.params ?? errorData.params,
-          },
-          errorData.error || "Failed to mark notification as read",
+  const markReadNotification = useCallback(
+    async (id: string) => {
+      try {
+        const response = await apiClient.patch(
+          `/api/notifications/${id}/read`,
+          { isRead: true },
+          { headers: { "Content-Type": "application/merge-patch+json" } }
         );
-        toast.error("Failed to mark notification as read", {
-          description: resolvedMessage,
+
+        if (response.ok) {
+          dispatch({ type: "MARK_READ_NOTIFICATION", payload: id });
+        } else {
+          const errorData = (await response.json().catch(() => ({}))) as {
+            error?: string;
+            message?: string;
+            key?: string;
+            params?: Record<string, unknown>;
+          };
+          const parsedError = parseErrorPayload(errorData);
+          const resolvedMessage = resolveErrorMessage(
+            {
+              ...parsedError,
+              message: parsedError.message ?? errorData.message,
+              error: parsedError.error ?? errorData.error,
+              params: parsedError.params ?? errorData.params,
+            },
+            errorData.error || "Failed to mark notification as read"
+          );
+          toast.error(getTranslation("error.notification.failed_to_mark_as_read"), {
+            description: resolvedMessage,
+          });
+        }
+      } catch (error: unknown) {
+        const backendError = error as (Error & { key?: string; params?: Record<string, unknown> }) | undefined;
+        const message = resolveErrorMessage(
+          {
+            key: backendError?.key,
+            params: backendError?.params,
+            message: backendError instanceof Error ? backendError.message : undefined,
+          },
+          backendError instanceof Error ? backendError.message : getDefaultErrorMessage()
+        );
+        toast.error(getTranslation("error.notification.failed_to_mark_as_read"), {
+          description: message,
         });
       }
-    } catch (error: unknown) {
-      const backendError = error as
-        | (Error & { key?: string; params?: Record<string, unknown> })
-        | undefined;
-      const errorMessage = resolveErrorMessage(
-        {
-          key: backendError?.key,
-          params: backendError?.params,
-          message:
-            backendError instanceof Error ? backendError.message : undefined,
-        },
-        backendError instanceof Error
-          ? backendError.message
-          : getDefaultErrorMessage(),
-      );
-      toast.error("Failed to mark notification as read", {
-        description: errorMessage,
-      });
-    }
-  }, []);
+    },
+    [getTranslation]
+  );
 
   const handleMercureMessage = useCallback(
     (message: MercureMessage) => {
@@ -236,7 +214,7 @@ export function NotificationProvider({
           console.log("Unknown Mercure notification type:", message.type);
       }
     },
-    [searchNotifications],
+    [searchNotifications]
   );
 
   const mercureTopics = React.useMemo(() => {
@@ -286,9 +264,7 @@ export function NotificationProvider({
 export function useNotifications() {
   const context = useContext(NotificationContext);
   if (context === undefined) {
-    throw new Error(
-      "useNotifications must be used within a NotificationProvider",
-    );
+    throw new Error("useNotifications must be used within a NotificationProvider");
   }
   return context;
 }

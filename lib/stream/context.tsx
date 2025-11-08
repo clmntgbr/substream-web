@@ -3,15 +3,10 @@
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { useMercure } from "@/lib/mercure";
+import { useGetTranslation } from "@/lib/use-get-translation";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { toast } from "sonner";
 import { initialState, streamReducer } from "./reducer";
 import { Stream, StreamState } from "./types";
@@ -54,6 +49,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const { user } = useAuth();
+  const getTranslation = useGetTranslation();
 
   const isPublicRoute =
     pathname?.endsWith("/login") ||
@@ -62,9 +58,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     pathname?.endsWith("/reset") ||
     pathname?.includes("/oauth");
 
-  const lastSearchParamsRef = React.useRef<StreamSearchParams | undefined>(
-    undefined,
-  );
+  const lastSearchParamsRef = React.useRef<StreamSearchParams | undefined>(undefined);
 
   const handleMercureMessage = useCallback(() => {
     setRefreshCounter((prev) => prev + 1);
@@ -89,85 +83,85 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     enabled: mercureEnabled,
   });
 
-  const searchStreams = useCallback(async (params?: StreamSearchParams) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    lastSearchParamsRef.current = params;
+  const searchStreams = useCallback(
+    async (params?: StreamSearchParams) => {
+      dispatch({ type: "SET_LOADING", payload: true });
+      lastSearchParamsRef.current = params;
 
-    try {
-      const queryParams = new URLSearchParams();
+      try {
+        const queryParams = new URLSearchParams();
 
-      const page = params?.page || 1;
-      queryParams.append("page", page.toString());
-      setCurrentPage(page);
+        const page = params?.page || 1;
+        queryParams.append("page", page.toString());
+        setCurrentPage(page);
 
-      const itemsPerPage = params?.itemsPerPage || 10;
-      queryParams.append("itemsPerPage", itemsPerPage.toString());
+        const itemsPerPage = params?.itemsPerPage || 10;
+        queryParams.append("itemsPerPage", itemsPerPage.toString());
 
-      if (params?.statusFilter && params.statusFilter.length > 0) {
-        params.statusFilter.forEach((filter) => {
-          queryParams.append("statusFilter[]", filter);
-        });
-      }
+        if (params?.statusFilter && params.statusFilter.length > 0) {
+          params.statusFilter.forEach((filter) => {
+            queryParams.append("statusFilter[]", filter);
+          });
+        }
 
-      queryParams.append("statusFilter[]", "!deleted");
+        queryParams.append("statusFilter[]", "!deleted");
 
-      if (params?.search && params.search.trim()) {
-        queryParams.append("search", params.search.trim());
-      }
+        if (params?.search && params.search.trim()) {
+          queryParams.append("search", params.search.trim());
+        }
 
-      if (params?.from) {
-        queryParams.append("createdAt[after]", params.from.toISOString());
-      }
+        if (params?.from) {
+          queryParams.append("createdAt[after]", params.from.toISOString());
+        }
 
-      if (params?.to) {
-        const toPlusOne = new Date(params.to);
-        toPlusOne.setDate(toPlusOne.getDate() + 1);
-        queryParams.append("createdAt[before]", toPlusOne.toISOString());
-      }
+        if (params?.to) {
+          const toPlusOne = new Date(params.to);
+          toPlusOne.setDate(toPlusOne.getDate() + 1);
+          queryParams.append("createdAt[before]", toPlusOne.toISOString());
+        }
 
-      const response = await apiClient.get(
-        `/api/search/streams?${queryParams.toString()}`,
-      );
+        const response = await apiClient.get(`/api/search/streams?${queryParams.toString()}`);
 
-      if (response.ok) {
-        const data = (await response.json()) as {
-          streams: Stream[];
-          totalItems: number;
-          page: number;
-          pageCount: number;
-        };
+        if (response.ok) {
+          const data = (await response.json()) as {
+            streams: Stream[];
+            totalItems: number;
+            page: number;
+            pageCount: number;
+          };
 
-        dispatch({
-          type: "SET_STREAMS",
-          payload: data.streams || [],
-        });
+          dispatch({
+            type: "SET_STREAMS",
+            payload: data.streams || [],
+          });
 
-        setTotalItems(data.totalItems || 0);
-        setPageCount(data.pageCount || 1);
-      } else {
-        const errorData = (await response.json()) as { error?: string };
+          setTotalItems(data.totalItems || 0);
+          setPageCount(data.pageCount || 1);
+        } else {
+          const errorData = (await response.json()) as { error?: string };
+          dispatch({
+            type: "SET_ERROR",
+            payload: errorData.error || "Failed to search streams",
+          });
+          toast.error(getTranslation("error.stream.search_failed"), {
+            description: errorData.error || "Failed to search streams",
+          });
+        }
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Failed to search streams";
         dispatch({
           type: "SET_ERROR",
-          payload: errorData.error || "Failed to search streams",
+          payload: message,
         });
-        toast.error("Search failed", {
-          description: errorData.error || "Failed to search streams",
+        toast.error(getTranslation("error.stream.search_failed"), {
+          description: message,
         });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
       }
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to search streams";
-      dispatch({
-        type: "SET_ERROR",
-        payload: errorMessage,
-      });
-      toast.error("Search failed", {
-        description: errorMessage,
-      });
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  }, []);
+    },
+    [getTranslation]
+  );
 
   const getStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -222,37 +216,34 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const updateStream = useCallback(
-    async (id: string, streamData: Partial<Stream>) => {
-      dispatch({ type: "SET_LOADING", payload: true });
-      try {
-        const response = await apiClient.put(`/api/streams/${id}`, streamData, {
-          headers: {
-            "Content-Type": "application/ld+json",
-          },
-        });
+  const updateStream = useCallback(async (id: string, streamData: Partial<Stream>) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      const response = await apiClient.put(`/api/streams/${id}`, streamData, {
+        headers: {
+          "Content-Type": "application/ld+json",
+        },
+      });
 
-        if (response.ok) {
-          const data = (await response.json()) as { stream: Stream };
-          dispatch({ type: "UPDATE_STREAM", payload: data.stream });
-        } else {
-          const errorData = (await response.json()) as { error?: string };
-          dispatch({
-            type: "SET_ERROR",
-            payload: errorData.error || "Failed to update stream",
-          });
-        }
-      } catch {
+      if (response.ok) {
+        const data = (await response.json()) as { stream: Stream };
+        dispatch({ type: "UPDATE_STREAM", payload: data.stream });
+      } else {
+        const errorData = (await response.json()) as { error?: string };
         dispatch({
           type: "SET_ERROR",
-          payload: "Failed to update stream",
+          payload: errorData.error || "Failed to update stream",
         });
-      } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
       }
-    },
-    [],
-  );
+    } catch {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to update stream",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, []);
 
   const deleteStream = useCallback(async (id: string) => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -278,227 +269,213 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const downloadStream = useCallback(async (id: string, filename: string) => {
-    dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+  const downloadStream = useCallback(
+    async (id: string, filename: string) => {
+      dispatch({ type: "SET_DOWNLOADING_START", payload: id });
 
-    toast.info("Download starting", {
-      description: "Preparing your file for download...",
-    });
+      toast.info("Download starting", {
+        description: "Preparing your file for download...",
+      });
 
-    try {
-      const response = await apiClient.get(`/api/streams/${id}/download`);
+      try {
+        const response = await apiClient.get(`/api/streams/${id}/download`);
 
-      if (!response.ok) {
-        const errorData = (await response.json().catch(() => ({}))) as {
-          message?: string;
-          error?: string;
-        };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        if (!response.ok) {
+          const errorData = (await response.json().catch(() => ({}))) as {
+            message?: string;
+            error?: string;
+          };
+          const message = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
-        toast.error("Download failed", {
-          description: errorMessage,
+          toast.error(getTranslation("error.stream.download_failed"), {
+            description: message,
+          });
+
+          dispatch({
+            type: "SET_ERROR",
+            payload: message,
+          });
+          return;
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const downloadFilename = contentDisposition ? contentDisposition.split("filename=")[1]?.replace(/"/g, "") : filename;
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = downloadFilename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast.success("Download completed", {
+          description: "Your file has been downloaded successfully.",
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Failed to download stream";
+
+        toast.error(getTranslation("error.stream.download_failed"), {
+          description: message,
         });
 
         dispatch({
           type: "SET_ERROR",
-          payload: errorMessage,
+          payload: message,
         });
-        return;
+      } finally {
+        dispatch({ type: "SET_DOWNLOADING_END", payload: id });
       }
+    },
+    [getTranslation]
+  );
 
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const downloadFilename = contentDisposition
-        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
-        : filename;
+  const downloadSubtitle = useCallback(
+    async (id: string, filename: string) => {
+      dispatch({ type: "SET_DOWNLOADING_START", payload: id });
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = downloadFilename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast.success("Download completed", {
-        description: "Your file has been downloaded successfully.",
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download stream";
-
-      toast.error("Download failed", {
-        description: errorMessage,
+      toast.info("Download starting", {
+        description: "Preparing your subtitle for download...",
       });
 
-      dispatch({
-        type: "SET_ERROR",
-        payload: errorMessage,
-      });
-    } finally {
-      dispatch({ type: "SET_DOWNLOADING_END", payload: id });
-    }
-  }, []);
+      try {
+        const response = await apiClient.get(`/api/streams/${id}/download/subtitle`);
 
-  const downloadSubtitle = useCallback(async (id: string, filename: string) => {
-    dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+        if (!response.ok) {
+          const errorData = (await response.json().catch(() => ({}))) as {
+            message?: string;
+            error?: string;
+          };
+          const message = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
-    toast.info("Download starting", {
-      description: "Preparing your subtitle for download...",
-    });
+          toast.error(getTranslation("error.stream.download_failed"), {
+            description: message,
+          });
 
-    try {
-      const response = await apiClient.get(
-        `/api/streams/${id}/download/subtitle`,
-      );
+          dispatch({
+            type: "SET_ERROR",
+            payload: message,
+          });
+          return;
+        }
 
-      if (!response.ok) {
-        const errorData = (await response.json().catch(() => ({}))) as {
-          message?: string;
-          error?: string;
-        };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const downloadFilename = contentDisposition
+          ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+          : filename.replace(/\.[^/.]+$/, ".srt");
 
-        toast.error("Download failed", {
-          description: errorMessage,
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = downloadFilename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast.success("Download completed", {
+          description: "Your subtitle has been downloaded successfully.",
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Failed to download subtitle";
+
+        toast.error(getTranslation("error.stream.download_failed"), {
+          description: message,
         });
 
         dispatch({
           type: "SET_ERROR",
-          payload: errorMessage,
+          payload: message,
         });
-        return;
+      } finally {
+        dispatch({ type: "SET_DOWNLOADING_END", payload: id });
       }
+    },
+    [getTranslation]
+  );
 
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const downloadFilename = contentDisposition
-        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
-        : filename.replace(/\.[^/.]+$/, ".srt");
+  const downloadResume = useCallback(
+    async (id: string, filename: string) => {
+      dispatch({ type: "SET_DOWNLOADING_START", payload: id });
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = downloadFilename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast.success("Download completed", {
-        description: "Your subtitle has been downloaded successfully.",
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download subtitle";
-
-      toast.error("Download failed", {
-        description: errorMessage,
+      toast.info("Download starting", {
+        description: "Preparing your resume for download...",
       });
 
-      dispatch({
-        type: "SET_ERROR",
-        payload: errorMessage,
-      });
-    } finally {
-      dispatch({ type: "SET_DOWNLOADING_END", payload: id });
-    }
-  }, []);
+      try {
+        const response = await apiClient.get(`/api/streams/${id}/download/resume`);
 
-  const downloadResume = useCallback(async (id: string, filename: string) => {
-    dispatch({ type: "SET_DOWNLOADING_START", payload: id });
+        if (!response.ok) {
+          const errorData = (await response.json().catch(() => ({}))) as {
+            message?: string;
+            error?: string;
+          };
+          const message = errorData.message || errorData.error || `Download failed with status ${response.status}`;
 
-    toast.info("Download starting", {
-      description: "Preparing your resume for download...",
-    });
+          toast.error(getTranslation("error.stream.download_failed"), {
+            description: message,
+          });
 
-    try {
-      const response = await apiClient.get(
-        `/api/streams/${id}/download/resume`,
-      );
+          dispatch({
+            type: "SET_ERROR",
+            payload: message,
+          });
+          return;
+        }
 
-      if (!response.ok) {
-        const errorData = (await response.json().catch(() => ({}))) as {
-          message?: string;
-          error?: string;
-        };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Download failed with status ${response.status}`;
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const downloadFilename = contentDisposition
+          ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+          : filename.replace(/\.[^/.]+$/, ".txt");
 
-        toast.error("Download failed", {
-          description: errorMessage,
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = downloadFilename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast.success("Download completed", {
+          description: "Your resume has been downloaded successfully.",
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Failed to download resume";
+
+        toast.error(getTranslation("error.stream.download_failed"), {
+          description: message,
         });
 
         dispatch({
           type: "SET_ERROR",
-          payload: errorMessage,
+          payload: message,
         });
-        return;
+      } finally {
+        dispatch({ type: "SET_DOWNLOADING_END", payload: id });
       }
-
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const downloadFilename = contentDisposition
-        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
-        : filename.replace(/\.[^/.]+$/, ".txt");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = downloadFilename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast.success("Download completed", {
-        description: "Your resume has been downloaded successfully.",
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to download resume";
-
-      toast.error("Download failed", {
-        description: errorMessage,
-      });
-
-      dispatch({
-        type: "SET_ERROR",
-        payload: errorMessage,
-      });
-    } finally {
-      dispatch({ type: "SET_DOWNLOADING_END", payload: id });
-    }
-  }, []);
+    },
+    [getTranslation]
+  );
 
   const getResume = useCallback(async (id: string): Promise<string | null> => {
     try {
-      const response = await apiClient.get(
-        `/api/streams/${id}/download/resume`,
-      );
+      const response = await apiClient.get(`/api/streams/${id}/download/resume`);
 
       if (!response.ok) {
         const errorData = (await response.json().catch(() => ({}))) as {
           message?: string;
           error?: string;
         };
-        const errorMessage =
-          errorData.message ||
-          errorData.error ||
-          `Failed to get resume with status ${response.status}`;
+        const message = errorData.message || errorData.error || `Failed to get resume with status ${response.status}`;
 
         dispatch({
           type: "SET_ERROR",
-          payload: errorMessage,
+          payload: message,
         });
         return null;
       }
@@ -507,12 +484,11 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const text = await blob.text();
       return text;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to get resume";
+      const message = error instanceof Error ? error.message : "Failed to get resume";
 
       dispatch({
         type: "SET_ERROR",
-        payload: errorMessage,
+        payload: message,
       });
       return null;
     }
@@ -522,7 +498,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     async (params?: StreamSearchParams) => {
       await searchStreams(params);
     },
-    [searchStreams],
+    [searchStreams]
   );
 
   useEffect(() => {
@@ -550,14 +526,10 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       refreshCounter,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state, totalItems, currentPage, pageCount, refreshCounter],
+    [state, totalItems, currentPage, pageCount, refreshCounter]
   );
 
-  return (
-    <StreamContext.Provider value={contextValue}>
-      {children}
-    </StreamContext.Provider>
-  );
+  return <StreamContext.Provider value={contextValue}>{children}</StreamContext.Provider>;
 }
 
 export function useStreams() {

@@ -88,7 +88,26 @@
     "error.task.creation_failed": "La création de la tâche a échoué. Veuillez réessayer.",
     "error.workflow.invalid_transition": "Cette action n'est pas autorisée dans l'état actuel du flux de travail.",
     "error.server.internal": "Une erreur serveur inattendue s'est produite. Veuillez réessayer plus tard.",
-    "error.server.internal_debug": "Une erreur serveur est survenue. Veuillez contacter le support."
+    "error.server.internal_debug": "Une erreur serveur est survenue. Veuillez contacter le support.",
+    "error.plan.failed_to_get_plans": "Échec de récupération des plans",
+    "error.plan.search_failed": "Recherche échouée",
+    "error.plan.plan_id_missing": "L'identifiant du plan est requis",
+    "error.subscription.failed_to_get_subscribe": "Échec de récupération de l'abonnement",
+    "error.subscription.failed_to_get_subscription": "Échec de récupération de l'abonnement",
+    "error.subscription.search_failed": "Recherche échouée",
+    "error.stream.search_failed": "Recherche échouée",
+    "error.stream.download_failed": "Téléchargement échoué",
+    "error.notification.search_failed": "Recherche échouée",
+    "error.notification.failed_to_mark_as_read": "Échec de marquage de la notification comme lue",
+    "error.api.session_expired": "Session expirée. Veuillez vous reconnecter.",
+    "error.api.network_error": "Erreur réseau. Veuillez réessayer.",
+    "error.video.no_file_or_url": "Veuillez télécharger un fichier ou saisir une URL",
+    "error.video.failed_to_create_options": "Échec de création des options. Veuillez réessayer.",
+    "error.video.no_file_or_url_provided": "Aucun fichier ou URL fourni",
+    "error.video.upload_failed": "Téléchargement échoué",
+    "error.auth.failed_to_initiate_google_login": "Échec d'initialisation de la connexion Google",
+    "error.auth.failed_to_initiate_github_login": "Échec d'initialisation de la connexion GitHub",
+    "error.auth.failed_to_initiate_linkedin_login": "Échec d'initialisation de la connexion LinkedIn"
   },
   "home": {
     "empty": {

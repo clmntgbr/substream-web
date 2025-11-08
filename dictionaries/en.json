@@ -88,7 +88,26 @@
     "error.task.creation_failed": "Task creation failed. Please try again.",
     "error.workflow.invalid_transition": "Operation is not allowed in the current workflow state.",
     "error.server.internal": "An unexpected server error occurred. Please try again later.",
-    "error.server.internal_debug": "A server error occurred. Please contact support."
+    "error.server.internal_debug": "A server error occurred. Please contact support.",
+    "error.plan.failed_to_get_plans": "Failed to get plans",
+    "error.plan.search_failed": "Search failed",
+    "error.plan.plan_id_missing": "Plan ID is required",
+    "error.subscription.failed_to_get_subscribe": "Failed to get subscribe",
+    "error.subscription.failed_to_get_subscription": "Failed to get subscription",
+    "error.subscription.search_failed": "Search failed",
+    "error.stream.search_failed": "Search failed",
+    "error.stream.download_failed": "Download failed",
+    "error.notification.search_failed": "Search failed",
+    "error.notification.failed_to_mark_as_read": "Failed to mark notification as read",
+    "error.api.session_expired": "Session expired. Please log in again.",
+    "error.api.network_error": "Network error. Please try again.",
+    "error.video.no_file_or_url": "Please upload a file or enter a URL",
+    "error.video.failed_to_create_options": "Failed to create options. Please try again.",
+    "error.video.no_file_or_url_provided": "No file or URL provided",
+    "error.video.upload_failed": "Upload failed",
+    "error.auth.failed_to_initiate_google_login": "Failed to initiate Google login",
+    "error.auth.failed_to_initiate_github_login": "Failed to initiate GitHub login",
+    "error.auth.failed_to_initiate_linkedin_login": "Failed to initiate LinkedIn login"
   },
   "home": {
     "empty": {

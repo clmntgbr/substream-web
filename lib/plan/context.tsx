@@ -1,6 +1,7 @@
 "use client";
 
 import { apiClient } from "@/lib/api-client";
+import { useGetTranslation } from "@/lib/use-get-translation";
 import * as React from "react";
 import { createContext, useCallback, useContext, useReducer } from "react";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
 export function PlanProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(planReducer, initialState);
+  const getTranslation = useGetTranslation();
 
   const getPlans = useCallback(async () => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -33,26 +35,28 @@ export function PlanProvider({ children }: { children: React.ReactNode }) {
           payload: data.plans || [],
         });
       } else {
+        const message = getTranslation("error.plan.failed_to_get_plans");
         dispatch({
           type: "SET_ERROR",
-          payload: "Failed to get plans",
+          payload: message,
         });
-        toast.error("Search failed", {
-          description: "Failed to get plans",
+        toast.error(getTranslation("error.plan.search_failed"), {
+          description: message,
         });
       }
-    } catch (error: unknown) {
+    } catch {
+      const message = getTranslation("error.plan.failed_to_get_plans");
       dispatch({
         type: "SET_ERROR",
-        payload: "Failed to get plans",
+        payload: message,
       });
-      toast.error("Search failed", {
-        description: "Failed to get plans",
+      toast.error(getTranslation("error.plan.search_failed"), {
+        description: message,
       });
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
-  }, []);
+  }, [getTranslation]);
 
   return (
     <PlanContext.Provider

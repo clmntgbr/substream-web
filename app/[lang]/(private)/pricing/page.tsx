@@ -6,12 +6,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth-context";
 import { Plan, usePlans } from "@/lib/plan";
+import { useSubscription } from "@/lib/subscription";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Pricing() {
   const { getPlans, state } = usePlans();
+  const { getSubscribe } = useSubscription();
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const { user } = useAuth();
   const [interval, setInterval] = useState<"monthly" | "yearly">("monthly");
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
@@ -25,6 +28,17 @@ export default function Pricing() {
     const filteredPlans = state.plans.filter((plan) => plan.interval === interval || plan.interval === "both");
     setFilteredPlans(filteredPlans);
   }, [state.plans, interval]);
+
+  const handleGetSubscribe = function (planId: string) {
+    setLoadingPlanId(planId);
+    getSubscribe(planId)
+      .then(() => {
+        setLoadingPlanId(null);
+      })
+      .catch(() => {
+        setLoadingPlanId(null);
+      });
+  };
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="mb-12 space-y-4 text-center">
@@ -45,6 +59,7 @@ export default function Pricing() {
         {filteredPlans.map((plan) => {
           const isCurrentPlan = currentPlanId === plan.id;
           const isPopular = plan.name === "Pro";
+          const isPlanLoading = loadingPlanId === plan.id;
 
           return (
             <Card
@@ -79,8 +94,22 @@ export default function Pricing() {
               </CardContent>
 
               <CardFooter>
-                <Button className="w-full" variant={isCurrentPlan ? "outline" : isPopular ? "default" : "outline"} disabled={isCurrentPlan}>
-                  {isCurrentPlan ? "Current Plan" : "Get Started"}
+                <Button
+                  className="w-full"
+                  variant={isCurrentPlan ? "outline" : isPopular ? "default" : "outline"}
+                  disabled={isCurrentPlan || isPlanLoading}
+                  onClick={() => handleGetSubscribe(plan.id)}
+                >
+                  {isPlanLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : isCurrentPlan ? (
+                    "Current Plan"
+                  ) : (
+                    "Get Started"
+                  )}
                 </Button>
               </CardFooter>
             </Card>

@@ -1,11 +1,9 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
-import { Plan } from "@/lib/plan";
 import { NextResponse } from "next/server";
-import { HydraResponse } from "../types/hydra";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-async function getPlansHandler(req: AuthenticatedRequest) {
+async function getSubscribeHandler(req: AuthenticatedRequest) {
   try {
     const sessionToken = req.sessionToken;
 
@@ -19,7 +17,19 @@ async function getPlansHandler(req: AuthenticatedRequest) {
       );
     }
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/plans`, {
+    const planId = req.nextUrl.searchParams.get("planId");
+
+    if (!planId) {
+      return NextResponse.json(
+        {
+          success: false,
+          key: "error.plan.plan_id_missing",
+        },
+        { status: 400 }
+      );
+    }
+
+    const backendResponse = await fetch(`${BACKEND_API_URL}/subscribe/${planId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
@@ -42,10 +52,10 @@ async function getPlansHandler(req: AuthenticatedRequest) {
       );
     }
 
-    const data = (await backendResponse.json()) as HydraResponse<Plan>;
+    const data = (await backendResponse.json()) as { data: { url: string } };
 
     return NextResponse.json({
-      plans: data.member || [],
+      url: data.data.url,
     });
   } catch {
     return NextResponse.json(
@@ -58,4 +68,4 @@ async function getPlansHandler(req: AuthenticatedRequest) {
   }
 }
 
-export const GET = authMiddleware(getPlansHandler);
+export const GET = authMiddleware(getSubscribeHandler);
