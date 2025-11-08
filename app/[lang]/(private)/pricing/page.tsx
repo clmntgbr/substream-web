@@ -62,7 +62,7 @@ export default function Pricing() {
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-5xl font-bold tracking-tight">${plan.price}</span>
+                  <span className="text-5xl font-bold tracking-tight">{plan.price}€</span>
                   <span className="text-muted-foreground">/{interval === "monthly" ? "mo" : "yr"}</span>
                 </div>
               </CardHeader>
