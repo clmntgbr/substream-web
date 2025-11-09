@@ -9,7 +9,8 @@ const dictionaries = {
 
 export function getTranslation(key: string, fallback?: string): string {
   // Get current language from URL
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "";
   const langMatch = currentPath.match(/^\/([a-z]{2})\//);
   const locale = (langMatch ? langMatch[1] : "en") as keyof typeof dictionaries;
 

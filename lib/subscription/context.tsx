@@ -7,22 +7,30 @@ import * as React from "react";
 import { createContext, useCallback, useContext, useReducer } from "react";
 import { toast } from "sonner";
 import { initialState, subscriptionReducer } from "./reducer";
-import { Subscription } from "./types";
 
 interface SubscriptionContextType {
   getSubscribe: (planId: string) => Promise<void>;
 }
 
-const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
+const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
+  undefined,
+);
 
-export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
+export function SubscriptionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const [state, dispatch] = useReducer(subscriptionReducer, initialState);
   const getTranslation = useGetTranslation();
+
   const getSubscribe = useCallback(
     async (planId: string) => {
       try {
-        const response = await apiClient.get(`/api/subscribe?planId=${encodeURIComponent(planId)}`);
+        const response = await apiClient.get(
+          `/api/subscribe?planId=${encodeURIComponent(planId)}`,
+        );
 
         if (response.ok) {
           const data = (await response.json()) as {
@@ -31,53 +39,18 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
           router.push(data.url);
         } else {
-          toast.error(getTranslation("error.subscription.failed_to_get_subscribe"));
+          toast.error(
+            getTranslation("error.subscription.failed_to_get_subscribe"),
+          );
         }
       } catch {
-        toast.error(getTranslation("error.subscription.failed_to_get_subscribe"));
+        toast.error(
+          getTranslation("error.subscription.failed_to_get_subscribe"),
+        );
       }
     },
-    [getTranslation]
+    [getTranslation],
   );
-
-  const getSubscription = useCallback(async () => {
-    dispatch({ type: "SET_LOADING", payload: true });
-
-    try {
-      const response = await apiClient.get(`/api/plans`);
-
-      if (response.ok) {
-        const data = (await response.json()) as {
-          subscription: Subscription;
-        };
-
-        dispatch({
-          type: "SET_SUBSCRIPTION",
-          payload: data.subscription || null,
-        });
-      } else {
-        const message = getTranslation("error.subscription.failed_to_get_subscription");
-        dispatch({
-          type: "SET_ERROR",
-          payload: message,
-        });
-        toast.error(getTranslation("error.subscription.search_failed"), {
-          description: message,
-        });
-      }
-    } catch {
-      const message = getTranslation("error.subscription.failed_to_get_subscription");
-      dispatch({
-        type: "SET_ERROR",
-        payload: message,
-      });
-      toast.error(getTranslation("error.plan.search_failed"), {
-        description: message,
-      });
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  }, [getTranslation]);
 
   return (
     <SubscriptionContext.Provider
@@ -93,7 +66,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 export function useSubscription() {
   const context = useContext(SubscriptionContext);
   if (context === undefined) {
-    throw new Error("useSubscription must be used within a SubscriptionProvider");
+    throw new Error(
+      "useSubscription must be used within a SubscriptionProvider",
+    );
   }
   return context;
 }

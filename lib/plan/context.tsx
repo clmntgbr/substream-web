@@ -3,8 +3,16 @@
 import { apiClient } from "@/lib/api-client";
 import { useGetTranslation } from "@/lib/use-get-translation";
 import * as React from "react";
-import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { toast } from "sonner";
+import { useAuth } from "../auth-context";
+import { MercureMessage, useMercure } from "../mercure";
 import { initialState, planReducer } from "./reducer";
 import { Plan, PlanState } from "./types";
 
@@ -19,6 +27,7 @@ const PlanContext = createContext<PlanContextType | undefined>(undefined);
 export function PlanProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(planReducer, initialState);
   const getTranslation = useGetTranslation();
+  const { user } = useAuth();
 
   const getPlans = useCallback(async () => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -97,6 +106,35 @@ export function PlanProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   }, [getTranslation]);
+
+  const mercureTopics = React.useMemo(() => {
+    return user?.id ? [`/users/${user.id}/plan`] : [];
+  }, [user?.id]);
+
+  const handleMercureError = useCallback(() => {}, []);
+  const handleMercureOpen = useCallback(() => {}, []);
+
+  const handleMercureMessage = useCallback(
+    (message: MercureMessage) => {
+      switch (message.type) {
+        case "plan.updated":
+          getCurrentPlan();
+          break;
+
+        default:
+          console.log("Unknown Mercure plan type:", message.type);
+      }
+    },
+    [getCurrentPlan],
+  );
+
+  useMercure({
+    topics: mercureTopics,
+    onMessage: handleMercureMessage,
+    onError: handleMercureError,
+    onOpen: handleMercureOpen,
+    enabled: true,
+  });
 
   useEffect(() => {
     getPlans();

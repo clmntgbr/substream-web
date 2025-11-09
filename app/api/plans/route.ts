@@ -15,7 +15,7 @@ async function getPlansHandler(req: AuthenticatedRequest) {
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -38,7 +38,7 @@ async function getPlansHandler(req: AuthenticatedRequest) {
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -53,7 +53,7 @@ async function getPlansHandler(req: AuthenticatedRequest) {
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

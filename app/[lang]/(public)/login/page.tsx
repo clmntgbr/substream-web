@@ -146,7 +146,9 @@ export default function LoginPage() {
       await initiateLinkedInOAuth();
     } catch {
       setIsLoading(false);
-      toast.error(getTranslation("error.auth.failed_to_initiate_linkedin_login"));
+      toast.error(
+        getTranslation("error.auth.failed_to_initiate_linkedin_login"),
+      );
     }
   };
 

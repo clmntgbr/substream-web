@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/lib/auth-context";
+import { usePlans } from "@/lib/plan/context";
 import { useRouter } from "next/navigation";
 
 export function User() {
   const isMobile = useIsMobile();
   const { logout } = useAuth();
   const { user } = useAuth();
+  const { state } = usePlans();
   const router = useRouter();
 
   if (!user) {
@@ -49,7 +51,10 @@ export function User() {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.picture || ""} alt={user.firstname || ""} />
+              <AvatarImage
+                src={user.picture || ""}
+                alt={user.firstname || ""}
+              />
               <AvatarFallback className="rounded-lg">
                 {user.firstname?.charAt(0) || ""}
                 {user.lastname?.charAt(0) || ""}
@@ -67,7 +72,7 @@ export function User() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Sparkles />
-            {user.plan?.name} plan
+            {state.currentPlan?.name} plan
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

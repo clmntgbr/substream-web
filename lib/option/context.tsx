@@ -15,24 +15,40 @@ const OptionContext = createContext<OptionContextType | undefined>(undefined);
 export function OptionProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } = useErrorTranslator();
+  const { resolveErrorMessage, parseErrorPayload, getDefaultErrorMessage } =
+    useErrorTranslator();
 
   const resolveFromResponse = useCallback(
     (data: unknown, fallback: string) => {
       const parsed = parseErrorPayload(data);
-      const record = data && typeof data === "object" && data !== null ? (data as Record<string, unknown>) : {};
+      const record =
+        data && typeof data === "object" && data !== null
+          ? (data as Record<string, unknown>)
+          : {};
 
       return resolveErrorMessage(
         {
           ...parsed,
-          message: parsed.message ?? (typeof record.message === "string" ? (record.message as string) : undefined),
-          error: parsed.error ?? (typeof record.error === "string" ? (record.error as string) : undefined),
-          params: parsed.params ?? (record.params && typeof record.params === "object" ? (record.params as Record<string, unknown>) : undefined),
+          message:
+            parsed.message ??
+            (typeof record.message === "string"
+              ? (record.message as string)
+              : undefined),
+          error:
+            parsed.error ??
+            (typeof record.error === "string"
+              ? (record.error as string)
+              : undefined),
+          params:
+            parsed.params ??
+            (record.params && typeof record.params === "object"
+              ? (record.params as Record<string, unknown>)
+              : undefined),
         },
-        fallback
+        fallback,
       );
     },
-    [parseErrorPayload, resolveErrorMessage]
+    [parseErrorPayload, resolveErrorMessage],
   );
 
   const createOption = useCallback(async (optionData: Partial<Option>) => {
@@ -53,19 +69,27 @@ export function OptionProvider({ children }: { children: React.ReactNode }) {
         return data.option;
       } else {
         const errorData = await response.json().catch(() => ({}));
-        const message = resolveFromResponse(errorData, "Failed to create option");
+        const message = resolveFromResponse(
+          errorData,
+          "Failed to create option",
+        );
         setError(message);
         return null;
       }
     } catch (err) {
-      const backendError = err as (Error & { key?: string; params?: Record<string, unknown> }) | undefined;
+      const backendError = err as
+        | (Error & { key?: string; params?: Record<string, unknown> })
+        | undefined;
       const message = resolveErrorMessage(
         {
           key: backendError?.key,
           params: backendError?.params,
-          message: backendError instanceof Error ? backendError.message : undefined,
+          message:
+            backendError instanceof Error ? backendError.message : undefined,
         },
-        backendError instanceof Error ? backendError.message : getDefaultErrorMessage()
+        backendError instanceof Error
+          ? backendError.message
+          : getDefaultErrorMessage(),
       );
       setError(message);
       return null;

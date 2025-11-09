@@ -8,7 +8,10 @@ export const initialState: SubscriptionState = {
 };
 
 // Reducer function
-export function subscriptionReducer(state: SubscriptionState, action: SubscriptionAction): SubscriptionState {
+export function subscriptionReducer(
+  state: SubscriptionState,
+  action: SubscriptionAction,
+): SubscriptionState {
   switch (action.type) {
     case "SET_SUBSCRIPTION":
       return {
