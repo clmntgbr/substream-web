@@ -25,7 +25,6 @@ export async function initiateLinkedInOAuth() {
 
     window.location.href = result.data.url;
   } catch (error) {
-    console.log("Error initiating LinkedIn OAuth:", error);
     throw error;
   }
 }

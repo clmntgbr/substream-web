@@ -25,7 +25,6 @@ export async function initiateGoogleOAuth() {
 
     window.location.href = result.data.url;
   } catch (error) {
-    console.log("Error initiating Google OAuth:", error);
     throw error;
   }
 }

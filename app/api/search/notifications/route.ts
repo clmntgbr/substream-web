@@ -24,23 +24,20 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
           success: false,
           key: "error.auth.token_missing",
         },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
     const { searchParams } = new URL(req.url);
     const queryString = searchParams.toString();
 
-    const backendResponse = await fetch(
-      `${BACKEND_API_URL}/search/notifications?${queryString}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-          "Content-Type": "application/ld+json",
-        },
+    const backendResponse = await fetch(`${BACKEND_API_URL}/search/notifications?${queryString}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        "Content-Type": "application/ld+json",
       },
-    );
+    });
 
     if (!backendResponse.ok) {
       const payload = (await backendResponse.json().catch(() => ({}))) as {
@@ -54,7 +51,7 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
           key: payload.key,
           params: payload.params,
         },
-        { status: backendResponse.status },
+        { status: backendResponse.status }
       );
     }
 
@@ -67,13 +64,12 @@ async function searchNotificationsHandler(req: AuthenticatedRequest) {
       pageCount: data.total_pages || 1,
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       {
         success: false,
         key: "error.server.internal",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

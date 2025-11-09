@@ -3,13 +3,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useGetTranslation } from "@/lib/use-get-translation";
 import * as React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import { toast } from "sonner";
 import { useAuth } from "../auth-context";
 import { MercureMessage, useMercure } from "../mercure";
@@ -117,15 +111,14 @@ export function PlanProvider({ children }: { children: React.ReactNode }) {
   const handleMercureMessage = useCallback(
     (message: MercureMessage) => {
       switch (message.type) {
-        case "plan.updated":
+        case "plan.refresh":
           getCurrentPlan();
           break;
 
         default:
-          console.log("Unknown Mercure plan type:", message.type);
       }
     },
-    [getCurrentPlan],
+    [getCurrentPlan]
   );
 
   useMercure({

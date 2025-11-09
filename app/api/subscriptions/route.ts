@@ -1,20 +1,11 @@
 import { AuthenticatedRequest, authMiddleware } from "@/lib/middleware";
-import { Stream } from "@/lib/stream";
+import { Subscription } from "@/lib/subscription/types";
 import { NextResponse } from "next/server";
+import { HydraResponse } from "../types/hydra";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
-export interface BackendApiResponse {
-  total_items: number;
-  items_per_page: number;
-  current_page: number;
-  total_pages: number;
-  results: Stream[];
-  next_page: number | null;
-  aggregations: unknown[];
-}
-
-async function searchStreamsHandler(req: AuthenticatedRequest) {
+async function getSubscriptionsHandler(req: AuthenticatedRequest) {
   try {
     const sessionToken = req.sessionToken;
 
@@ -28,14 +19,11 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
       );
     }
 
-    const { searchParams } = new URL(req.url);
-    const queryString = searchParams.toString();
-
-    const backendResponse = await fetch(`${BACKEND_API_URL}/search/streams?${queryString}`, {
+    const backendResponse = await fetch(`${BACKEND_API_URL}/subscriptions`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/ld+json",
+        "Content-Type": "application/json",
       },
     });
 
@@ -54,15 +42,12 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
       );
     }
 
-    const data = (await backendResponse.json()) as BackendApiResponse;
+    const data = (await backendResponse.json()) as HydraResponse<Subscription>;
 
     return NextResponse.json({
-      streams: data.results || [],
-      totalItems: data.total_items || 0,
-      page: data.current_page || 1,
-      pageCount: data.total_pages || 1,
+      subscriptions: data.member || [],
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -73,4 +58,4 @@ async function searchStreamsHandler(req: AuthenticatedRequest) {
   }
 }
 
-export const GET = authMiddleware(searchStreamsHandler);
+export const GET = authMiddleware(getSubscriptionsHandler);
