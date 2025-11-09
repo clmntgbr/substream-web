@@ -11,6 +11,7 @@ import { Plan, PlanState } from "./types";
 interface PlanContextType {
   state: PlanState;
   getPlans: () => Promise<void>;
+  getCurrentPlan: () => Promise<void>;
 }
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
@@ -58,16 +59,56 @@ export function PlanProvider({ children }: { children: React.ReactNode }) {
     }
   }, [getTranslation]);
 
-  // Load plans on component mount
+  const getCurrentPlan = useCallback(async () => {
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    try {
+      const response = await apiClient.get(`/api/plan`);
+
+      if (response.ok) {
+        const data = (await response.json()) as {
+          plan: Plan;
+        };
+
+        dispatch({
+          type: "SET_CURRENT_PLAN",
+          payload: data.plan || null,
+        });
+      } else {
+        const message = getTranslation("error.plan.failed_to_get_current_plan");
+        dispatch({
+          type: "SET_ERROR",
+          payload: message,
+        });
+        toast.error(getTranslation("error.plan.failed_to_get_current_plan"), {
+          description: message,
+        });
+      }
+    } catch {
+      const message = getTranslation("error.plan.failed_to_get_current_plan");
+      dispatch({
+        type: "SET_ERROR",
+        payload: message,
+      });
+      toast.error(getTranslation("error.plan.failed_to_get_current_plan"), {
+        description: message,
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, [getTranslation]);
+
   useEffect(() => {
     getPlans();
-  }, [getPlans]);
+    getCurrentPlan();
+  }, [getPlans, getCurrentPlan]);
 
   return (
     <PlanContext.Provider
       value={{
         state,
         getPlans,
+        getCurrentPlan,
       }}
     >
       {children}

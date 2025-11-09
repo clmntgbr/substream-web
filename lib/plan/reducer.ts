@@ -3,6 +3,7 @@ import { PlanAction, PlanState } from "./types";
 // Initial state
 export const initialState: PlanState = {
   plans: [],
+  currentPlan: null,
   isLoading: false,
   error: null,
 };
@@ -14,6 +15,12 @@ export function planReducer(state: PlanState, action: PlanAction): PlanState {
       return {
         ...state,
         plans: action.payload,
+        error: null,
+      };
+    case "SET_CURRENT_PLAN":
+      return {
+        ...state,
+        currentPlan: action.payload,
         error: null,
       };
     case "SET_LOADING":

@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ClientOnly } from "@/components/ui/client-only";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth-context";
 import { Plan, usePlans } from "@/lib/plan";
@@ -18,7 +19,7 @@ export default function Pricing() {
   const { user } = useAuth();
   const [interval, setInterval] = useState<"monthly" | "yearly">("monthly");
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
-  const currentPlanId = user?.plan?.id;
+  // const currentPlanId = user?.plan?.id;
 
   useEffect(() => {
     const filteredPlans = state.plans.filter((plan) => plan.interval === interval || plan.interval === "both");
@@ -43,17 +44,19 @@ export default function Pricing() {
       </div>
 
       <div className="mb-12 flex justify-center">
-        <Tabs value={interval} onValueChange={(v) => setInterval(v as "monthly" | "yearly")}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="yearly">Yearly</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <ClientOnly>
+          <Tabs value={interval} onValueChange={(v) => setInterval(v as "monthly" | "yearly")}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="monthly">Monthly</TabsTrigger>
+              <TabsTrigger value="yearly">Yearly</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </ClientOnly>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         {filteredPlans.map((plan) => {
-          const isCurrentPlan = currentPlanId === plan.id;
+          const isCurrentPlan = null;
           const isPopular = plan.name === "Pro";
           const isPlanLoading = loadingPlanId === plan.id;
 
