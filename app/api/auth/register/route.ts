@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { setSessionCookie } from "../../../../lib/session";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
@@ -18,8 +19,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false }, { status: backendResponse.status });
     }
 
-    const data = await backendResponse.json();
-    return NextResponse.json(data);
+    const { user, token } = await backendResponse.json();
+
+    if (!token || !user) {
+      return NextResponse.json({ success: false }, { status: 500 });
+    }
+
+    const { id, email, firstname, lastname, picture, roles } = user;
+    const response = NextResponse.json({ user: { id, email, firstname, lastname, picture, roles } });
+
+    setSessionCookie(response, token);
+    return response;
   } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }

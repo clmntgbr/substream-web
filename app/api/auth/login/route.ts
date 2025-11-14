@@ -1,5 +1,5 @@
-import { setSessionCookie } from "@/lib/session";
 import { NextResponse } from "next/server";
+import { setSessionCookie } from "../../../../lib/session";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
