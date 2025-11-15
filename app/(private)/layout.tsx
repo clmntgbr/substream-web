@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/layout/Theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth/provider";
+import { MercureProvider } from "@/lib/mercure/provider";
 import { UserProvider } from "@/lib/user/provider";
 
 export default function PrivateLayout({
@@ -14,10 +15,12 @@ export default function PrivateLayout({
     <ThemeProvider attribute="class" defaultTheme="white" enableSystem disableTransitionOnChange>
       <AuthProvider>
         <UserProvider>
-          <Header />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">{children}</div>
-          <Footer />
-          <Toaster richColors expand={false} position="top-right" closeButton />
+          <MercureProvider>
+            <Header />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">{children}</div>
+            <Footer />
+            <Toaster richColors expand={false} position="top-right" closeButton />
+          </MercureProvider>
         </UserProvider>
       </AuthProvider>
     </ThemeProvider>

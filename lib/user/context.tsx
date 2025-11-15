@@ -1,21 +1,19 @@
-'use client';
+"use client";
 
-import { createContext, useContext } from 'react';
-import { UserState } from './types';
+import { createContext, useContext } from "react";
+import { UserState } from "./types";
 
 export interface UserContextType extends UserState {
-  fetchMe: () => Promise<void>;
+  useFetchMe: () => Promise<void>;
   clearUser: () => void;
 }
 
-export const UserContext = createContext<UserContextType | undefined>(
-  undefined
-);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error('useUser must be used within UserProvider');
+    throw new Error("useUser must be used within UserProvider");
   }
   return context;
 };
