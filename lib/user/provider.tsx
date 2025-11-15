@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useReducer, useCallback } from 'react';
-import { UserContext } from './context';
-import { userReducer } from './reducer';
-import { fetchMe as fetchMeApi } from './api';
-import { UserState } from './types';
+import { useCallback, useEffect, useReducer } from "react";
+import { fetchMe as fetchMeApi } from "./api";
+import { UserContext } from "./context";
+import { userReducer } from "./reducer";
+import { UserState } from "./types";
 
 const initialState: UserState = {
   user: null,
@@ -17,19 +17,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const fetchMe = useCallback(async () => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
+      dispatch({ type: "SET_LOADING", payload: true });
       const user = await fetchMeApi();
-      dispatch({ type: 'FETCH_ME_SUCCESS', payload: user });
+      dispatch({ type: "FETCH_ME_SUCCESS", payload: user });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to fetch user';
-      dispatch({ type: 'FETCH_ME_ERROR', payload: message });
+      dispatch({ type: "FETCH_ME_ERROR", payload: "Failed to fetch user" });
     }
   }, []);
 
   const clearUser = useCallback(() => {
-    dispatch({ type: 'CLEAR_USER' });
+    dispatch({ type: "CLEAR_USER" });
   }, []);
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
 
   return (
     <UserContext.Provider

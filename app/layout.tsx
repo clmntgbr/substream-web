@@ -1,27 +1,31 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { AuthProvider } from '@/lib/auth/provider';
-import { UserProvider } from '@/lib/user/provider';
-
-const inter = Inter({ subsets: ['latin'] });
+import { fontVariables } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Auth App',
-  description: 'Authentication system with Next.js',
+  title: "Substream Web",
+  description: "Application sécurisée avec authentification JWT",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: {
+  params,
+}: Readonly<{
   children: React.ReactNode;
-}) {
+  params: Promise<{ lang: string }>;
+}>) {
+  const { lang } = await params;
+
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
-          <UserProvider>{children}</UserProvider>
-        </AuthProvider>
+    <html lang={lang} suppressHydrationWarning>
+      <body
+        className={cn(
+          "text-foreground group/body theme-blue overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]",
+          fontVariables
+        )}
+      >
+        {children}
       </body>
     </html>
   );

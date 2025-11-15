@@ -2,21 +2,10 @@
 
 import { useAuth } from "@/lib/auth/context";
 import { useUser } from "@/lib/user/context";
-import { useEffect } from "react";
 
 export default function StudioPage() {
-  const { user, logout, loading, requireAuth } = useAuth();
-  const { user: userData, fetchMe } = useUser();
-
-  useEffect(() => {
-    requireAuth();
-  }, [requireAuth]);
-
-  useEffect(() => {
-    if (user?.email && !userData) {
-      fetchMe();
-    }
-  }, [user?.email, userData, fetchMe]);
+  const { user, logout } = useAuth();
+  const { user: userData } = useUser();
 
   const handleLogout = async () => {
     await logout();

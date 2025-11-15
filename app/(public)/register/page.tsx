@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -16,12 +16,6 @@ export default function RegisterPage() {
   const [validationError, setValidationError] = useState("");
   const { register, error, loading, token } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (token && !loading) {
-      router.push("/studio");
-    }
-  }, [token, loading, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
