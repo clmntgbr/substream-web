@@ -1,0 +1,40 @@
+import { StreamAction, StreamState } from "./types";
+
+export const streamReducer = (state: StreamState, action: StreamAction): StreamState => {
+  switch (action.type) {
+    case "FETCH_STREAMS_SUCCESS":
+      return {
+        ...state,
+        streams: action.payload,
+        loading: false,
+        error: null,
+      };
+    case "FETCH_STREAMS_ERROR":
+      return {
+        ...state,
+        streams: {
+          member: [],
+          totalItems: 0,
+        },
+        loading: false,
+        error: action.payload,
+      };
+    case "SET_LOADING":
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case "CLEAR_STREAMS":
+      return {
+        ...state,
+        streams: {
+          member: [],
+          totalItems: 0,
+        },
+        loading: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};

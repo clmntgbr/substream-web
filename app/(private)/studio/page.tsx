@@ -1,11 +1,13 @@
 "use client";
 
 import { useAuth } from "@/lib/auth/context";
+import { useStream } from "@/lib/stream/context";
 import { useUser } from "@/lib/user/context";
 
 export default function StudioPage() {
   const { user, logout } = useAuth();
   const { user: userData } = useUser();
+  const { streams } = useStream();
 
   const handleLogout = async () => {
     await logout();
@@ -68,6 +70,18 @@ export default function StudioPage() {
               </div>
             </div>
           )}
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Données du contexte Stream</h2>
+            <div className="space-y-2 text-sm">
+              {streams.member.map((stream) => (
+                <div key={stream.id}>
+                  <h3 className="text-lg font-semibold">{stream.name}</h3>
+                  <p className="text-sm text-gray-500">{stream.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
