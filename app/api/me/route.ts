@@ -1,3 +1,4 @@
+import { pick } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -7,48 +8,25 @@ export async function GET(request: NextRequest) {
     const sessionToken = request.cookies.get("session_token")?.value;
 
     if (!sessionToken) {
-      return NextResponse.json(
-        {
-          success: false,
-          key: "error.auth.token_missing",
-        },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false }, { status: 401 });
     }
 
     const backendResponse = await fetch(`${BACKEND_API_URL}/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
       },
     });
 
     if (!backendResponse.ok) {
-      const payload = (await backendResponse.json().catch(() => ({}))) as {
-        key?: string;
-        params?: Record<string, unknown>;
-      };
-      return NextResponse.json(
-        {
-          success: false,
-          key: payload.key,
-          params: payload.params,
-        },
-        { status: backendResponse.status },
-      );
+      return NextResponse.json({ success: false }, { status: backendResponse.status });
     }
 
-    const user = await backendResponse.json();
+    const response = await backendResponse.json();
+    const user = pick(response, ["id", "email", "firstname", "lastname", "picture", "roles"]);
 
-    return NextResponse.json({ user });
+    return NextResponse.json(user);
   } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        key: "error.server.internal",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }
