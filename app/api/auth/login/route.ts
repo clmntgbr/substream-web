@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/auth/login`, {
+    const response = await fetch(`${BACKEND_API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -15,21 +15,21 @@ export async function POST(request: Request) {
       body: JSON.stringify(body),
     });
 
-    if (!backendResponse.ok) {
-      return NextResponse.json({ success: false }, { status: backendResponse.status });
+    if (!response.ok) {
+      return NextResponse.json({ success: false }, { status: response.status });
     }
 
-    const { user, token } = await backendResponse.json();
+    const { user, token } = await response.json();
 
     if (!token || !user) {
       return NextResponse.json({ success: false }, { status: 500 });
     }
 
     const { id, email, firstname, lastname, picture, roles } = user;
-    const response = NextResponse.json({ user: { id, email, firstname, lastname, picture, roles } });
+    const nextResponse = NextResponse.json({ user: { id, email, firstname, lastname, picture, roles } });
 
-    setSessionCookie(response, token);
-    return response;
+    setSessionCookie(nextResponse, token);
+    return nextResponse;
   } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }

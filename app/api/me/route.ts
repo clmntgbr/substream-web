@@ -11,19 +11,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false }, { status: 401 });
     }
 
-    const backendResponse = await fetch(`${BACKEND_API_URL}/me`, {
+    const response = await fetch(`${BACKEND_API_URL}/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
       },
     });
 
-    if (!backendResponse.ok) {
-      return NextResponse.json({ success: false }, { status: backendResponse.status });
+    if (!response.ok) {
+      return NextResponse.json({ success: false }, { status: response.status });
     }
 
-    const response = await backendResponse.json();
-    const user = pick(response, ["id", "email", "firstname", "lastname", "picture", "roles"]);
+    const nextResponse = await response.json();
+    const user = pick(nextResponse, ["id", "email", "firstname", "lastname", "picture", "roles"]);
 
     return NextResponse.json(user);
   } catch {
