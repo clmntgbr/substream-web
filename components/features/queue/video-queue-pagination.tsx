@@ -29,7 +29,7 @@ export function VideoQueuePagination({ onPageChange }: VideoQueuePaginationProps
             disabled={streams.currentPage <= 1}
           >
             <span className="sr-only">Go to first page</span>
-            <ChevronsLeft />
+            <ChevronsLeft size={16} />
           </Button>
           <Button
             variant="outline"
@@ -39,7 +39,7 @@ export function VideoQueuePagination({ onPageChange }: VideoQueuePaginationProps
             disabled={streams.currentPage <= 1}
           >
             <span className="sr-only">Go to previous page</span>
-            <ChevronLeft />
+            <ChevronLeft size={16} />
           </Button>
           <Button
             variant="outline"
@@ -49,7 +49,7 @@ export function VideoQueuePagination({ onPageChange }: VideoQueuePaginationProps
             disabled={streams.currentPage >= streams.totalPages}
           >
             <span className="sr-only">Go to next page</span>
-            <ChevronRight />
+            <ChevronRight size={16} />
           </Button>
           <Button
             variant="outline"
@@ -59,7 +59,7 @@ export function VideoQueuePagination({ onPageChange }: VideoQueuePaginationProps
             disabled={streams.currentPage >= streams.totalPages}
           >
             <span className="sr-only">Go to last page</span>
-            <ChevronsRight />
+            <ChevronsRight size={16} />
           </Button>
         </div>
       </div>

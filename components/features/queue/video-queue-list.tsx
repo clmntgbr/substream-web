@@ -12,9 +12,10 @@ export const VideoQueueList = () => {
 
   const handleFilterChange = () => {};
 
-  const handleSearchChange = () => {
+  const handleSearchChange = (search: string) => {
     useFetchStreams({
       page: 1,
+      search: search,
     });
   };
 

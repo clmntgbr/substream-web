@@ -1,23 +1,33 @@
 import { Input } from "@/components/ui/input";
-import { forwardRef, memo, useState } from "react";
+import { forwardRef, memo, useEffect, useState } from "react";
 
 interface VideoQueueFilterSearchProps {
-  onSearchChange: (search: string | undefined) => void;
+  onSearchChange: (search: string) => void;
 }
 
 const VideoQueueFilterSearchComponent = forwardRef<void, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch({ onSearchChange }, ref) {
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string | undefined>(undefined);
 
   const handleClearSearch = () => {
+    onSearchChange("");
     setSearch("");
-    onSearchChange(undefined);
   };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (search) {
+        onSearchChange(search);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [search]);
 
   return (
     <div className="relative">
       <Input
         placeholder="Search by name"
-        value={search}
+        value={search ?? ""}
         onChange={(event) => setSearch(event.target.value)}
         className="h-8 w-[150px] lg:w-[250px] pr-8"
       />

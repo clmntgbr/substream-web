@@ -1,15 +1,16 @@
 import { Hydra } from "../hydra";
+import { QueryParams } from "./provider";
 import { Stream } from "./types";
-
-interface QueryParams {
-  page: number;
-}
 
 export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stream>> => {
   const query = new URLSearchParams();
 
-  query.append("itemsPerPage", "2");
+  query.append("itemsPerPage", "10");
   query.append("page", queryParams.page.toString());
+
+  if (queryParams.search) {
+    query.append("search[originalFileName]", queryParams.search);
+  }
 
   console.log(query.toString());
   const response = await fetch(`/api/streams?${query.toString()}`, {
