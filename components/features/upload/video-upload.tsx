@@ -1,6 +1,6 @@
 "use client";
 
-import VideoPreview from "@/components/features/uploaddd/video-preview";
+import VideoPreview from "@/components/features/upload/video-preview";
 import { YoutubeUrlSchema } from "@/components/shared/misc/youtube-url-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
