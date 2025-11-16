@@ -76,8 +76,7 @@ export default function StudioPage() {
             <div className="space-y-2 text-sm">
               {streams.member.map((stream) => (
                 <div key={stream.id}>
-                  <h3 className="text-lg font-semibold">{stream.name}</h3>
-                  <p className="text-sm text-gray-500">{stream.description}</p>
+                  <h3 className="text-lg font-semibold">{stream.id}</h3>
                 </div>
               ))}
             </div>

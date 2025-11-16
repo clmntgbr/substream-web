@@ -6,7 +6,7 @@ interface QueryParams {
   itemsPerPage?: number;
 }
 
-export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stream[]>> => {
+export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stream>> => {
   const query = new URLSearchParams();
 
   const itemsPerPage = queryParams?.itemsPerPage || 10;
