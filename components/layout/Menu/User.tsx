@@ -29,7 +29,7 @@ export function User() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full flex items-center justify-center">
           <Avatar className="h-8 w-8 rounded-full">
             <AvatarImage src={user.picture} alt={user.email} />
             <AvatarFallback className="rounded-full">
