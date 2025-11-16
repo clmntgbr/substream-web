@@ -1,13 +1,12 @@
 "use client";
 
-import { ImageIcon, UploadIcon } from "lucide-react";
-
+import VideoPreview from "@/components/features/uploaddd/video-preview";
 import { YoutubeUrlSchema } from "@/components/shared/misc/youtube-url-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ImageIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import VideoPreview from "./video-preview";
 
 export default function Upload() {
   const [url, setUrl] = useState<string>("");

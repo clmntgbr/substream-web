@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useOptions } from "@/lib/option/context";
+import { Option } from "@/lib/option/types";
 import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "sonner";
 import { VideoSettings } from "./video-settings";
-import { Option } from "@/lib/option/types";
 
 interface PreviewProps {
   open: boolean;
@@ -463,20 +463,20 @@ export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: Prev
             <div className="backdrop-blur-xl px-6 py-4">
               <div className="flex justify-center gap-3 mx-auto">
                 <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
-                  <VideoSettingsIcon className="h-3 w-3 mr-1" />
+                  <VideoSettingsIcon className="h-3 w-3 mr-2" />
                   Settings
-                  <KbdGroup>
+                  <KbdGroup className="ml-2">
                     <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
                 </Button>
                 <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
-                  <KbdGroup>
+                  <KbdGroup className="mr-2">
                     <Kbd className="bg-black/10 backdrop-blur-md text-white border-white/20 rounded-md px-2 py-1 dark:bg-white/10 dark:border-black/20 dark:text-black">
                       ⌘ + e
                     </Kbd>
                   </KbdGroup>
                   Process
-                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="ml-2 h-4 w-4" />}
                 </Button>
               </div>
             </div>
