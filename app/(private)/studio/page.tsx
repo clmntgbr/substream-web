@@ -73,6 +73,7 @@ export default function StudioPage() {
 
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Données du contexte Stream</h2>
+            <pre>{JSON.stringify(streams, null, 2)}</pre>
             <div className="space-y-2 text-sm">
               {streams.member.map((stream) => (
                 <div key={stream.id}>

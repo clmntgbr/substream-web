@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "./Menu/User";
 import { ThemeToggle } from "./Theme/ThemeToggle";
 
 export function Header() {
@@ -12,6 +13,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
               <ThemeToggle />
+              <User />
             </div>
           </div>
         </div>

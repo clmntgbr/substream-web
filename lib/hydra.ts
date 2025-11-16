@@ -7,6 +7,9 @@ export interface HydraView {
 
 export interface Hydra<TData> {
   member: TData[];
+  currentPage: number;
+  itemsPerPage: number;
+  totalPages: number;
   totalItems: number;
   view?: HydraView;
 }

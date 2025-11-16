@@ -15,6 +15,9 @@ export const streamReducer = (state: StreamState, action: StreamAction): StreamS
         streams: {
           member: [],
           totalItems: 0,
+          currentPage: 0,
+          itemsPerPage: 0,
+          totalPages: 0,
         },
         loading: false,
         error: action.payload,
@@ -30,6 +33,9 @@ export const streamReducer = (state: StreamState, action: StreamAction): StreamS
         streams: {
           member: [],
           totalItems: 0,
+          currentPage: 0,
+          itemsPerPage: 0,
+          totalPages: 0,
         },
         loading: false,
         error: null,
