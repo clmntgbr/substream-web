@@ -9,10 +9,17 @@ export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stre
   query.append("page", queryParams.page.toString());
 
   if (queryParams.search) {
-    query.append("search[originalFileName]", queryParams.search);
+    query.append("originalFileName", queryParams.search);
   }
 
-  console.log(query.toString());
+  if (queryParams.from) {
+    query.append("createdAt[after]", queryParams.from.toISOString());
+  }
+
+  if (queryParams.to) {
+    query.append("createdAt[before]", queryParams.to.toISOString());
+  }
+
   const response = await fetch(`/api/streams?${query.toString()}`, {
     method: "GET",
   });

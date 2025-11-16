@@ -1,5 +1,7 @@
 import { useStreams } from "@/lib/stream/context";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterSearch } from "./filter/video-queue-filter-search";
 import { VideoQueueCard } from "./video-queue-card";
 import { VideoQueueListEmpty } from "./video-queue-list-empty";
@@ -7,6 +9,9 @@ import { VideoQueuePagination } from "./video-queue-pagination";
 
 export const VideoQueueList = () => {
   const { streams, useFetchStreams } = useStreams();
+  const [from, setFrom] = useState<Date | undefined>(undefined);
+  const [to, setTo] = useState<Date | undefined>(undefined);
+  const [page, setPage] = useState<number>(1);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -20,12 +25,21 @@ export const VideoQueueList = () => {
   };
 
   const handlePageChange = (page: number) => {
+    setPage(page);
     useFetchStreams({
       page: page,
     });
   };
 
-  const handleDateChange = () => {};
+  const handleDateChange = (from: Date | undefined, to: Date | undefined) => {
+    setFrom(from);
+    setTo(to);
+    useFetchStreams({
+      page: page,
+      from: from,
+      to: to,
+    });
+  };
 
   return (
     <>
@@ -35,7 +49,7 @@ export const VideoQueueList = () => {
             <VideoQueueFilterSearch onSearchChange={handleSearchChange} />
             {/* <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} /> */}
           </div>
-          {/* <VideoQueueFilterDate ref={dateRef} onDateChange={handleDateChange} /> */}
+          <VideoQueueFilterDate onDateChange={handleDateChange} />
         </div>
       </>
 

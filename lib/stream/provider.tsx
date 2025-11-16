@@ -9,6 +9,8 @@ import { StreamState } from "./types";
 export interface QueryParams {
   page: number;
   search?: string;
+  from?: Date;
+  to?: Date;
 }
 
 const initialState: StreamState = {
