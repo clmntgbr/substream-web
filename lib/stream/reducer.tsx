@@ -22,6 +22,17 @@ export const streamReducer = (state: StreamState, action: StreamAction): StreamS
         loading: false,
         error: action.payload,
       };
+    case "DOWNLOAD_STREAM_ERROR":
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case "DOWNLOAD_STREAM_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        error: null,
+      };
     case "SET_LOADING":
       return {
         ...state,

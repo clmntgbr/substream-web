@@ -1,14 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useReducer } from "react";
-import { fetchStreams } from "./api";
+import { downloadStream, fetchStreams } from "./api";
 import { StreamContext } from "./context";
 import { streamReducer } from "./reducer";
 import { StreamState } from "./types";
 
-interface QueryParams {
-  page?: number;
-  itemsPerPage?: number;
+export interface QueryParams {
+  page: number;
 }
 
 const initialState: StreamState = {
@@ -26,7 +25,7 @@ const initialState: StreamState = {
 export function StreamProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(streamReducer, initialState);
 
-  const useFetchStreams = useCallback(async (params: QueryParams = { itemsPerPage: 2 }) => {
+  const useFetchStreams = useCallback(async (params: QueryParams) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
@@ -37,12 +36,21 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const useDownloadStream = useCallback(async (id: string, fileName: string) => {
+    try {
+      await downloadStream(id, fileName);
+      dispatch({ type: "DOWNLOAD_STREAM_SUCCESS" });
+    } catch (error) {
+      dispatch({ type: "DOWNLOAD_STREAM_ERROR", payload: "Failed to download stream" });
+    }
+  }, []);
+
   const clearStream = useCallback(() => {
     dispatch({ type: "CLEAR_STREAMS" });
   }, []);
 
   useEffect(() => {
-    useFetchStreams();
+    useFetchStreams({ page: 1 });
   }, [useFetchStreams]);
 
   return (
@@ -50,6 +58,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       value={{
         ...state,
         useFetchStreams,
+        useDownloadStream,
         clearStream,
       }}
     >

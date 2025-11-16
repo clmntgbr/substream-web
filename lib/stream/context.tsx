@@ -1,16 +1,18 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import { QueryParams } from "./provider";
 import { StreamState } from "./types";
 
 export interface StreamContextType extends StreamState {
-  useFetchStreams: () => Promise<void>;
+  useFetchStreams: (params: QueryParams) => Promise<void>;
+  useDownloadStream: (id: string, fileName: string) => Promise<void>;
   clearStream: () => void;
 }
 
 export const StreamContext = createContext<StreamContextType | undefined>(undefined);
 
-export const useStream = () => {
+export const useStreams = () => {
   const context = useContext(StreamContext);
   if (!context) {
     throw new Error("useStream must be used within StreamProvider");
