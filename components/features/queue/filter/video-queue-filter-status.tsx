@@ -13,11 +13,21 @@ interface VideoQueueFilterStatusProps {
 }
 
 const VideoQueueFilterStatusComponent = forwardRef<void, VideoQueueFilterStatusProps>(function VideoQueueFilterStatus({ onStatusChange }, ref) {
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[] | undefined>(undefined);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  const handleSelectStatus = (status: string) => {
+    if (selectedStatuses && selectedStatuses.includes(status)) {
+      setSelectedStatuses(selectedStatuses.filter((s) => s !== status));
+      return;
+    }
+    setSelectedStatuses([...(selectedStatuses || []), status]);
+  };
+
   useEffect(() => {
-    onStatusChange(selectedStatuses);
+    if (selectedStatuses) {
+      onStatusChange(selectedStatuses);
+    }
   }, [selectedStatuses]);
 
   return (
@@ -27,11 +37,11 @@ const VideoQueueFilterStatusComponent = forwardRef<void, VideoQueueFilterStatusP
           <Button variant="outline" size="sm" className="h-8 border-dashed cursor-pointer hover:bg-accent hover:text-accent-foregroun dark:bg-input">
             <PlusCircle />
             Filter by status
-            {selectedStatuses.length > 0 && (
+            {selectedStatuses && selectedStatuses.length > 0 && (
               <>
                 <Separator orientation="vertical" className="mx-2 h-4" />
                 <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
-                  {selectedStatuses.length}
+                  {selectedStatuses && selectedStatuses.length}
                 </Badge>
                 <div className="hidden gap-1 lg:flex">
                   {selectedStatuses.length > 2 ? (
@@ -59,9 +69,9 @@ const VideoQueueFilterStatusComponent = forwardRef<void, VideoQueueFilterStatusP
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
                 {VideoQueueStatuses.map((status) => {
-                  const isSelected = selectedStatuses.includes(status.value);
+                  const isSelected = selectedStatuses && selectedStatuses.includes(status.value);
                   return (
-                    <CommandItem key={status.value} onSelect={() => setSelectedStatuses([...selectedStatuses, status.value])}>
+                    <CommandItem key={status.value} onSelect={() => handleSelectStatus(status.value)}>
                       <div
                         className={cn(
                           "flex size-4 items-center justify-center rounded-[4px] border",
@@ -75,7 +85,7 @@ const VideoQueueFilterStatusComponent = forwardRef<void, VideoQueueFilterStatusP
                   );
                 })}
               </CommandGroup>
-              {selectedStatuses.length > 0 && (
+              {selectedStatuses && selectedStatuses.length > 0 && (
                 <>
                   <CommandSeparator />
                   <CommandGroup>
