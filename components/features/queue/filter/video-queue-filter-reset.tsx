@@ -1,18 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/lib/use-translations";
 import { X } from "lucide-react";
 
 interface VideoQueueFilterResetProps {
-  handleClearFilters: () => void;
+  onReset: () => void;
 }
 
-export function VideoQueueFilterReset({
-  handleClearFilters,
-}: VideoQueueFilterResetProps) {
-  const t = useTranslations();
+export function VideoQueueFilterReset({ onReset }: VideoQueueFilterResetProps) {
   return (
-    <Button variant="ghost" size="sm" onClick={handleClearFilters}>
-      {t?.home?.queue?.resetFilters || "Reset Filters"}
+    <Button variant="ghost" size="sm" onClick={onReset}>
+      Reset Filters
       <X />
     </Button>
   );

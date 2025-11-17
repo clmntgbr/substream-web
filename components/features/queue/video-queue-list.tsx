@@ -2,6 +2,7 @@ import { useMercure } from "@/lib/mercure/provider";
 import { useStreams } from "@/lib/stream/context";
 import { useEffect, useState } from "react";
 import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
+import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
 import { VideoQueueFilterSearch } from "./filter/video-queue-filter-search";
 import { VideoQueueFilterStatus } from "./filter/video-queue-filter-status";
 import { VideoQueueCard } from "./video-queue-card";
@@ -19,7 +20,6 @@ export const VideoQueueList = () => {
 
   const handleStatusChange = (status: string[]) => {
     setStatus(status);
-    console.log("handleStatusChange");
     useFetchStreams({
       page: page,
       search: search,
@@ -31,7 +31,6 @@ export const VideoQueueList = () => {
 
   const handleSearchChange = (search: string) => {
     setSearch(search);
-    console.log("handleSearchChange");
     useFetchStreams({
       page: page,
       search: search,
@@ -43,7 +42,6 @@ export const VideoQueueList = () => {
 
   const handlePageChange = (page: number) => {
     setPage(page);
-    console.log("handlePageChange");
     useFetchStreams({
       page: page,
       search: search,
@@ -56,7 +54,6 @@ export const VideoQueueList = () => {
   const handleDateChange = (from: Date | undefined, to: Date | undefined) => {
     setFrom(from);
     setTo(to);
-    console.log("handleDateChange");
     useFetchStreams({
       page: page,
       search: search,
@@ -66,9 +63,18 @@ export const VideoQueueList = () => {
     });
   };
 
+  const handleReset = () => {
+    setFrom(undefined);
+    setTo(undefined);
+    setSearch(undefined);
+    setStatus([]);
+    useFetchStreams({
+      page: page,
+    });
+  };
+
   useEffect(() => {
     const unsubscribe = on("streams.refresh", (data) => {
-      console.log("useEffect");
       useFetchStreams({
         page: page,
         search: search,
@@ -88,6 +94,7 @@ export const VideoQueueList = () => {
           <div className="flex items-center gap-4">
             <VideoQueueFilterSearch onSearchChange={handleSearchChange} />
             <VideoQueueFilterStatus onStatusChange={handleStatusChange} />
+            <VideoQueueFilterReset onReset={handleReset} />
           </div>
           <VideoQueueFilterDate onDateChange={handleDateChange} />
         </div>
