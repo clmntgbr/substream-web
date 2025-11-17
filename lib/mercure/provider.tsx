@@ -1,6 +1,13 @@
 "use client";
 import { useAuth } from "@/lib/auth/context";
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useStreams } from "../stream/context";
 import { useUser } from "../user/context";
 
@@ -117,7 +124,10 @@ export function MercureProvider({ children }: MercureProviderProps) {
 
         eventSource.onerror = () => {
           eventSource.close();
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
+          const delay = Math.min(
+            1000 * Math.pow(2, reconnectAttemptsRef.current),
+            30000,
+          );
           reconnectAttemptsRef.current++;
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
@@ -141,7 +151,11 @@ export function MercureProvider({ children }: MercureProviderProps) {
     };
   }, [topic]);
 
-  return <MercureContext.Provider value={{ on, off, emit }}>{children}</MercureContext.Provider>;
+  return (
+    <MercureContext.Provider value={{ on, off, emit }}>
+      {children}
+    </MercureContext.Provider>
+  );
 }
 
 export function useMercure() {

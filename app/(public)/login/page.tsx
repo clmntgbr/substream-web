@@ -33,7 +33,11 @@ export default function LoginPage() {
         <div className="bg-white rounded-lg shadow p-8">
           <h1 className="text-2xl font-bold mb-6 text-center">Connexion</h1>
 
-          {error && <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
+          {error && (
+            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -52,7 +56,10 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-2"
+              >
                 Mot de passe
               </label>
               <input
@@ -77,7 +84,10 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm">
             Pas encore de compte?{" "}
-            <a href="/register" className="text-blue-600 hover:underline font-medium">
+            <a
+              href="/register"
+              className="text-blue-600 hover:underline font-medium"
+            >
               S'inscrire
             </a>
           </p>

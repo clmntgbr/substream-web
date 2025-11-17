@@ -8,11 +8,17 @@ const publicRoutes = ["/login", "/register"];
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  if (path.startsWith("/api/") || path.startsWith("/_next/") || path.includes(".")) {
+  if (
+    path.startsWith("/api/") ||
+    path.startsWith("/_next/") ||
+    path.includes(".")
+  ) {
     return NextResponse.next();
   }
 
-  const isProtectedRoute = protectedRoutes.some((route) => path.startsWith(route));
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    path.startsWith(route),
+  );
   const isPublicRoute = publicRoutes.some((route) => path === route);
 
   const cookie = (await cookies()).get("session_token")?.value;

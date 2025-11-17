@@ -1,6 +1,9 @@
 import { OptionAction, OptionState } from "./types";
 
-export const optionReducer = (state: OptionState, action: OptionAction): OptionState => {
+export const optionReducer = (
+  state: OptionState,
+  action: OptionAction,
+): OptionState => {
   switch (action.type) {
     case "CREATE_OPTION_SUCCESS":
       return {

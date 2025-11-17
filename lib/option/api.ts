@@ -1,6 +1,8 @@
 import { Option } from "./types";
 
-export const createOption = async (optionData: Partial<Option>): Promise<Option> => {
+export const createOption = async (
+  optionData: Partial<Option>,
+): Promise<Option> => {
   const response = await fetch(`/api/options`, {
     method: "POST",
     body: JSON.stringify(optionData),

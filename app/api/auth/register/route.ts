@@ -26,7 +26,9 @@ export async function POST(request: Request) {
     }
 
     const { id, email, firstname, lastname, picture, roles } = user;
-    const nextResponse = NextResponse.json({ user: { id, email, firstname, lastname, picture, roles } });
+    const nextResponse = NextResponse.json({
+      user: { id, email, firstname, lastname, picture, roles },
+    });
 
     setSessionCookie(nextResponse, token);
     return nextResponse;

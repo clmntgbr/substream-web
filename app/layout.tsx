@@ -27,7 +27,7 @@ export default async function RootLayout({
       <body
         className={
           cn(
-            "text-foreground group/body theme-blue overscroll-none antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]"
+            "text-foreground group/body theme-blue overscroll-none antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]",
           ) + outfit.className
         }
       >

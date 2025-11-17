@@ -14,16 +14,28 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="white" enableSystem disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="white"
+      enableSystem
+      disableTransitionOnChange
+    >
       <AuthProvider>
         <UserProvider>
           <StreamProvider>
             <OptionProvider>
               <MercureProvider>
                 <Header />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">{children}</div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">
+                  {children}
+                </div>
                 <Footer />
-                <Toaster richColors expand={false} position="top-right" closeButton />
+                <Toaster
+                  richColors
+                  expand={false}
+                  position="top-right"
+                  closeButton
+                />
               </MercureProvider>
             </OptionProvider>
           </StreamProvider>

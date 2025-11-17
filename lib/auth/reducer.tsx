@@ -1,11 +1,11 @@
-import { AuthState, AuthAction } from './types';
+import { AuthState, AuthAction } from "./types";
 
 export const authReducer = (
   state: AuthState,
-  action: AuthAction
+  action: AuthAction,
 ): AuthState => {
   switch (action.type) {
-    case 'LOGIN_SUCCESS':
+    case "LOGIN_SUCCESS":
       return {
         ...state,
         user: action.payload.user,
@@ -13,7 +13,7 @@ export const authReducer = (
         loading: false,
         error: null,
       };
-    case 'LOGIN_ERROR':
+    case "LOGIN_ERROR":
       return {
         ...state,
         user: null,
@@ -21,7 +21,7 @@ export const authReducer = (
         loading: false,
         error: action.payload,
       };
-    case 'LOGOUT':
+    case "LOGOUT":
       return {
         ...state,
         user: null,
@@ -29,7 +29,7 @@ export const authReducer = (
         loading: false,
         error: null,
       };
-    case 'REGISTER_SUCCESS':
+    case "REGISTER_SUCCESS":
       return {
         ...state,
         user: action.payload.user,
@@ -37,7 +37,7 @@ export const authReducer = (
         loading: false,
         error: null,
       };
-    case 'REGISTER_ERROR':
+    case "REGISTER_ERROR":
       return {
         ...state,
         user: null,
@@ -45,7 +45,7 @@ export const authReducer = (
         loading: false,
         error: action.payload,
       };
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return {
         ...state,
         loading: action.payload,

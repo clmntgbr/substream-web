@@ -2,11 +2,35 @@ import { SubtitleColorPicker } from "@/components/shared/misc/subtitle-color-pic
 import { SubtitleSizeInput } from "@/components/shared/misc/subtitle-size-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+} from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { BrainCircuit, FormInputIcon, LanguagesIcon, PaletteIcon, Text, VideoIcon, WandSparkles } from "lucide-react";
+import {
+  BrainCircuit,
+  FormInputIcon,
+  LanguagesIcon,
+  PaletteIcon,
+  Text,
+  VideoIcon,
+  WandSparkles,
+} from "lucide-react";
 
 interface VideoSettingsProps {
   open: boolean;
@@ -81,7 +105,10 @@ export const VideoSettings = ({
 }: VideoSettingsProps) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col">
+      <SheetContent
+        side="right"
+        className="sm:max-w-[500px] overflow-hidden px-0 flex flex-col"
+      >
         <SheetHeader className="px-4 pt-6 pb-4 border-b">
           <SheetTitle>Video Settings</SheetTitle>
           <SheetDescription>Configure the video settings</SheetDescription>
@@ -101,14 +128,25 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup defaultValue={subtitleFont} onValueChange={(value) => setSubtitleFont(value)} disabled={readOnly}>
+                        <RadioGroup
+                          defaultValue={subtitleFont}
+                          onValueChange={(value) => setSubtitleFont(value)}
+                          disabled={readOnly}
+                        >
                           <FieldLabel htmlFor="arial">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>Arial</FieldTitle>
-                                <FieldDescription>Arial is a sans-serif font that is commonly used for web design and typography.</FieldDescription>
+                                <FieldDescription>
+                                  Arial is a sans-serif font that is commonly
+                                  used for web design and typography.
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="Arial" id="arial" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="Arial"
+                                id="arial"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="timesNewRoman">
@@ -116,10 +154,15 @@ export const VideoSettings = ({
                               <FieldContent>
                                 <FieldTitle>Times New Roman</FieldTitle>
                                 <FieldDescription>
-                                  Times New Roman is a serif font that is commonly used for web design and typography.
+                                  Times New Roman is a serif font that is
+                                  commonly used for web design and typography.
                                 </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="Times New Roman" id="timesNewRoman" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="Times New Roman"
+                                id="timesNewRoman"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="courierNew">
@@ -127,10 +170,15 @@ export const VideoSettings = ({
                               <FieldContent>
                                 <FieldTitle>Courier New</FieldTitle>
                                 <FieldDescription>
-                                  Courier New is a monospace font that is commonly used for web design and typography.
+                                  Courier New is a monospace font that is
+                                  commonly used for web design and typography.
                                 </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="Courier New" id="courierNew" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="Courier New"
+                                id="courierNew"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -166,15 +214,27 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <Field>
                       <FieldTitle>Color</FieldTitle>
-                      <SubtitleColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
+                      <SubtitleColorPicker
+                        background={subtitleColor}
+                        setBackground={setSubtitleColor}
+                        disabled={readOnly}
+                      />
                     </Field>
                     <Field>
                       <FieldTitle>Outline Color</FieldTitle>
-                      <SubtitleColorPicker background={subtitleOutlineColor} setBackground={setSubtitleOutlineColor} disabled={readOnly} />
+                      <SubtitleColorPicker
+                        background={subtitleOutlineColor}
+                        setBackground={setSubtitleOutlineColor}
+                        disabled={readOnly}
+                      />
                     </Field>
                     <Field>
                       <FieldTitle>Shadow Color</FieldTitle>
-                      <SubtitleColorPicker background={subtitleShadowColor} setBackground={setSubtitleShadowColor} disabled={readOnly} />
+                      <SubtitleColorPicker
+                        background={subtitleShadowColor}
+                        setBackground={setSubtitleShadowColor}
+                        disabled={readOnly}
+                      />
                     </Field>
                   </FieldGroup>
                 </FieldSet>
@@ -196,12 +256,20 @@ export const VideoSettings = ({
                         <FieldLabel htmlFor="bold">Bold</FieldLabel>
                         <FieldDescription>Make the text bold</FieldDescription>
                       </FieldContent>
-                      <Switch id="bold" checked={subtitleBold} onCheckedChange={setSubtitleBold} disabled={readOnly} className="cursor-pointer" />
+                      <Switch
+                        id="bold"
+                        checked={subtitleBold}
+                        onCheckedChange={setSubtitleBold}
+                        disabled={readOnly}
+                        className="cursor-pointer"
+                      />
                     </Field>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldLabel htmlFor="italic">Italic</FieldLabel>
-                        <FieldDescription>Make the text italic</FieldDescription>
+                        <FieldDescription>
+                          Make the text italic
+                        </FieldDescription>
                       </FieldContent>
                       <Switch
                         id="italic"
@@ -280,32 +348,56 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup defaultValue={format} onValueChange={(value) => setFormat(value)} disabled={readOnly}>
+                        <RadioGroup
+                          defaultValue={format}
+                          onValueChange={(value) => setFormat(value)}
+                          disabled={readOnly}
+                        >
                           <FieldLabel htmlFor="original">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>Original</FieldTitle>
-                                <FieldDescription>The original video format</FieldDescription>
+                                <FieldDescription>
+                                  The original video format
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="original" id="original" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="original"
+                                id="original"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="zoomed_916">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>Zoomed 9:16</FieldTitle>
-                                <FieldDescription>Zoom the video to 9:16</FieldDescription>
+                                <FieldDescription>
+                                  Zoom the video to 9:16
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="zoomed_916" id="zoomed_916" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="zoomed_916"
+                                id="zoomed_916"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="normal_916_with_borders">
                             <Field orientation="horizontal">
                               <FieldContent>
-                                <FieldTitle>Normal 9:16 with Borders</FieldTitle>
-                                <FieldDescription>Normal 9:16 with borders</FieldDescription>
+                                <FieldTitle>
+                                  Normal 9:16 with Borders
+                                </FieldTitle>
+                                <FieldDescription>
+                                  Normal 9:16 with borders
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="normal_916_with_borders" id="normal_916_with_borders" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="normal_916_with_borders"
+                                id="normal_916_with_borders"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -357,9 +449,17 @@ export const VideoSettings = ({
                           <Field orientation="horizontal">
                             <FieldContent>
                               <FieldLabel htmlFor="isResume">Resume</FieldLabel>
-                              <FieldDescription>Resume the video from the beginning</FieldDescription>
+                              <FieldDescription>
+                                Resume the video from the beginning
+                              </FieldDescription>
                             </FieldContent>
-                            <Switch id="isResume" checked={isResume} onCheckedChange={setIsResume} disabled={readOnly} className="cursor-pointer" />
+                            <Switch
+                              id="isResume"
+                              checked={isResume}
+                              onCheckedChange={setIsResume}
+                              disabled={readOnly}
+                              className="cursor-pointer"
+                            />
                           </Field>
                         </FieldGroup>
                       </FieldSet>
@@ -380,32 +480,54 @@ export const VideoSettings = ({
                   <FieldGroup>
                     <FieldGroup>
                       <FieldSet>
-                        <RadioGroup defaultValue={language} onValueChange={(value) => setLanguage(value)} disabled={readOnly}>
+                        <RadioGroup
+                          defaultValue={language}
+                          onValueChange={(value) => setLanguage(value)}
+                          disabled={readOnly}
+                        >
                           <FieldLabel htmlFor="auto">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>Auto</FieldTitle>
-                                <FieldDescription>Automatically detect the language of the video</FieldDescription>
+                                <FieldDescription>
+                                  Automatically detect the language of the video
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="auto" id="auto" disabled={readOnly} />
+                              <RadioGroupItem
+                                value="auto"
+                                id="auto"
+                                disabled={readOnly}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="english">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>English</FieldTitle>
-                                <FieldDescription>English is the default language</FieldDescription>
+                                <FieldDescription>
+                                  English is the default language
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="english" id="english" disabled={true} />
+                              <RadioGroupItem
+                                value="english"
+                                id="english"
+                                disabled={true}
+                              />
                             </Field>
                           </FieldLabel>
                           <FieldLabel htmlFor="french">
                             <Field orientation="horizontal">
                               <FieldContent>
                                 <FieldTitle>French</FieldTitle>
-                                <FieldDescription>French is the default language</FieldDescription>
+                                <FieldDescription>
+                                  French is the default language
+                                </FieldDescription>
                               </FieldContent>
-                              <RadioGroupItem value="french" id="french" disabled={true} />
+                              <RadioGroupItem
+                                value="french"
+                                id="french"
+                                disabled={true}
+                              />
                             </Field>
                           </FieldLabel>
                         </RadioGroup>
@@ -419,7 +541,11 @@ export const VideoSettings = ({
         </div>
 
         <SheetFooter className="flex justify-center gap-3 px-4 py-4 border-t">
-          <Button variant="default" onClick={() => onOpenChange(false)} className="cursor-pointer">
+          <Button
+            variant="default"
+            onClick={() => onOpenChange(false)}
+            className="cursor-pointer"
+          >
             Close
           </Button>
         </SheetFooter>

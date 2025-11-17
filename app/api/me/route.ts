@@ -23,7 +23,14 @@ export async function GET(request: NextRequest) {
     }
 
     const nextResponse = await response.json();
-    const user = pick(nextResponse, ["id", "email", "firstname", "lastname", "picture", "roles"]);
+    const user = pick(nextResponse, [
+      "id",
+      "email",
+      "firstname",
+      "lastname",
+      "picture",
+      "roles",
+    ]);
 
     return NextResponse.json(user);
   } catch {

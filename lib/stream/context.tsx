@@ -12,7 +12,9 @@ export interface StreamContextType extends StreamState {
   clearStream: () => void;
 }
 
-export const StreamContext = createContext<StreamContextType | undefined>(undefined);
+export const StreamContext = createContext<StreamContextType | undefined>(
+  undefined,
+);
 
 export const useStreams = () => {
   const context = useContext(StreamContext);

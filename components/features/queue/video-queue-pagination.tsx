@@ -1,12 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { useStreams } from "@/lib/stream/context";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 interface VideoQueuePaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function VideoQueuePagination({ onPageChange }: VideoQueuePaginationProps) {
+export function VideoQueuePagination({
+  onPageChange,
+}: VideoQueuePaginationProps) {
   const { streams } = useStreams();
 
   const handlePageChange = (pageIndex: number) => {

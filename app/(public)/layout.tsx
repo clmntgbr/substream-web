@@ -9,7 +9,12 @@ export default function PublicLayout({
 }>) {
   return (
     <AuthProvider>
-      <ThemeProvider attribute="class" defaultTheme="white" enableSystem disableTransitionOnChange>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="white"
+        enableSystem
+        disableTransitionOnChange
+      >
         {children}
         <Toaster richColors expand={false} position="top-right" closeButton />
       </ThemeProvider>

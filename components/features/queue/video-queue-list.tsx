@@ -92,7 +92,10 @@ export const VideoQueueList = () => {
       <>
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
-            <VideoQueueFilterSearch onSearchChange={handleSearchChange} value={search} />
+            <VideoQueueFilterSearch
+              onSearchChange={handleSearchChange}
+              value={search}
+            />
             <VideoQueueFilterStatus onStatusChange={handleStatusChange} />
             <VideoQueueFilterReset onReset={handleReset} />
           </div>

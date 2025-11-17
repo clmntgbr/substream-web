@@ -1,4 +1,10 @@
-import { EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { FolderArchive } from "lucide-react";
 
 export function VideoQueueListEmpty() {
@@ -10,7 +16,9 @@ export function VideoQueueListEmpty() {
             <FolderArchive />
           </EmptyMedia>
           <EmptyTitle>No streams in the queue</EmptyTitle>
-          <EmptyDescription>Add a video to the queue to get started</EmptyDescription>
+          <EmptyDescription>
+            Add a video to the queue to get started
+          </EmptyDescription>
         </EmptyHeader>
       </EmptyContent>
     </>

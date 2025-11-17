@@ -2,7 +2,9 @@ import { Hydra } from "../hydra";
 import { QueryParams } from "./provider";
 import { Stream } from "./types";
 
-export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stream>> => {
+export const fetchStreams = async (
+  queryParams: QueryParams,
+): Promise<Hydra<Stream>> => {
   const query = new URLSearchParams();
 
   query.append("itemsPerPage", "10");
@@ -34,7 +36,10 @@ export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stre
   return response.json();
 };
 
-export const downloadStream = async (id: string, fileName: string): Promise<void> => {
+export const downloadStream = async (
+  id: string,
+  fileName: string,
+): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download`, {
     method: "GET",
   });
@@ -54,7 +59,10 @@ export const downloadStream = async (id: string, fileName: string): Promise<void
   window.URL.revokeObjectURL(url);
 };
 
-export const downloadSubtitle = async (id: string, fileName: string): Promise<void> => {
+export const downloadSubtitle = async (
+  id: string,
+  fileName: string,
+): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download/subtitle`, {
     method: "GET",
   });
@@ -74,7 +82,10 @@ export const downloadSubtitle = async (id: string, fileName: string): Promise<vo
   window.URL.revokeObjectURL(url);
 };
 
-export const downloadResume = async (id: string, fileName: string): Promise<void> => {
+export const downloadResume = async (
+  id: string,
+  fileName: string,
+): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download/resume`, {
     method: "GET",
   });

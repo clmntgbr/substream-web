@@ -29,7 +29,11 @@ export function User() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full flex items-center justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 rounded-full flex items-center justify-center"
+        >
           <Avatar className="h-8 w-8 rounded-full">
             <AvatarImage src={user.picture} alt={user.email} />
             <AvatarFallback className="rounded-full">
@@ -39,11 +43,19 @@ export function User() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" side="bottom" align="start" sideOffset={4}>
+      <DropdownMenuContent
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+        side="bottom"
+        align="start"
+        sideOffset={4}
+      >
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.picture || ""} alt={user.firstname || ""} />
+              <AvatarImage
+                src={user.picture || ""}
+                alt={user.firstname || ""}
+              />
               <AvatarFallback className="rounded-lg">
                 {user.firstname?.charAt(0) || ""}
                 {user.lastname?.charAt(0) || ""}

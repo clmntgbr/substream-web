@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useReducer } from "react";
 import { toast } from "sonner";
-import { downloadResume, downloadStream, downloadSubtitle, fetchStreams } from "./api";
+import {
+  downloadResume,
+  downloadStream,
+  downloadSubtitle,
+  fetchStreams,
+} from "./api";
 import { StreamContext } from "./context";
 import { streamReducer } from "./reducer";
 import { StreamState } from "./types";
@@ -37,43 +42,64 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       const streams = await fetchStreams(params);
       dispatch({ type: "FETCH_STREAMS_SUCCESS", payload: streams });
     } catch (error) {
-      dispatch({ type: "FETCH_STREAMS_ERROR", payload: "Failed to fetch streams" });
+      dispatch({
+        type: "FETCH_STREAMS_ERROR",
+        payload: "Failed to fetch streams",
+      });
     }
   }, []);
 
-  const useDownloadStream = useCallback(async (id: string, fileName: string) => {
-    try {
-      toast.info("Stream will be downloaded shortly");
-      await downloadStream(id, fileName);
-      toast.success("Stream downloaded successfully");
-      dispatch({ type: "DOWNLOAD_STREAM_SUCCESS" });
-    } catch (error) {
-      toast.error("Failed to download stream");
-      dispatch({ type: "DOWNLOAD_STREAM_ERROR", payload: "Failed to download stream" });
-    }
-  }, []);
+  const useDownloadStream = useCallback(
+    async (id: string, fileName: string) => {
+      try {
+        toast.info("Stream will be downloaded shortly");
+        await downloadStream(id, fileName);
+        toast.success("Stream downloaded successfully");
+        dispatch({ type: "DOWNLOAD_STREAM_SUCCESS" });
+      } catch (error) {
+        toast.error("Failed to download stream");
+        dispatch({
+          type: "DOWNLOAD_STREAM_ERROR",
+          payload: "Failed to download stream",
+        });
+      }
+    },
+    [],
+  );
 
-  const useDownloadSubtitle = useCallback(async (id: string, fileName: string) => {
-    try {
-      await downloadSubtitle(id, fileName);
-      toast.success("Subtitle downloaded successfully");
-      dispatch({ type: "DOWNLOAD_SUBTITLE_SUCCESS" });
-    } catch (error) {
-      toast.error("Failed to download subtitle");
-      dispatch({ type: "DOWNLOAD_SUBTITLE_ERROR", payload: "Failed to download subtitle" });
-    }
-  }, []);
+  const useDownloadSubtitle = useCallback(
+    async (id: string, fileName: string) => {
+      try {
+        await downloadSubtitle(id, fileName);
+        toast.success("Subtitle downloaded successfully");
+        dispatch({ type: "DOWNLOAD_SUBTITLE_SUCCESS" });
+      } catch (error) {
+        toast.error("Failed to download subtitle");
+        dispatch({
+          type: "DOWNLOAD_SUBTITLE_ERROR",
+          payload: "Failed to download subtitle",
+        });
+      }
+    },
+    [],
+  );
 
-  const useDownloadResume = useCallback(async (id: string, fileName: string) => {
-    try {
-      await downloadResume(id, fileName);
-      toast.success("Resume downloaded successfully");
-      dispatch({ type: "DOWNLOAD_RESUME_SUCCESS" });
-    } catch (error) {
-      toast.error("Failed to download resume");
-      dispatch({ type: "DOWNLOAD_RESUME_ERROR", payload: "Failed to download resume" });
-    }
-  }, []);
+  const useDownloadResume = useCallback(
+    async (id: string, fileName: string) => {
+      try {
+        await downloadResume(id, fileName);
+        toast.success("Resume downloaded successfully");
+        dispatch({ type: "DOWNLOAD_RESUME_SUCCESS" });
+      } catch (error) {
+        toast.error("Failed to download resume");
+        dispatch({
+          type: "DOWNLOAD_RESUME_ERROR",
+          payload: "Failed to download resume",
+        });
+      }
+    },
+    [],
+  );
 
   const clearStream = useCallback(() => {
     dispatch({ type: "CLEAR_STREAMS" });

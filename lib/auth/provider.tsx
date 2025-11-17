@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: "LOGIN_ERROR", payload: message });
       }
     },
-    [router]
+    [router],
   );
 
   const register = useCallback(
@@ -78,11 +78,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         router.push("/studio");
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Registration failed";
+        const message =
+          error instanceof Error ? error.message : "Registration failed";
         dispatch({ type: "REGISTER_ERROR", payload: message });
       }
     },
-    [router]
+    [router],
   );
 
   const logout = useCallback(async () => {

@@ -1,7 +1,9 @@
 import { User } from "../user/types";
 import { LoginPayload, RegisterPayload } from "./types";
 
-export const loginApi = async (payload: LoginPayload): Promise<{ user: User; token: string }> => {
+export const loginApi = async (
+  payload: LoginPayload,
+): Promise<{ user: User; token: string }> => {
   const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: {
@@ -18,7 +20,9 @@ export const loginApi = async (payload: LoginPayload): Promise<{ user: User; tok
   return response.json();
 };
 
-export const registerApi = async (payload: RegisterPayload): Promise<{ user: User; token: string }> => {
+export const registerApi = async (
+  payload: RegisterPayload,
+): Promise<{ user: User; token: string }> => {
   const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: {

@@ -1,5 +1,12 @@
 import { Input } from "@/components/ui/input";
-import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string) => void;
@@ -10,10 +17,10 @@ export interface VideoQueueFilterSearchRef {
   reset: () => void;
 }
 
-const VideoQueueFilterSearchComponent = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
-  { onSearchChange, value },
-  ref
-) {
+const VideoQueueFilterSearchComponent = forwardRef<
+  VideoQueueFilterSearchRef,
+  VideoQueueFilterSearchProps
+>(function VideoQueueFilterSearch({ onSearchChange, value }, ref) {
   const [search, setSearch] = useState<string>(value ?? "");
   const timeoutRef = useRef<NodeJS.Timeout>(null);
 
@@ -72,7 +79,12 @@ const VideoQueueFilterSearchComponent = forwardRef<VideoQueueFilterSearchRef, Vi
 
   return (
     <div className="relative">
-      <Input placeholder="Search by name" value={search} onChange={handleInputChange} className="h-8 w-[150px] lg:w-[250px] pr-8" />
+      <Input
+        placeholder="Search by name"
+        value={search}
+        onChange={handleInputChange}
+        className="h-8 w-[150px] lg:w-[250px] pr-8"
+      />
       {search && (
         <button
           onClick={handleClearSearch}

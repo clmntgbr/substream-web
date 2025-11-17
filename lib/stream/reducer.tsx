@@ -1,6 +1,9 @@
 import { StreamAction, StreamState } from "./types";
 
-export const streamReducer = (state: StreamState, action: StreamAction): StreamState => {
+export const streamReducer = (
+  state: StreamState,
+  action: StreamAction,
+): StreamState => {
   switch (action.type) {
     case "FETCH_STREAMS_SUCCESS":
       return {

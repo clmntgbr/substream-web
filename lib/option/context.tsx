@@ -7,7 +7,9 @@ export interface OptionContextType extends OptionState {
   useCreateOption: (optionData: Partial<Option>) => Promise<Option>;
 }
 
-export const OptionContext = createContext<OptionContextType | undefined>(undefined);
+export const OptionContext = createContext<OptionContextType | undefined>(
+  undefined,
+);
 
 export const useOptions = () => {
   const context = useContext(OptionContext);

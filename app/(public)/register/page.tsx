@@ -52,13 +52,18 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold mb-6 text-center">Inscription</h1>
 
           {(error || validationError) && (
-            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{error || validationError}</div>
+            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error || validationError}
+            </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstname" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="firstname"
+                  className="block text-sm font-medium mb-2"
+                >
                   Prénom
                 </label>
                 <input
@@ -73,7 +78,10 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label htmlFor="lastname" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="lastname"
+                  className="block text-sm font-medium mb-2"
+                >
                   Nom
                 </label>
                 <input
@@ -106,7 +114,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-2"
+              >
                 Mot de passe
               </label>
               <input
@@ -122,7 +133,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium mb-2"
+              >
                 Confirmer le mot de passe
               </label>
               <input
@@ -148,7 +162,10 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-sm">
             Déjà inscrit?{" "}
-            <a href="/login" className="text-blue-600 hover:underline font-medium">
+            <a
+              href="/login"
+              className="text-blue-600 hover:underline font-medium"
+            >
               Se connecter
             </a>
           </p>

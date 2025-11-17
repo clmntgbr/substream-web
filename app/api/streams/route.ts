@@ -26,7 +26,14 @@ export async function GET(request: NextRequest) {
     }
 
     const nextResponse = await response.json();
-    const streams = pick(nextResponse, ["member", "totalItems", "currentPage", "itemsPerPage", "totalPages", "view"]);
+    const streams = pick(nextResponse, [
+      "member",
+      "totalItems",
+      "currentPage",
+      "itemsPerPage",
+      "totalPages",
+      "view",
+    ]);
 
     return NextResponse.json(streams);
   } catch {
