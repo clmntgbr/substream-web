@@ -13,7 +13,7 @@ export const VideoQueueList = () => {
   const { streams, useFetchStreams } = useStreams();
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
-  const [search, setSearch] = useState<string | undefined>(undefined);
+  const [search, setSearch] = useState<string>("");
   const [status, setStatus] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const { on } = useMercure();
@@ -66,7 +66,7 @@ export const VideoQueueList = () => {
   const handleReset = () => {
     setFrom(undefined);
     setTo(undefined);
-    setSearch(undefined);
+    setSearch("");
     setStatus([]);
     useFetchStreams({
       page: page,
@@ -92,7 +92,7 @@ export const VideoQueueList = () => {
       <>
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
-            <VideoQueueFilterSearch onSearchChange={handleSearchChange} />
+            <VideoQueueFilterSearch onSearchChange={handleSearchChange} value={search} />
             <VideoQueueFilterStatus onStatusChange={handleStatusChange} />
             <VideoQueueFilterReset onReset={handleReset} />
           </div>

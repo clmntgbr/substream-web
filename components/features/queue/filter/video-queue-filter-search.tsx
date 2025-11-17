@@ -1,36 +1,78 @@
 import { Input } from "@/components/ui/input";
-import { forwardRef, memo, useEffect, useState } from "react";
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string) => void;
+  value?: string;
 }
 
-const VideoQueueFilterSearchComponent = forwardRef<void, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch({ onSearchChange }, ref) {
-  const [search, setSearch] = useState<string | undefined>(undefined);
+export interface VideoQueueFilterSearchRef {
+  reset: () => void;
+}
+
+const VideoQueueFilterSearchComponent = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
+  { onSearchChange, value },
+  ref
+) {
+  const [search, setSearch] = useState<string>(value ?? "");
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
+
+  // Synchroniser avec la prop value (pour le reset)
+  useEffect(() => {
+    setSearch(value ?? "");
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, [value]);
 
   const handleClearSearch = () => {
-    onSearchChange("");
     setSearch("");
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    onSearchChange("");
   };
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (search) {
-        onSearchChange(search);
-      }
-    }, 500);
+  const resetWithoutCallback = () => {
+    setSearch("");
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // Ne pas appeler onSearchChange
+  };
 
-    return () => clearTimeout(timeoutId);
-  }, [search]);
+  // Exposer la méthode reset au parent
+  useImperativeHandle(ref, () => ({
+    reset: resetWithoutCallback,
+  }));
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearch(value);
+
+    // Clear le timeout précédent
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Créer un nouveau timeout
+    timeoutRef.current = setTimeout(() => {
+      onSearchChange(value);
+    }, 500);
+  };
+
+  // Cleanup du timeout au démontage
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative">
-      <Input
-        placeholder="Search by name"
-        value={search ?? ""}
-        onChange={(event) => setSearch(event.target.value)}
-        className="h-8 w-[150px] lg:w-[250px] pr-8"
-      />
+      <Input placeholder="Search by name" value={search} onChange={handleInputChange} className="h-8 w-[150px] lg:w-[250px] pr-8" />
       {search && (
         <button
           onClick={handleClearSearch}
