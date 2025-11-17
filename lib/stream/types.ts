@@ -38,4 +38,8 @@ export type StreamAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "CLEAR_STREAMS" }
   | { type: "DOWNLOAD_STREAM_ERROR"; payload: string }
-  | { type: "DOWNLOAD_STREAM_SUCCESS" };
+  | { type: "DOWNLOAD_STREAM_SUCCESS" }
+  | { type: "DOWNLOAD_SUBTITLE_ERROR"; payload: string }
+  | { type: "DOWNLOAD_SUBTITLE_SUCCESS" }
+  | { type: "DOWNLOAD_RESUME_ERROR"; payload: string }
+  | { type: "DOWNLOAD_RESUME_SUCCESS" };

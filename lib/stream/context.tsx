@@ -7,6 +7,8 @@ import { StreamState } from "./types";
 export interface StreamContextType extends StreamState {
   useFetchStreams: (params: QueryParams) => Promise<void>;
   useDownloadStream: (id: string, fileName: string) => Promise<void>;
+  useDownloadSubtitle: (id: string, fileName: string) => Promise<void>;
+  useDownloadResume: (id: string, fileName: string) => Promise<void>;
   clearStream: () => void;
 }
 

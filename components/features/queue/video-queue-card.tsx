@@ -19,7 +19,7 @@ type VideoQueueCardProps = {
 };
 
 export function VideoQueueCard({ stream }: VideoQueueCardProps) {
-  const { useDownloadStream } = useStreams();
+  const { useDownloadStream, useDownloadSubtitle, useDownloadResume } = useStreams();
   const router = useRouter();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -37,7 +37,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
       toast.error("Subtitle not available");
       return;
     }
-    // downloadSubtitle(stream.id, stream.originalFileName);
+    useDownloadSubtitle(stream.id, stream.originalFileName);
   };
 
   const handleDownloadResume = () => {
@@ -45,7 +45,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
       toast.error("Resume not available");
       return;
     }
-    // downloadResume(stream.id, stream.originalFileName);
+    useDownloadResume(stream.id, stream.originalFileName);
   };
 
   const handleDelete = async () => {
@@ -74,9 +74,9 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="data-[state=open]:bg-muted size-8 cursor-pointer absolute top-0 right-0 rounded-full bg-accent/50"
+              className="data-[state=open]:bg-gray-500/50 size-8 cursor-pointer absolute top-0 right-0 rounded-full bg-gray-500/50 hover:bg-gray-500/70"
             >
-              <MoreVertical />
+              <MoreVertical className="text-white" />
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
