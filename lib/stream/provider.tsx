@@ -12,6 +12,7 @@ export interface QueryParams {
   search?: string;
   from?: Date;
   to?: Date;
+  status?: string[];
 }
 
 const initialState: StreamState = {
@@ -42,6 +43,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
 
   const useDownloadStream = useCallback(async (id: string, fileName: string) => {
     try {
+      toast.info("Stream will be downloaded shortly");
       await downloadStream(id, fileName);
       toast.success("Stream downloaded successfully");
       dispatch({ type: "DOWNLOAD_STREAM_SUCCESS" });

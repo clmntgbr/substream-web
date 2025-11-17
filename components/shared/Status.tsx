@@ -11,7 +11,10 @@ interface StatusProps {
 export default function Status({ stream }: StatusProps) {
   return (
     <>
-      <Badge variant="outline" className="text-muted-foreground px-1.5 cursor-pointer w-full border-b-0 border-l-0 border-r-0 py-2 rounded-none">
+      <Badge
+        variant="outline"
+        className="text-muted-foreground px-1.5 cursor-pointer w-full border-b-0 border-l-0 border-r-0 py-2 rounded-none text-sm"
+      >
         {stream.isCompleted && (
           <>
             <CheckCircle2Icon className="size-4 text-emerald-400" />

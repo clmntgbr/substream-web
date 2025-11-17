@@ -20,6 +20,9 @@ export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stre
     query.append("createdAt[before]", queryParams.to.toISOString());
   }
 
+  const status = [...(queryParams.status || []), "!deleted"];
+  query.append("status", status.join(","));
+
   const response = await fetch(`/api/streams?${query.toString()}`, {
     method: "GET",
   });

@@ -1,9 +1,9 @@
 import { useMercure } from "@/lib/mercure/provider";
 import { useStreams } from "@/lib/stream/context";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterSearch } from "./filter/video-queue-filter-search";
+import { VideoQueueFilterStatus } from "./filter/video-queue-filter-status";
 import { VideoQueueCard } from "./video-queue-card";
 import { VideoQueueListEmpty } from "./video-queue-list-empty";
 import { VideoQueuePagination } from "./video-queue-pagination";
@@ -13,51 +13,68 @@ export const VideoQueueList = () => {
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
   const [search, setSearch] = useState<string | undefined>(undefined);
+  const [status, setStatus] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
-  const router = useRouter();
   const { on } = useMercure();
-  const searchParams = useSearchParams();
 
-  const handleFilterChange = () => {};
-
-  const handleSearchChange = (search: string) => {
-    setSearch(search);
+  const handleStatusChange = (status: string[]) => {
+    setStatus(status);
+    console.log("handleStatusChange");
     useFetchStreams({
       page: page,
       search: search,
       from: from,
       to: to,
+      status: status,
+    });
+  };
+
+  const handleSearchChange = (search: string) => {
+    setSearch(search);
+    console.log("handleSearchChange");
+    useFetchStreams({
+      page: page,
+      search: search,
+      from: from,
+      to: to,
+      status: status,
     });
   };
 
   const handlePageChange = (page: number) => {
     setPage(page);
+    console.log("handlePageChange");
     useFetchStreams({
       page: page,
       search: search,
       from: from,
       to: to,
+      status: status,
     });
   };
 
   const handleDateChange = (from: Date | undefined, to: Date | undefined) => {
     setFrom(from);
     setTo(to);
+    console.log("handleDateChange");
     useFetchStreams({
       page: page,
       search: search,
       from: from,
       to: to,
+      status: status,
     });
   };
 
   useEffect(() => {
     const unsubscribe = on("streams.refresh", (data) => {
+      console.log("useEffect");
       useFetchStreams({
         page: page,
         search: search,
         from: from,
         to: to,
+        status: status,
       });
     });
 
@@ -70,7 +87,7 @@ export const VideoQueueList = () => {
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
             <VideoQueueFilterSearch onSearchChange={handleSearchChange} />
-            {/* <VideoQueueFilterStatus ref={statusRef} onFilterChange={handleFilterChange} /> */}
+            <VideoQueueFilterStatus onStatusChange={handleStatusChange} />
           </div>
           <VideoQueueFilterDate onDateChange={handleDateChange} />
         </div>

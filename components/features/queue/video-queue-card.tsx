@@ -151,8 +151,8 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             <HoverCardContent className="w-80" side="top">
               <div className="flex justify-between gap-4">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">{stream.status}</h4>
-                  <p className="text-sm">{stream.status}</p>
+                  <h4 className="text-base font-semibold">{stream.status}</h4>
+                  <p className="text-base">{stream.status}</p>
                 </div>
               </div>
             </HoverCardContent>
