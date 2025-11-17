@@ -1,6 +1,7 @@
 "use client";
 import { useAuth } from "@/lib/auth/context";
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { useStreams } from "../stream/context";
 import { useUser } from "../user/context";
 
 type EventType = string;
@@ -22,6 +23,7 @@ export function MercureProvider({ children }: MercureProviderProps) {
   const { user } = useAuth();
   const [topic, setTopic] = useState<string | null>(null);
   const { useFetchMe } = useUser();
+  const { useFetchStreams } = useStreams();
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
@@ -104,7 +106,6 @@ export function MercureProvider({ children }: MercureProviderProps) {
                   handleUserRefresh();
                   break;
                 default:
-                  console.warn("event type not handled:", message.type);
               }
 
               emit(message.type, message.data);

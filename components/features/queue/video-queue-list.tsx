@@ -1,6 +1,7 @@
+import { useMercure } from "@/lib/mercure/provider";
 import { useStreams } from "@/lib/stream/context";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterSearch } from "./filter/video-queue-filter-search";
 import { VideoQueueCard } from "./video-queue-card";
@@ -11,16 +12,21 @@ export const VideoQueueList = () => {
   const { streams, useFetchStreams } = useStreams();
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
   const router = useRouter();
+  const { on } = useMercure();
   const searchParams = useSearchParams();
 
   const handleFilterChange = () => {};
 
   const handleSearchChange = (search: string) => {
+    setSearch(search);
     useFetchStreams({
-      page: 1,
+      page: page,
       search: search,
+      from: from,
+      to: to,
     });
   };
 
@@ -28,6 +34,9 @@ export const VideoQueueList = () => {
     setPage(page);
     useFetchStreams({
       page: page,
+      search: search,
+      from: from,
+      to: to,
     });
   };
 
@@ -36,10 +45,24 @@ export const VideoQueueList = () => {
     setTo(to);
     useFetchStreams({
       page: page,
+      search: search,
       from: from,
       to: to,
     });
   };
+
+  useEffect(() => {
+    const unsubscribe = on("streams.refresh", (data) => {
+      useFetchStreams({
+        page: page,
+        search: search,
+        from: from,
+        to: to,
+      });
+    });
+
+    return unsubscribe;
+  }, [on]);
 
   return (
     <>

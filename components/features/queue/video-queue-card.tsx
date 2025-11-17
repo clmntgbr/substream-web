@@ -127,13 +127,13 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
         <CardContent className="flex flex-col gap-4 overflow-hidden">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <CardTitle className="font-medium hover:underline cursor-pointer text-xs mb-10">
+              <CardTitle className="font-medium hover:underline cursor-pointer text-sm mb-10 line-">
                 {stream.originalFileName.replace(".mp4", "")}
               </CardTitle>
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold">{stream.originalFileName.replace(".mp4", "")}</h4>
+                <h4 className="text-base font-semibold">{stream.originalFileName.replace(".mp4", "")}</h4>
                 <div className="flex gap-2">
                   {stream.mimeType && <Badge variant="outline">{stream.mimeType}</Badge>}
                   {stream.sizeInMegabytes && <Badge variant="outline">{stream.sizeInMegabytes.toFixed(2)} MB</Badge>}
