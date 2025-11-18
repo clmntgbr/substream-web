@@ -1,9 +1,6 @@
 import { StreamAction, StreamState } from "./types";
 
-export const streamReducer = (
-  state: StreamState,
-  action: StreamAction,
-): StreamState => {
+export const streamReducer = (state: StreamState, action: StreamAction): StreamState => {
   switch (action.type) {
     case "FETCH_STREAMS_SUCCESS":
       return {
@@ -25,17 +22,6 @@ export const streamReducer = (
         loading: false,
         error: action.payload,
       };
-    case "DOWNLOAD_STREAM_ERROR":
-      return {
-        ...state,
-        error: action.payload,
-      };
-    case "DOWNLOAD_STREAM_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        error: null,
-      };
     case "SET_LOADING":
       return {
         ...state,
@@ -53,6 +39,15 @@ export const streamReducer = (
         },
         loading: false,
         error: null,
+      };
+    case "DELETE_STREAM_OPTIMISTIC":
+      return {
+        ...state,
+        streams: {
+          ...state.streams,
+          member: state.streams.member.filter((stream) => stream.id !== action.payload),
+          totalItems: Math.max(0, state.streams.totalItems - 1),
+        },
       };
     default:
       return state;

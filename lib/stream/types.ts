@@ -47,4 +47,5 @@ export type StreamAction =
   | { type: "FETCH_STREAMS_SUCCESS"; payload: Hydra<Stream> }
   | { type: "FETCH_STREAMS_ERROR"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "CLEAR_STREAMS" };
+  | { type: "CLEAR_STREAMS" }
+  | { type: "DELETE_STREAM_OPTIMISTIC"; payload: string };

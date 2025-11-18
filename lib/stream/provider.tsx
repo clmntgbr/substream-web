@@ -110,17 +110,15 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
 
   const useDeleteStream = useCallback(async (id: string): Promise<Response> => {
     try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      const response = await deleteStream(id);
+      dispatch({ type: "DELETE_STREAM_OPTIMISTIC", payload: id });
 
+      const response = await deleteStream(id);
       const result = await response.json();
 
-      dispatch({ type: "SET_LOADING", payload: false });
       toast.success("Stream video deleted successfully");
 
       return result;
     } catch (error) {
-      dispatch({ type: "SET_LOADING", payload: false });
       toast.error("Failed to delete stream video");
       throw error;
     }
