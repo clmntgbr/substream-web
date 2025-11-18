@@ -1,37 +1,13 @@
 import Status from "@/components/shared/Status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useStreams } from "@/lib/stream/context";
 import { Stream } from "@/lib/stream/types";
 import { format } from "date-fns";
-import {
-  BrainCircuit,
-  Download,
-  FileText,
-  MoreVertical,
-  Settings2Icon,
-  SettingsIcon,
-  Trash2,
-} from "lucide-react";
+import { BrainCircuit, Download, FileText, MoreVertical, Settings2Icon, SettingsIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -43,8 +19,7 @@ type VideoQueueCardProps = {
 };
 
 export function VideoQueueCard({ stream }: VideoQueueCardProps) {
-  const { useDownloadStream, useDownloadSubtitle, useDownloadResume } =
-    useStreams();
+  const { useDownloadStream, useDownloadSubtitle, useDownloadResume, useDeleteStream } = useStreams();
   const router = useRouter();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -74,12 +49,12 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
   };
 
   const handleDelete = async () => {
-    if (
-      stream.id &&
-      confirm(`Are you sure you want to delete "${stream.originalFileName}"?`)
-    ) {
-      // await deleteStream(stream.id);
+    if (!stream.id) {
+      toast.error("Stream not available");
+      return;
     }
+
+    await useDeleteStream(stream.id);
   };
 
   const handleViewOptions = () => {
@@ -96,10 +71,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
 
   return (
     <>
-      <Card
-        key={stream.id}
-        className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-2"
-      >
+      <Card key={stream.id} className="flex flex-col gap-0 pt-0 overflow-hidden relative py-0 pb-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -112,49 +84,28 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]">
-            <DropdownMenuItem
-              onClick={handleDownload}
-              disabled={!stream.isDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownload} disabled={!stream.isDownloadable} className="cursor-pointer">
               <Download className="mr-2 size-4" />
               Download
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleDownloadSubtitle}
-              disabled={!stream.isSrtDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownloadSubtitle} disabled={!stream.isSrtDownloadable} className="cursor-pointer">
               <FileText className="mr-2 size-4" />
               Download subtitle
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleDownloadResume}
-              disabled={!stream.isResumeDownloadable}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleDownloadResume} disabled={!stream.isResumeDownloadable} className="cursor-pointer">
               <BrainCircuit className="mr-2 size-4" />
               Download resume
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={handleViewOptions}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={handleViewOptions} className="cursor-pointer">
               <SettingsIcon className="mr-2 size-4" />
               View Options
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => router.push(`/stream/${stream.id}`)}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem onClick={() => router.push(`/stream/${stream.id}`)} className="cursor-pointer">
               <Settings2Icon className="mr-2 size-4" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleDelete}
-              className="cursor-pointer text-destructive"
-            >
+            <DropdownMenuItem onClick={handleDelete} className="cursor-pointer text-destructive">
               <Trash2 className="mr-2 size-4" />
               Delete
             </DropdownMenuItem>
@@ -174,9 +125,7 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
           </div>
         )}
         <CardHeader className="mb-4 gap-0">
-          <CardDescription className="text-xs text-muted-foreground">
-            {formatDate(stream.createdAt)}
-          </CardDescription>
+          <CardDescription className="text-xs text-muted-foreground">{formatDate(stream.createdAt)}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 overflow-hidden">
           <HoverCard>
@@ -187,21 +136,11 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
               <div className="space-y-2">
-                <h4 className="text-base font-semibold">
-                  {stream.originalFileName.replace(".mp4", "")}
-                </h4>
+                <h4 className="text-base font-semibold">{stream.originalFileName.replace(".mp4", "")}</h4>
                 <div className="flex gap-2">
-                  {stream.mimeType && (
-                    <Badge variant="outline">{stream.mimeType}</Badge>
-                  )}
-                  {stream.sizeInMegabytes && (
-                    <Badge variant="outline">
-                      {stream.sizeInMegabytes.toFixed(2)} MB
-                    </Badge>
-                  )}
-                  {stream.duration && (
-                    <Badge variant="outline">{stream.duration}</Badge>
-                  )}
+                  {stream.mimeType && <Badge variant="outline">{stream.mimeType}</Badge>}
+                  {stream.sizeInMegabytes && <Badge variant="outline">{stream.sizeInMegabytes.toFixed(2)} MB</Badge>}
+                  {stream.duration && <Badge variant="outline">{stream.duration}</Badge>}
                 </div>
               </div>
             </HoverCardContent>

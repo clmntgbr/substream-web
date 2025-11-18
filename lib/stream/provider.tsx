@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useReducer } from "react";
 import { toast } from "sonner";
-import { createStreamUrl, createStreamVideo, downloadResume, downloadStream, downloadSubtitle, fetchStreams } from "./api";
+import { createStreamUrl, createStreamVideo, deleteStream, downloadResume, downloadStream, downloadSubtitle, fetchStreams } from "./api";
 import { StreamContext } from "./context";
 import { streamReducer } from "./reducer";
 import { StreamState, StreamUrlRequestBody, StreamVideoRequestBody } from "./types";
@@ -108,6 +108,24 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const useDeleteStream = useCallback(async (id: string): Promise<Response> => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      const response = await deleteStream(id);
+
+      const result = await response.json();
+
+      dispatch({ type: "SET_LOADING", payload: false });
+      toast.success("Stream video deleted successfully");
+
+      return result;
+    } catch (error) {
+      dispatch({ type: "SET_LOADING", payload: false });
+      toast.error("Failed to delete stream video");
+      throw error;
+    }
+  }, []);
+
   const clearStream = useCallback(() => {
     dispatch({ type: "CLEAR_STREAMS" });
   }, []);
@@ -126,6 +144,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
         useDownloadResume,
         useCreateStreamUrl,
         useCreateStreamVideo,
+        useDeleteStream,
         clearStream,
       }}
     >

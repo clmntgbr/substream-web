@@ -11,6 +11,7 @@ export interface StreamContextType extends StreamState {
   useDownloadResume: (id: string, fileName: string) => Promise<void>;
   useCreateStreamUrl: (data: StreamUrlRequestBody) => Promise<Response>;
   useCreateStreamVideo: (data: StreamVideoRequestBody) => Promise<Response>;
+  useDeleteStream: (id: string) => Promise<Response>;
   clearStream: () => void;
 }
 

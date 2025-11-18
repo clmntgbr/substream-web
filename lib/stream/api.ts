@@ -119,3 +119,15 @@ export const createStreamVideo = async (form: StreamVideoRequestBody): Promise<R
 
   return response;
 };
+
+export const deleteStream = async (id: string): Promise<Response> => {
+  const response = await fetch(`/api/streams/${id}/delete`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete stream");
+  }
+
+  return response;
+};
