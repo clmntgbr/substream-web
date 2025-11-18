@@ -35,6 +35,7 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "SET_LOADING", payload: true });
 
       const streams = await fetchStreams(params);
+
       dispatch({ type: "FETCH_STREAMS_SUCCESS", payload: streams });
     } catch (error) {
       dispatch({
@@ -75,8 +76,8 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const useCreateStreamUrl = useCallback(async (data: StreamUrlRequestBody): Promise<Response> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const response = await createStreamUrl(data);
 
+      const response = await createStreamUrl(data);
       const result = await response.json();
 
       dispatch({ type: "SET_LOADING", payload: false });
@@ -93,8 +94,8 @@ export function StreamProvider({ children }: { children: React.ReactNode }) {
   const useCreateStreamVideo = useCallback(async (data: StreamVideoRequestBody): Promise<Response> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const response = await createStreamVideo(data);
 
+      const response = await createStreamVideo(data);
       const result = await response.json();
 
       dispatch({ type: "SET_LOADING", payload: false });
