@@ -108,7 +108,7 @@ export const createStreamUrl = async (data: StreamUrlRequestBody): Promise<Respo
 };
 
 export const createStreamVideo = async (form: StreamVideoRequestBody): Promise<Response> => {
-  const response = await fetch(`/api/streams/file`, {
+  const response = await fetch(`/api/streams/video`, {
     method: "POST",
     body: form.data,
   });

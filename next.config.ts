@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
     unoptimized: process.env.NODE_ENV === "development",
   },
   serverExternalPackages: [],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10gb",
+    },
+  },
 };
 
 export default nextConfig;
