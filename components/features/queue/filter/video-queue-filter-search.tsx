@@ -1,12 +1,5 @@
 import { Input } from "@/components/ui/input";
-import {
-  forwardRef,
-  memo,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface VideoQueueFilterSearchProps {
   onSearchChange: (search: string) => void;
@@ -17,14 +10,13 @@ export interface VideoQueueFilterSearchRef {
   reset: () => void;
 }
 
-const VideoQueueFilterSearchComponent = forwardRef<
-  VideoQueueFilterSearchRef,
-  VideoQueueFilterSearchProps
->(function VideoQueueFilterSearch({ onSearchChange, value }, ref) {
+const VideoQueueFilterSearchComponent = forwardRef<VideoQueueFilterSearchRef, VideoQueueFilterSearchProps>(function VideoQueueFilterSearch(
+  { onSearchChange, value },
+  ref
+) {
   const [search, setSearch] = useState<string>(value ?? "");
   const timeoutRef = useRef<NodeJS.Timeout>(null);
 
-  // Synchroniser avec la prop value (pour le reset)
   useEffect(() => {
     setSearch(value ?? "");
     if (timeoutRef.current) {
@@ -45,10 +37,8 @@ const VideoQueueFilterSearchComponent = forwardRef<
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    // Ne pas appeler onSearchChange
   };
 
-  // Exposer la méthode reset au parent
   useImperativeHandle(ref, () => ({
     reset: resetWithoutCallback,
   }));
@@ -57,18 +47,15 @@ const VideoQueueFilterSearchComponent = forwardRef<
     const value = event.target.value;
     setSearch(value);
 
-    // Clear le timeout précédent
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    // Créer un nouveau timeout
     timeoutRef.current = setTimeout(() => {
       onSearchChange(value);
     }, 500);
   };
 
-  // Cleanup du timeout au démontage
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -79,12 +66,7 @@ const VideoQueueFilterSearchComponent = forwardRef<
 
   return (
     <div className="relative">
-      <Input
-        placeholder="Search by name"
-        value={search}
-        onChange={handleInputChange}
-        className="h-8 w-[150px] lg:w-[250px] pr-8"
-      />
+      <Input placeholder="Search by name" value={search} onChange={handleInputChange} className="h-8 w-[150px] lg:w-[250px] pr-8" />
       {search && (
         <button
           onClick={handleClearSearch}

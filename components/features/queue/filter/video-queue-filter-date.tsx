@@ -7,15 +7,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
-import { memo, useState } from "react";
+import { forwardRef, memo, useImperativeHandle, useState } from "react";
 
 interface VideoQueueFilterDateProps {
   onDateChange: (from: Date | undefined, to: Date | undefined) => void;
 }
 
-const VideoQueueFilterDateComponent = function VideoQueueFilterDate({
-  onDateChange,
-}: VideoQueueFilterDateProps) {
+export interface VideoQueueFilterDateRef {
+  reset: () => void;
+}
+
+const VideoQueueFilterDateComponent = forwardRef<VideoQueueFilterDateRef, VideoQueueFilterDateProps>(function VideoQueueFilterDate(
+  { onDateChange },
+  ref
+) {
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
   const [from, setFrom] = useState<Date | undefined>(undefined);
@@ -32,6 +37,15 @@ const VideoQueueFilterDateComponent = function VideoQueueFilterDate({
     setToOpen(false);
     onDateChange(from, date);
   };
+
+  const resetWithoutCallback = () => {
+    setFrom(undefined);
+    setTo(undefined);
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: resetWithoutCallback,
+  }));
 
   return (
     <div>
@@ -93,6 +107,6 @@ const VideoQueueFilterDateComponent = function VideoQueueFilterDate({
       </div>
     </div>
   );
-};
+});
 
 export const VideoQueueFilterDate = memo(VideoQueueFilterDateComponent);

@@ -1,10 +1,10 @@
 import { useMercure } from "@/lib/mercure/provider";
 import { useStreams } from "@/lib/stream/context";
-import { useEffect, useState } from "react";
-import { VideoQueueFilterDate } from "./filter/video-queue-filter-date";
+import { useEffect, useRef, useState } from "react";
+import { VideoQueueFilterDate, VideoQueueFilterDateRef } from "./filter/video-queue-filter-date";
 import { VideoQueueFilterReset } from "./filter/video-queue-filter-reset";
-import { VideoQueueFilterSearch } from "./filter/video-queue-filter-search";
-import { VideoQueueFilterStatus } from "./filter/video-queue-filter-status";
+import { VideoQueueFilterSearch, VideoQueueFilterSearchRef } from "./filter/video-queue-filter-search";
+import { VideoQueueFilterStatus, VideoQueueFilterStatusRef } from "./filter/video-queue-filter-status";
 import { VideoQueueCard } from "./video-queue-card";
 import { VideoQueueListEmpty } from "./video-queue-list-empty";
 import { VideoQueuePagination } from "./video-queue-pagination";
@@ -17,6 +17,9 @@ export const VideoQueueList = () => {
   const [status, setStatus] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const { on } = useMercure();
+  const searchFilterRef = useRef<VideoQueueFilterSearchRef>(null);
+  const statusFilterRef = useRef<VideoQueueFilterStatusRef>(null);
+  const dateFilterRef = useRef<VideoQueueFilterDateRef>(null);
 
   const handleStatusChange = (status: string[]) => {
     setStatus(status);
@@ -68,6 +71,9 @@ export const VideoQueueList = () => {
     setTo(undefined);
     setSearch("");
     setStatus([]);
+    searchFilterRef.current?.reset();
+    statusFilterRef.current?.reset();
+    dateFilterRef.current?.reset();
     useFetchStreams({
       page: page,
     });
@@ -92,14 +98,11 @@ export const VideoQueueList = () => {
       <>
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
-            <VideoQueueFilterSearch
-              onSearchChange={handleSearchChange}
-              value={search}
-            />
-            <VideoQueueFilterStatus onStatusChange={handleStatusChange} />
+            <VideoQueueFilterSearch ref={searchFilterRef} onSearchChange={handleSearchChange} value={search} />
+            <VideoQueueFilterStatus ref={statusFilterRef} onStatusChange={handleStatusChange} />
             <VideoQueueFilterReset onReset={handleReset} />
           </div>
-          <VideoQueueFilterDate onDateChange={handleDateChange} />
+          <VideoQueueFilterDate ref={dateFilterRef} onDateChange={handleDateChange} />
         </div>
       </>
 
