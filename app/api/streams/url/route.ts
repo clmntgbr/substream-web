@@ -10,16 +10,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false }, { status: 401 });
     }
 
-    const body = await request.json();
-    console.log(JSON.stringify(body));
-    console.log(`${BACKEND_API_URL}/streams/url`);
     const response = await fetch(`${BACKEND_API_URL}/streams/url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionToken}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(await request.json()),
     });
 
     if (!response.ok) {
