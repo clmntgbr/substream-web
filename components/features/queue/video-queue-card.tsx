@@ -53,7 +53,6 @@ export function VideoQueueCard({ stream }: VideoQueueCardProps) {
       toast.error("Stream not available");
       return;
     }
-
     await useDeleteStream(stream.id);
   };
 
