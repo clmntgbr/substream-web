@@ -1,25 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useOptions } from "@/lib/option/context";
 import { Option } from "@/lib/option/types";
-import {
-  Clock,
-  Film,
-  HardDrive,
-  Loader2,
-  Play,
-  Settings as VideoSettingsIcon,
-  X,
-} from "lucide-react";
+import { useStreams } from "@/lib/stream/context";
+import { Clock, Film, HardDrive, Loader2, Play, Settings as VideoSettingsIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -34,14 +20,9 @@ interface PreviewProps {
   onUploadSuccess?: () => void;
 }
 
-export const Preview = ({
-  open,
-  onOpenChange,
-  file,
-  url,
-  onUploadSuccess,
-}: PreviewProps) => {
+export const Preview = ({ open, onOpenChange, file, url, onUploadSuccess }: PreviewProps) => {
   const { useCreateOption } = useOptions();
+  const { useCreateStreamVideo, useCreateStreamUrl } = useStreams();
   const [isUploading, setIsUploading] = useState(false);
   const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState<string>("--:--");
@@ -94,7 +75,6 @@ export const Preview = ({
     if (file) {
       handleFile(file);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, url]);
 
   const handleFile = (file: File) => {
@@ -154,9 +134,7 @@ export const Preview = ({
 
   const handleUrl = async (url: string) => {
     try {
-      const response = await fetch(
-        `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`,
-      );
+      const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
       if (!response.ok) {
         setThumbnail(null);
         setVideoTitle("");
@@ -170,7 +148,6 @@ export const Preview = ({
         author_name: string;
       };
 
-      // Process thumbnail to remove black bars
       const processedThumbnail = await processThumbnail(data.thumbnail_url);
       setThumbnail(processedThumbnail);
       setVideoTitle(data.title);
@@ -198,22 +175,17 @@ export const Preview = ({
           return;
         }
 
-        // Set canvas size to original image size
         canvas.width = img.width;
         canvas.height = img.height;
 
-        // Draw the image
         ctx.drawImage(img, 0, 0);
 
-        // Get image data to detect black bars
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Find top and bottom black bars
         let topBar = 0;
         let bottomBar = canvas.height;
 
-        // Check top bar
         for (let y = 0; y < canvas.height; y++) {
           let isBlackRow = true;
           for (let x = 0; x < canvas.width; x++) {
@@ -222,7 +194,6 @@ export const Preview = ({
             const g = data[index + 1];
             const b = data[index + 2];
 
-            // Check if pixel is not black (allowing some tolerance)
             if (r > 20 || g > 20 || b > 20) {
               isBlackRow = false;
               break;
@@ -234,7 +205,6 @@ export const Preview = ({
           }
         }
 
-        // Check bottom bar
         for (let y = canvas.height - 1; y >= 0; y--) {
           let isBlackRow = true;
           for (let x = 0; x < canvas.width; x++) {
@@ -243,7 +213,6 @@ export const Preview = ({
             const g = data[index + 1];
             const b = data[index + 2];
 
-            // Check if pixel is not black (allowing some tolerance)
             if (r > 20 || g > 20 || b > 20) {
               isBlackRow = false;
               break;
@@ -255,7 +224,6 @@ export const Preview = ({
           }
         }
 
-        // If we found black bars, crop the image
         if (topBar > 0 || bottomBar < canvas.height) {
           const croppedHeight = bottomBar - topBar + 1;
           const croppedCanvas = document.createElement("canvas");
@@ -265,24 +233,13 @@ export const Preview = ({
             croppedCanvas.width = canvas.width;
             croppedCanvas.height = croppedHeight;
 
-            croppedCtx.drawImage(
-              canvas,
-              0,
-              topBar,
-              canvas.width,
-              croppedHeight,
-              0,
-              0,
-              canvas.width,
-              croppedHeight,
-            );
+            croppedCtx.drawImage(canvas, 0, topBar, canvas.width, croppedHeight, 0, 0, canvas.width, croppedHeight);
 
             resolve(croppedCanvas.toDataURL("image/jpeg", 0.9));
             return;
           }
         }
 
-        // If no black bars found, return original
         resolve(thumbnailUrl);
       };
 
@@ -328,8 +285,6 @@ export const Preview = ({
         return;
       }
 
-      let response;
-
       if (file) {
         const formData = new FormData();
         formData.append("video", file as Blob);
@@ -348,12 +303,10 @@ export const Preview = ({
           }
         }
 
-        response = await fetch("/api/streams/video", {
-          method: "POST",
-          credentials: "include",
-          body: formData,
-        });
-      } else if (url) {
+        await useCreateStreamVideo({ data: formData });
+      }
+
+      if (url) {
         const requestBody: {
           url: string;
           optionId: string;
@@ -369,44 +322,16 @@ export const Preview = ({
           requestBody.thumbnail_file = thumbnail;
         }
 
-        response = await fetch("/api/streams/url", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
-      } else {
-        toast.error("No file or URL provided");
-        return;
+        await useCreateStreamUrl(requestBody);
       }
 
-      if (response.ok) {
-        const data = (await response.json()) as { message?: string };
-
-        if (onUploadSuccess) {
-          onUploadSuccess();
-        }
-
-        onOpenChange(false);
-        toast.success("Video uploaded successfully!", {
-          description: data.message || "Your video is now being processed.",
-        });
-      } else {
-        const errorData = (await response.json().catch(() => ({}))) as {
-          message?: string;
-          error?: string;
-          key?: string;
-          params?: Record<string, unknown>;
-        };
-
-        toast.error("Upload failed");
+      if (onUploadSuccess) {
+        onUploadSuccess();
       }
+
+      onOpenChange(false);
     } catch (error) {
-      toast.error("Upload failed", {
-        description: "Failed to upload video",
-      });
+      console.error(error);
     } finally {
       setIsUploading(false);
     }
@@ -470,14 +395,9 @@ export const Preview = ({
                 <div className="w-full h-full bg-gray-200 animate-pulse" />
               )}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">
-                  HD Ready
-                </Badge>
+                <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20">HD Ready</Badge>
               </div>
-              <div
-                className="absolute inset-x-0 flex items-center justify-center pointer-events-none"
-                style={{ bottom: `${yAxisAlignment}px` }}
-              >
+              <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none" style={{ bottom: `${yAxisAlignment}px` }}>
                 <p
                   className="text-center px-4 max-w-[90%]"
                   style={{
@@ -500,34 +420,21 @@ export const Preview = ({
           <SheetFooter>
             <div className="backdrop-blur-xl px-6 py-4">
               <div className="flex justify-center gap-3 mx-auto">
-                <Button
-                  onClick={() => setIsSettingsOpen(true)}
-                  variant="outline"
-                  disabled={isUploading}
-                  className="cursor-pointer"
-                >
+                <Button onClick={() => setIsSettingsOpen(true)} variant="outline" disabled={isUploading} className="cursor-pointer">
                   <VideoSettingsIcon className="h-3 w-3 mr-2" />
                   Settings
                   <KbdGroup className="ml-2">
                     <Kbd>⌘ + j</Kbd>
                   </KbdGroup>
                 </Button>
-                <Button
-                  onClick={handleProcess}
-                  disabled={isUploading}
-                  className="cursor-pointer"
-                >
+                <Button onClick={handleProcess} disabled={isUploading} className="cursor-pointer">
                   <KbdGroup className="mr-2">
                     <Kbd className="bg-black/10 backdrop-blur-md text-white border-white/20 rounded-md px-2 py-1 dark:bg-white/10 dark:border-black/20 dark:text-black">
                       ⌘ + e
                     </Kbd>
                   </KbdGroup>
                   Process
-                  {isUploading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Play className="ml-2 h-4 w-4" />
-                  )}
+                  {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="ml-2 h-4 w-4" />}
                 </Button>
               </div>
             </div>

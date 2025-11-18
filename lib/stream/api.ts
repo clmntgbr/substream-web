@@ -1,10 +1,8 @@
 import { Hydra } from "../hydra";
 import { QueryParams } from "./provider";
-import { Stream } from "./types";
+import { Stream, StreamUrlRequestBody, StreamVideoRequestBody } from "./types";
 
-export const fetchStreams = async (
-  queryParams: QueryParams,
-): Promise<Hydra<Stream>> => {
+export const fetchStreams = async (queryParams: QueryParams): Promise<Hydra<Stream>> => {
   const query = new URLSearchParams();
 
   query.append("itemsPerPage", "10");
@@ -36,10 +34,7 @@ export const fetchStreams = async (
   return response.json();
 };
 
-export const downloadStream = async (
-  id: string,
-  fileName: string,
-): Promise<void> => {
+export const downloadStream = async (id: string, fileName: string): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download`, {
     method: "GET",
   });
@@ -59,10 +54,7 @@ export const downloadStream = async (
   window.URL.revokeObjectURL(url);
 };
 
-export const downloadSubtitle = async (
-  id: string,
-  fileName: string,
-): Promise<void> => {
+export const downloadSubtitle = async (id: string, fileName: string): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download/subtitle`, {
     method: "GET",
   });
@@ -82,10 +74,7 @@ export const downloadSubtitle = async (
   window.URL.revokeObjectURL(url);
 };
 
-export const downloadResume = async (
-  id: string,
-  fileName: string,
-): Promise<void> => {
+export const downloadResume = async (id: string, fileName: string): Promise<void> => {
   const response = await fetch(`/api/streams/${id}/download/resume`, {
     method: "GET",
   });
@@ -103,4 +92,30 @@ export const downloadResume = async (
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
+};
+
+export const createStreamUrl = async (data: StreamUrlRequestBody): Promise<Response> => {
+  const response = await fetch(`/api/streams/url`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create stream url");
+  }
+
+  return response;
+};
+
+export const createStreamVideo = async (form: StreamVideoRequestBody): Promise<Response> => {
+  const response = await fetch(`/api/streams/file`, {
+    method: "POST",
+    body: form.data,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create stream file");
+  }
+
+  return response;
 };

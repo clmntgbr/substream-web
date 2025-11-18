@@ -1,4 +1,3 @@
-import { pick } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -12,8 +11,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-
-    const response = await fetch(`${BACKEND_API_URL}/options`, {
+    console.log(JSON.stringify(body));
+    console.log(`${BACKEND_API_URL}/streams/url`);
+    const response = await fetch(`${BACKEND_API_URL}/streams/url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,16 +22,11 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    console.log(response);
-
     if (!response.ok) {
       return NextResponse.json({ success: false }, { status: response.status });
     }
 
-    const nextResponse = await response.json();
-    const option = pick(nextResponse, ["id"]);
-
-    return NextResponse.json(option);
+    return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }

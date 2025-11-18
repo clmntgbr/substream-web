@@ -32,14 +32,19 @@ export interface StreamState {
   error: string | null;
 }
 
+export interface StreamUrlRequestBody {
+  url: string;
+  optionId: string;
+  name: string;
+  thumbnail_file?: string;
+}
+
+export interface StreamVideoRequestBody {
+  data: FormData;
+}
+
 export type StreamAction =
   | { type: "FETCH_STREAMS_SUCCESS"; payload: Hydra<Stream> }
   | { type: "FETCH_STREAMS_ERROR"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "CLEAR_STREAMS" }
-  | { type: "DOWNLOAD_STREAM_ERROR"; payload: string }
-  | { type: "DOWNLOAD_STREAM_SUCCESS" }
-  | { type: "DOWNLOAD_SUBTITLE_ERROR"; payload: string }
-  | { type: "DOWNLOAD_SUBTITLE_SUCCESS" }
-  | { type: "DOWNLOAD_RESUME_ERROR"; payload: string }
-  | { type: "DOWNLOAD_RESUME_SUCCESS" };
+  | { type: "CLEAR_STREAMS" };
