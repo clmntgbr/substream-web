@@ -89,10 +89,10 @@ export const VideoSettings = ({
 
         <div className="space-y-6 py-2 px-4 overflow-y-auto flex-1">
           <div className="w-full space-y-4">
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
-                  <FieldLegend>
+                  <FieldLegend className="mb-6">
                     <span className="flex items-center gap-2">
                       <FormInputIcon className="size-4" />
                       Font and Size
@@ -154,7 +154,7 @@ export const VideoSettings = ({
               </CardContent>
             </Card>
 
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -165,7 +165,7 @@ export const VideoSettings = ({
                   </FieldLegend>
                   <FieldGroup>
                     <Field>
-                      <FieldTitle>Color</FieldTitle>
+                      <FieldTitle>Font Color</FieldTitle>
                       <SubtitleColorPicker background={subtitleColor} setBackground={setSubtitleColor} disabled={readOnly} />
                     </Field>
                     <Field>
@@ -181,7 +181,7 @@ export const VideoSettings = ({
               </CardContent>
             </Card>
 
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -228,7 +228,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -268,7 +268,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -341,7 +341,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
@@ -368,7 +368,7 @@ export const VideoSettings = ({
                 </FieldSet>
               </CardContent>
             </Card>
-            <Card className="dark:bg-transparent border-none">
+            <Card className="dark:bg-transparent">
               <CardContent className="">
                 <FieldSet>
                   <FieldLegend>
