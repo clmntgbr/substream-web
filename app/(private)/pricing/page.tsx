@@ -1,11 +1,11 @@
 "use client";
 
-import Pricing from "@/components/features/pricing/pricing";
+import PricingV2 from "@/components/features/pricing/pricing-v2";
 
 export default function PricingPage() {
   return (
     <>
-      <Pricing />
+      <PricingV2 />
     </>
   );
 }

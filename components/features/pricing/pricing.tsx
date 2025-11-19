@@ -43,7 +43,7 @@ const Pricing = () => {
                   planListItem.isMonthly && (
                     <Card
                       className={cn(
-                        "relative w-full text-left",
+                        "relative w-full text-left flex flex-col",
                         planListItem.isPopular && "ring-2 ring-primary"
                       )}
                       key={planListItem.id}
@@ -53,12 +53,12 @@ const Pricing = () => {
                           Popular
                         </Badge>
                       )}
-                      <CardHeader>
+                      <CardHeader className="flex flex-col flex-1">
                         <CardTitle className="font-medium text-xl">
                           {planListItem.name}
                         </CardTitle>
-                        <CardDescription>
-                          <p>{planListItem.description}</p>
+                        <CardDescription className="flex flex-col flex-1">
+                          <p className="flex-1">{planListItem.description}</p>
                           {planListItem.price && (
                             <NumberFlow
                               className="font-medium text-foreground mt-2"
@@ -73,7 +73,7 @@ const Pricing = () => {
                           )}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="grid gap-2">
+                      <CardContent className="grid gap-2 flex-1">
                         {planListItem.features?.map((feature, index) => (
                           <div
                             className="flex items-center gap-2 text-muted-foreground text-sm"
@@ -106,7 +106,7 @@ const Pricing = () => {
                   planListItem.isYearly && (
                     <Card
                       className={cn(
-                        "relative w-full text-left",
+                        "relative w-full text-left flex flex-col",
                         planListItem.isPopular && "ring-2 ring-primary"
                       )}
                       key={planListItem.id}
@@ -116,12 +116,12 @@ const Pricing = () => {
                           Popular
                         </Badge>
                       )}
-                      <CardHeader>
+                      <CardHeader className="flex flex-col flex-1">
                         <CardTitle className="font-medium text-xl">
                           {planListItem.name}
                         </CardTitle>
-                        <CardDescription>
-                          <p>{planListItem.description}</p>
+                        <CardDescription className="flex flex-col flex-1">
+                          <p className="flex-1">{planListItem.description}</p>
                           {planListItem.price && (
                             <NumberFlow
                               className="font-medium text-foreground"
@@ -130,13 +130,13 @@ const Pricing = () => {
                                 currency: "EUR",
                                 maximumFractionDigits: 2,
                               }}
-                              suffix={`/year, billed yearly.`}
-                              value={planListItem.price}
+                              suffix={`/month, billed yearly.`}
+                              value={planListItem.price / 12}
                             />
                           )}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="grid gap-2">
+                      <CardContent className="grid gap-2 flex-1">
                         {planListItem.features?.map((feature, index) => (
                           <div
                             className="flex items-center gap-2 text-muted-foreground text-sm"
