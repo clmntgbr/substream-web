@@ -1,7 +1,17 @@
-import { Hydra } from "../hydra";
-
 export interface Plan {
   id?: string;
+  isPopular?: boolean;
+  name: string;
+  description: string;
+  reference: string;
+  price: number;
+  interval: string;
+  features: string[];
+  maxVideosPerMonth: number;
+  maxSizeInMegabytes: number;
+  maxDurationMinutes: number;
+  isYearly: boolean;
+  isMonthly: boolean;
 }
 
 export interface PlanState {
