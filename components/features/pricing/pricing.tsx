@@ -18,7 +18,7 @@ import { ArrowRight, BadgeCheck } from "lucide-react";
 import { useState } from "react";
 
 const Pricing = () => {
-  const { plans } = usePlans();
+  const { plans, plan } = usePlans();
 
   const [frequency, setFrequency] = useState<string>("monthly");
 
@@ -39,40 +39,42 @@ const Pricing = () => {
           <TabsContent value="monthly">
             <div className="mt-8 grid gap-4 lg:grid-cols-4">
               {plans.map(
-                (plan) =>
-                  plan.isMonthly && (
+                (planListItem) =>
+                  planListItem.isMonthly && (
                     <Card
                       className={cn(
                         "relative w-full text-left",
-                        plan.isPopular && "ring-2 ring-primary"
+                        planListItem.isPopular && "ring-2 ring-primary"
                       )}
-                      key={plan.id}
+                      key={planListItem.id}
                     >
-                      {plan.isPopular && (
+                      {planListItem.isPopular && (
                         <Badge className="-translate-x-1/2 -translate-y-1/2 absolute top-0 left-1/2 rounded-full">
                           Popular
                         </Badge>
                       )}
                       <CardHeader>
                         <CardTitle className="font-medium text-xl">
-                          {plan.name}
+                          {planListItem.name}
                         </CardTitle>
                         <CardDescription>
-                          <p>{plan.description}</p>
-                          <NumberFlow
-                            className="font-medium text-foreground mt-2"
-                            format={{
-                              style: "currency",
-                              currency: "EUR",
-                              maximumFractionDigits: 2,
-                            }}
-                            suffix={`/month, billed monthly.`}
-                            value={plan.price}
-                          />
+                          <p>{planListItem.description}</p>
+                          {planListItem.price && (
+                            <NumberFlow
+                              className="font-medium text-foreground mt-2"
+                              format={{
+                                style: "currency",
+                                currency: "EUR",
+                                maximumFractionDigits: 2,
+                              }}
+                              suffix={`/month, billed monthly.`}
+                              value={planListItem.price}
+                            />
+                          )}
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="grid gap-2">
-                        {plan.features.map((feature, index) => (
+                        {planListItem.features?.map((feature, index) => (
                           <div
                             className="flex items-center gap-2 text-muted-foreground text-sm"
                             key={index}
@@ -83,8 +85,12 @@ const Pricing = () => {
                         ))}
                       </CardContent>
                       <CardFooter>
-                        <Button className="w-full" variant={"default"}>
-                          {plan.reference}
+                        <Button
+                          className="w-full"
+                          variant={"default"}
+                          disabled={planListItem.id === plan?.id}
+                        >
+                          {planListItem.reference}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>
@@ -94,42 +100,44 @@ const Pricing = () => {
             </div>
           </TabsContent>
           <TabsContent value="yearly">
-            <div className="mt-8 grid w-full max-w-4xl gap-4 lg:grid-cols-3">
+            <div className="mt-8 grid gap-4 lg:grid-cols-4">
               {plans.map(
-                (plan) =>
-                  plan.isYearly && (
+                (planListItem) =>
+                  planListItem.isYearly && (
                     <Card
                       className={cn(
                         "relative w-full text-left",
-                        plan.isPopular && "ring-2 ring-primary"
+                        planListItem.isPopular && "ring-2 ring-primary"
                       )}
-                      key={plan.id}
+                      key={planListItem.id}
                     >
-                      {plan.isPopular && (
+                      {planListItem.isPopular && (
                         <Badge className="-translate-x-1/2 -translate-y-1/2 absolute top-0 left-1/2 rounded-full">
                           Popular
                         </Badge>
                       )}
                       <CardHeader>
                         <CardTitle className="font-medium text-xl">
-                          {plan.name}
+                          {planListItem.name}
                         </CardTitle>
                         <CardDescription>
-                          <p>{plan.description}</p>
-                          <NumberFlow
-                            className="font-medium text-foreground"
-                            format={{
-                              style: "currency",
-                              currency: "EUR",
-                              maximumFractionDigits: 2,
-                            }}
-                            suffix={`/year, billed yearly.`}
-                            value={plan.price}
-                          />
+                          <p>{planListItem.description}</p>
+                          {planListItem.price && (
+                            <NumberFlow
+                              className="font-medium text-foreground"
+                              format={{
+                                style: "currency",
+                                currency: "EUR",
+                                maximumFractionDigits: 2,
+                              }}
+                              suffix={`/year, billed yearly.`}
+                              value={planListItem.price}
+                            />
+                          )}
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="grid gap-2">
-                        {plan.features.map((feature, index) => (
+                        {planListItem.features?.map((feature, index) => (
                           <div
                             className="flex items-center gap-2 text-muted-foreground text-sm"
                             key={index}
@@ -140,8 +148,12 @@ const Pricing = () => {
                         ))}
                       </CardContent>
                       <CardFooter>
-                        <Button className="w-full" variant={"default"}>
-                          {plan.reference}
+                        <Button
+                          className="w-full"
+                          variant={"default"}
+                          disabled={planListItem.id === plan?.id}
+                        >
+                          {planListItem.reference}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>

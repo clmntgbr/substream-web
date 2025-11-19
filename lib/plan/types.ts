@@ -1,21 +1,22 @@
 export interface Plan {
-  id?: string;
+  id: string;
   isPopular?: boolean;
-  name: string;
-  description: string;
-  reference: string;
-  price: number;
-  interval: string;
-  features: string[];
-  maxVideosPerMonth: number;
-  maxSizeInMegabytes: number;
-  maxDurationMinutes: number;
-  isYearly: boolean;
-  isMonthly: boolean;
+  name?: string;
+  description?: string;
+  reference?: string;
+  price?: number;
+  interval?: string;
+  features?: string[];
+  maxVideosPerMonth?: number;
+  maxSizeInMegabytes?: number;
+  maxDurationMinutes?: number;
+  isYearly?: boolean;
+  isMonthly?: boolean;
 }
 
 export interface PlanState {
   plans: Plan[];
+  plan: Plan | null;
   loading: boolean;
   error: string | null;
 }
@@ -23,5 +24,7 @@ export interface PlanState {
 export type PlanAction =
   | { type: "FETCH_PLANS_SUCCESS"; payload: Plan[] }
   | { type: "FETCH_PLANS_ERROR"; payload: string }
+  | { type: "GET_PLAN_SUCCESS"; payload: Plan }
+  | { type: "GET_PLAN_ERROR"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "CLEAR_PLANS" };

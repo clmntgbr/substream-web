@@ -1,6 +1,9 @@
 import { PlanAction, PlanState } from "./types";
 
-export const planReducer = (state: PlanState, action: PlanAction): PlanState => {
+export const planReducer = (
+  state: PlanState,
+  action: PlanAction
+): PlanState => {
   switch (action.type) {
     case "FETCH_PLANS_SUCCESS":
       return {
@@ -13,6 +16,20 @@ export const planReducer = (state: PlanState, action: PlanAction): PlanState => 
       return {
         ...state,
         plans: [],
+        loading: false,
+        error: action.payload,
+      };
+    case "GET_PLAN_SUCCESS":
+      return {
+        ...state,
+        plan: action.payload,
+        loading: false,
+        error: null,
+      };
+    case "GET_PLAN_ERROR":
+      return {
+        ...state,
+        plan: null,
         loading: false,
         error: action.payload,
       };

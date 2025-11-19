@@ -1,4 +1,3 @@
-import { Hydra } from "../hydra";
 import { Plan } from "./types";
 
 export const fetchPlans = async (): Promise<Plan[]> => {
@@ -8,6 +7,18 @@ export const fetchPlans = async (): Promise<Plan[]> => {
 
   if (!response.ok) {
     throw new Error("Failed to fetch streams");
+  }
+
+  return response.json();
+};
+
+export const getPlan = async (): Promise<Plan> => {
+  const response = await fetch(`/api/plan`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch plan");
   }
 
   return response.json();

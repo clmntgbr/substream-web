@@ -5,9 +5,12 @@ import { PlanState } from "./types";
 
 export interface PlanContextType extends PlanState {
   useFetchPlans: () => Promise<void>;
+  useGetPlan: () => Promise<void>;
 }
 
-export const PlanContext = createContext<PlanContextType | undefined>(undefined);
+export const PlanContext = createContext<PlanContextType | undefined>(
+  undefined
+);
 
 export const usePlans = () => {
   const context = useContext(PlanContext);
