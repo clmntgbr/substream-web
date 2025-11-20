@@ -7,7 +7,7 @@ export function Main() {
     <nav className="flex items-center gap-6">
       <Link
         className="text-sm font-normal text-foreground transition-colors hover:text-foreground/80"
-        href="/pricing"
+        href="/studio/pricing"
       >
         Pricing
       </Link>

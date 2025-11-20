@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false }, { status: 401 });
     }
 
-    const response = await fetch(`${BACKEND_API_URL}/plan`, {
+    const response = await fetch(`${BACKEND_API_URL}/subscription`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -24,9 +24,9 @@ export async function GET(request: NextRequest) {
     }
 
     const nextResponse = await response.json();
-    const plan = pick(nextResponse, ["id", "name"]);
+    const subscription = pick(nextResponse, ["id"]);
 
-    return NextResponse.json(plan);
+    return NextResponse.json(subscription);
   } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }

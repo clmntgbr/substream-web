@@ -7,6 +7,7 @@ import { MercureProvider } from "@/lib/mercure/provider";
 import { OptionProvider } from "@/lib/option/provider";
 import { PlanProvider } from "@/lib/plan/provider";
 import { StreamProvider } from "@/lib/stream/provider";
+import { SubscriptionProvider } from "@/lib/subscription/provider";
 import { UserProvider } from "@/lib/user/provider";
 
 export default function PrivateLayout({
@@ -25,21 +26,23 @@ export default function PrivateLayout({
         <UserProvider>
           <StreamProvider>
             <OptionProvider>
-              <PlanProvider>
-                <MercureProvider>
-                  <Header />
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">
-                    {children}
-                  </div>
-                  <Footer />
-                  <Toaster
-                    richColors
-                    expand={false}
-                    position="top-right"
-                    closeButton
-                />
-              </MercureProvider>
-              </PlanProvider>
+              <SubscriptionProvider>
+                <PlanProvider>
+                  <MercureProvider>
+                    <Header />
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16">
+                      {children}
+                    </div>
+                    <Footer />
+                    <Toaster
+                      richColors
+                      expand={false}
+                      position="top-right"
+                      closeButton
+                    />
+                  </MercureProvider>
+                </PlanProvider>
+              </SubscriptionProvider>
             </OptionProvider>
           </StreamProvider>
         </UserProvider>

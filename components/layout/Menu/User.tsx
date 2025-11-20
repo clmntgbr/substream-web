@@ -14,12 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth/context";
+import { usePlans } from "@/lib/plan/context";
 import { useUser } from "@/lib/user/context";
 import { useRouter } from "next/navigation";
 
 export function User() {
   const { logout } = useAuth();
   const { user } = useUser();
+  const { plan } = usePlans();
   const router = useRouter();
 
   if (!user) {
@@ -73,16 +75,16 @@ export function User() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Sparkles />
-            Free plan
+            {plan?.name} plan
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/account")}>
+          <DropdownMenuItem onClick={() => router.push("/studio/account")}>
             <BadgeCheck />
             Account
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/billing")}>
+          <DropdownMenuItem onClick={() => router.push("/studio/billing")}>
             <CreditCard />
             Billing
           </DropdownMenuItem>

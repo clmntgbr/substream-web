@@ -4,6 +4,7 @@ export interface User {
   lastname?: string;
   picture?: string;
   roles?: string[];
+  hasStripeCustomerId?: boolean;
   id?: string;
 }
 

@@ -10,15 +10,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { usePlans } from "@/lib/plan/context";
 import { Plan } from "@/lib/plan/types";
 import { cn } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
 import { ArrowRight, BadgeCheck } from "lucide-react";
 import { useState } from "react";
 
-export const Pricing = () => {
-  const { plans, plan: currentPlan } = usePlans();
+interface PricingProps {
+  plans: Plan[];
+  currentPlan?: Plan | null;
+}
+
+export const Pricing = ({ plans, currentPlan }: PricingProps) => {
   const [frequency, setFrequency] = useState<string>("monthly");
 
   const filteredPlans = plans.filter((plan) =>
@@ -61,11 +64,14 @@ export const Pricing = () => {
               )}
               key={plan.name ?? plan.id}
             >
-              {plan.isPopular && (
-                <Badge className="-translate-x-1/2 -translate-y-1/2 absolute top-0 left-1/2 rounded-full">
-                  Popular
-                </Badge>
-              )}
+              <div className="-translate-x-1/2 -translate-y-1/2 absolute top-0 left-1/2 flex gap-2">
+                {plan.isPopular && (
+                  <Badge className="rounded-full">Popular</Badge>
+                )}
+                {plan.id === currentPlan?.id && (
+                  <Badge className="rounded-full">Current</Badge>
+                )}
+              </div>
               <CardHeader className="flex flex-col flex-1">
                 <CardTitle className="font-medium text-xl">
                   {plan.name}

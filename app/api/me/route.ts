@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
       "lastname",
       "picture",
       "roles",
+      "hasStripeCustomerId",
     ]);
 
     return NextResponse.json(user);
