@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useReducer } from "react";
 import { toast } from "sonner";
-import { createSubsription, getSubscription, getSubscriptionManage } from "./api";
+import { createSubsription, getSubscription, getSubscriptionManage, updateSubsription } from "./api";
 import { SubscriptionContext } from "./context";
 import { SubscriptionReducer } from "./reducer";
 import { SubscriptionState } from "./types";
@@ -31,55 +31,50 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   }, []);
 
-  const useGetSubscriptionManage = useCallback(async (): Promise<{ url: string }> => {
+  const useGetSubscriptionManage = useCallback(async (): Promise<{ url: string } | undefined> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
+      toast.info("Getting subscription manage...");
       const response = await getSubscriptionManage();
 
       if (!response.url) {
         toast.error("Failed to create subscription");
-        dispatch({
-          type: "GET_SUBSCRIPTION_MANAGE_ERROR",
-          payload: "Failed to get subscription manage",
-        });
-        throw new Error("Failed to get subscription manage");
+        return;
       }
 
       return { url: response.url };
     } catch (error) {
       toast.error("Failed to get subscription manage");
-      dispatch({
-        type: "GET_SUBSCRIPTION_MANAGE_ERROR",
-        payload: "Failed to get subscription manage",
-      });
-      throw error;
     }
   }, []);
 
-  const useCreateSubscription = useCallback(async (planId: string): Promise<{ url: string }> => {
+  const useCreateSubscription = useCallback(async (planId: string): Promise<{ url: string } | undefined> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
+      toast.info("Creating subscription...");
       const response = await createSubsription({ planId: planId });
 
       if (!response.url) {
         toast.error("Failed to create subscription");
-        dispatch({
-          type: "CREATE_SUBSCRIPTION_ERROR",
-          payload: "Failed to create subscription",
-        });
-        throw new Error("Failed to create subscription");
+        return;
       }
 
       return { url: response.url };
     } catch (error) {
       toast.error("Failed to create subscription");
-      dispatch({
-        type: "CREATE_SUBSCRIPTION_ERROR",
-        payload: "Failed to create subscription",
-      });
-      throw error;
+    }
+  }, []);
+
+  const useUpdateSubscription = useCallback(async (planId: string): Promise<void> => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      toast.info("Subscription is being updated...");
+      await updateSubsription({ planId: planId });
+      toast.success("Subscription updated successfully");
+    } catch (error) {
+      toast.error("Failed to update subscription");
     }
   }, []);
 
@@ -94,6 +89,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         useGetSubscription,
         useGetSubscriptionManage,
         useCreateSubscription,
+        useUpdateSubscription,
       }}
     >
       {children}

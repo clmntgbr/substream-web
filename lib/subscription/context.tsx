@@ -5,8 +5,9 @@ import { SubscriptionState } from "./types";
 
 export interface SubscriptionContextType extends SubscriptionState {
   useGetSubscription: () => Promise<void>;
-  useGetSubscriptionManage: () => Promise<{ url: string }>;
-  useCreateSubscription: (planId: string) => Promise<{ url: string }>;
+  useGetSubscriptionManage: () => Promise<{ url: string } | undefined>;
+  useCreateSubscription: (planId: string) => Promise<{ url: string } | undefined>;
+  useUpdateSubscription: (planId: string) => Promise<void>;
 }
 
 export const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);

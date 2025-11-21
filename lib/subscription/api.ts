@@ -1,4 +1,4 @@
-import { CreateSubscriptionRequestBody, Subscription } from "./types";
+import { CreateSubscriptionRequestBody, Subscription, UpdateSubscriptionRequestBody } from "./types";
 
 export const getSubscription = async (): Promise<Subscription> => {
   const response = await fetch(`/api/subscription`, {
@@ -23,6 +23,17 @@ export const createSubsription = async (data: CreateSubscriptionRequestBody): Pr
   }
 
   return response.json();
+};
+
+export const updateSubsription = async (data: UpdateSubscriptionRequestBody): Promise<void> => {
+  const response = await fetch(`/api/subscription/update`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch subscription update");
+  }
 };
 
 export const getSubscriptionManage = async (): Promise<{ url?: string }> => {

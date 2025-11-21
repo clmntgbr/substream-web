@@ -16,12 +16,6 @@ export const SubscriptionReducer = (state: SubscriptionState, action: Subscripti
         loading: false,
         error: action.payload,
       };
-    case "CREATE_SUBSCRIPTION_ERROR":
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
     case "SET_LOADING":
       return {
         ...state,

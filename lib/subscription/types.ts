@@ -23,6 +23,10 @@ export interface CreateSubscriptionRequestBody {
   planId: string;
 }
 
+export interface UpdateSubscriptionRequestBody {
+  planId: string;
+}
+
 export type SubscriptionAction =
   | { type: "GET_SUBSCRIPTION_SUCCESS"; payload: Subscription }
   | { type: "GET_SUBSCRIPTION_ERROR"; payload: string }

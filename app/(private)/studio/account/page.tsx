@@ -14,7 +14,7 @@ import { useState } from "react";
 
 export default function AccountPage() {
   const router = useRouter();
-  const { subscription, useGetSubscriptionManage, useCreateSubscription } = useSubscriptions();
+  const { subscription, useGetSubscriptionManage, useCreateSubscription, useUpdateSubscription } = useSubscriptions();
   const { plans, plan: currentPlan } = usePlans();
 
   const [frequency, setFrequency] = useState<string>("monthly");
@@ -23,12 +23,18 @@ export default function AccountPage() {
 
   const handleCreateSubscription = async (plan: Plan) => {
     const result = await useCreateSubscription(plan.id);
+    if (!result) return;
     router.push(result.url);
   };
 
   const handleGetSubscriptionManage = async () => {
     const result = await useGetSubscriptionManage();
+    if (!result) return;
     router.push(result.url);
+  };
+
+  const handleUpdateSubscription = async (plan: Plan) => {
+    await useUpdateSubscription(plan.id);
   };
 
   return (
@@ -39,7 +45,7 @@ export default function AccountPage() {
       </div>
 
       {currentPlan && (
-        <div className="grid gap-4 lg:grid-cols-2 my-8">
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-2 my-8">
           <Card className="relative w-full flex flex-col" key={currentPlan.name ?? currentPlan.id}>
             <CardHeader className="flex flex-col flex-1">
               <CardTitle className="font-medium text-xl">
@@ -73,7 +79,7 @@ export default function AccountPage() {
         </div>
       )}
 
-      <h3 className="text-2xl font-bold text-gray-900 dark:text-white my-8">Upgrade to a plan</h3>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white my-8">Update to a plan</h3>
 
       <Tabs defaultValue={frequency} onValueChange={setFrequency} className="mb-2">
         <TabsList>
@@ -84,7 +90,7 @@ export default function AccountPage() {
           </TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="grid gap-4 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {filteredPlans.map((plan) => {
           if (plan.id === currentPlan?.id) return null;
           if (plan.reference === "plan_free") return null;
@@ -114,9 +120,9 @@ export default function AccountPage() {
                 <Button
                   className="w-full"
                   variant="default"
-                  onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleGetSubscriptionManage())}
+                  onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleUpdateSubscription(plan))}
                 >
-                  Upgrade to {plan.reference}
+                  Update to {plan.reference}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardFooter>
