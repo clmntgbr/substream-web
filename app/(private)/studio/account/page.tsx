@@ -4,6 +4,7 @@ import PricingPreview from "@/components/features/pricing/preview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePlans } from "@/lib/plan/context";
 import { Plan } from "@/lib/plan/types";
@@ -24,27 +25,43 @@ export default function AccountPage() {
   const [open, setOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [subscriptionPreview, setSubscriptionPreview] = useState<GetSubscriptionUpdatePreviewResponse | null>(null);
+  const [loadingButton, setLoadingButton] = useState<string | null>(null);
   const filteredPlans = plans.filter((plan) => (frequency === "monthly" ? plan.isMonthly : plan.isYearly));
 
   const handleCreateSubscription = async (plan: Plan) => {
-    const result = await useCreateSubscription(plan.id);
-    if (!result) return;
-    router.push(result.url);
+    setLoadingButton(`create-${plan.id}`);
+    try {
+      const result = await useCreateSubscription(plan.id);
+      if (!result) return;
+      router.push(result.url);
+    } finally {
+      setLoadingButton(null);
+    }
   };
 
   const handleGetSubscriptionManage = async () => {
-    const result = await useGetSubscriptionManage();
-    if (!result) return;
-    router.push(result.url);
+    setLoadingButton("manage");
+    try {
+      const result = await useGetSubscriptionManage();
+      if (!result) return;
+      router.push(result.url);
+    } finally {
+      setLoadingButton(null);
+    }
   };
 
   const handleGetSubscriptionUpdatePreview = async (plan: Plan) => {
-    const result = await useGetSubscriptionUpdatePreview(plan.id);
-    if (!result) return;
+    setLoadingButton(`preview-${plan.id}`);
+    try {
+      const result = await useGetSubscriptionUpdatePreview(plan.id);
+      if (!result) return;
 
-    setSubscriptionPreview(result);
-    setSelectedPlan(plan);
-    setOpen(true);
+      setSubscriptionPreview(result);
+      setSelectedPlan(plan);
+      setOpen(true);
+    } finally {
+      setLoadingButton(null);
+    }
   };
 
   const handleUpdateSubscription = async () => {
@@ -85,9 +102,9 @@ export default function AccountPage() {
 
             {currentPlan.reference !== "plan_free" && (
               <CardFooter>
-                <Button className="w-full" variant="default" onClick={handleGetSubscriptionManage}>
+                <Button className="w-full" variant="default" onClick={handleGetSubscriptionManage} disabled={loadingButton !== null}>
                   Manage your subscription
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {loadingButton === "manage" ? <Spinner className="ml-2 size-4" /> : <ArrowRight className="ml-2 h-4 w-4" />}
                 </Button>
               </CardFooter>
             )}
@@ -137,9 +154,14 @@ export default function AccountPage() {
                   className="w-full"
                   variant="default"
                   onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleGetSubscriptionUpdatePreview(plan))}
+                  disabled={loadingButton !== null}
                 >
                   Update to {plan.reference}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {loadingButton === `create-${plan.id}` || loadingButton === `preview-${plan.id}` ? (
+                    <Spinner className="ml-2 size-4" />
+                  ) : (
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  )}
                 </Button>
               </CardFooter>
             </Card>

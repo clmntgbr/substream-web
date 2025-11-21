@@ -35,12 +35,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      toast.info("Getting subscription manage...");
       const response = await getSubscriptionManage();
 
       if (!response.url) {
-        toast.error("Failed to create subscription");
-        return;
+        throw new Error();
       }
 
       return { url: response.url };
@@ -53,12 +51,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      toast.info("Creating subscription...");
       const response = await createSubsription({ planId: planId });
 
       if (!response.url) {
-        toast.error("Failed to create subscription");
-        return;
+        throw new Error();
       }
 
       return { url: response.url };
@@ -71,12 +67,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      toast.info("Getting subscription update preview...");
       const response = await getSubscriptionUpdatePreview({ planId: planId });
 
       if (!response) {
-        toast.error("Failed to get subscription update preview");
-        return;
+        throw new Error();
       }
 
       return response;
@@ -88,7 +82,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const useUpdateSubscription = useCallback(async (planId: string): Promise<void> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      toast.info("Subscription is being updated...");
       await updateSubsription({ planId: planId });
       toast.success("Subscription updated successfully");
     } catch (error) {

@@ -57,7 +57,7 @@ export default function PricingPreview({ subscriptionPreview, onUpdateSubscripti
           </Button>
           <Button size="sm" className="flex-1" onClick={handleUpdateSubscription} disabled={loading}>
             Update Subscription
-            {loading ? <Spinner className="size-4" /> : <ArrowRightIcon className="size-4 ml-2" />}
+            {loading ? <Spinner className="ml-2 size-4" /> : <ArrowRightIcon className="ml-2 h-4 w-4" />}
           </Button>
         </div>
       </DialogContent>
