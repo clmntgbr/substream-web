@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useReducer } from "react";
 import { toast } from "sonner";
-import { createSubsription, getSubscription, getSubscriptionManage, updateSubsription } from "./api";
+import { createSubsription, getSubscription, getSubscriptionManage, getSubscriptionUpdatePreview, updateSubsription } from "./api";
 import { SubscriptionContext } from "./context";
 import { SubscriptionReducer } from "./reducer";
-import { SubscriptionState } from "./types";
+import { GetSubscriptionUpdatePreviewResponse, SubscriptionState } from "./types";
 
 const initialState: SubscriptionState = {
   subscription: null,
@@ -67,6 +67,24 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   }, []);
 
+  const useGetSubscriptionUpdatePreview = useCallback(async (planId: string): Promise<GetSubscriptionUpdatePreviewResponse | undefined> => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+
+      toast.info("Getting subscription update preview...");
+      const response = await getSubscriptionUpdatePreview({ planId: planId });
+
+      if (!response) {
+        toast.error("Failed to get subscription update preview");
+        return;
+      }
+
+      return response;
+    } catch (error) {
+      toast.error("Failed to get subscription update preview");
+    }
+  }, []);
+
   const useUpdateSubscription = useCallback(async (planId: string): Promise<void> => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
@@ -90,6 +108,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         useGetSubscriptionManage,
         useCreateSubscription,
         useUpdateSubscription,
+        useGetSubscriptionUpdatePreview,
       }}
     >
       {children}

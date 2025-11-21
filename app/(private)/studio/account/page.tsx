@@ -1,5 +1,6 @@
 "use client";
 
+import PricingPreview from "@/components/features/pricing/preview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePlans } from "@/lib/plan/context";
 import { Plan } from "@/lib/plan/types";
 import { useSubscriptions } from "@/lib/subscription/context";
+import { GetSubscriptionUpdatePreviewResponse } from "@/lib/subscription/types";
 import NumberFlow from "@number-flow/react";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,11 +16,14 @@ import { useState } from "react";
 
 export default function AccountPage() {
   const router = useRouter();
-  const { subscription, useGetSubscriptionManage, useCreateSubscription, useUpdateSubscription } = useSubscriptions();
+  const { subscription, useGetSubscriptionManage, useCreateSubscription, useUpdateSubscription, useGetSubscriptionUpdatePreview } =
+    useSubscriptions();
   const { plans, plan: currentPlan } = usePlans();
 
   const [frequency, setFrequency] = useState<string>("monthly");
-
+  const [open, setOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [subscriptionPreview, setSubscriptionPreview] = useState<GetSubscriptionUpdatePreviewResponse | null>(null);
   const filteredPlans = plans.filter((plan) => (frequency === "monthly" ? plan.isMonthly : plan.isYearly));
 
   const handleCreateSubscription = async (plan: Plan) => {
@@ -33,8 +38,19 @@ export default function AccountPage() {
     router.push(result.url);
   };
 
-  const handleUpdateSubscription = async (plan: Plan) => {
-    await useUpdateSubscription(plan.id);
+  const handleGetSubscriptionUpdatePreview = async (plan: Plan) => {
+    const result = await useGetSubscriptionUpdatePreview(plan.id);
+    if (!result) return;
+
+    setSubscriptionPreview(result);
+    setSelectedPlan(plan);
+    setOpen(true);
+  };
+
+  const handleUpdateSubscription = async () => {
+    if (!selectedPlan) return;
+    await useUpdateSubscription(selectedPlan.id);
+    setOpen(false);
   };
 
   return (
@@ -120,7 +136,7 @@ export default function AccountPage() {
                 <Button
                   className="w-full"
                   variant="default"
-                  onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleUpdateSubscription(plan))}
+                  onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleGetSubscriptionUpdatePreview(plan))}
                 >
                   Update to {plan.reference}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -142,6 +158,15 @@ export default function AccountPage() {
           </Button>
         </CardContent>
       </Card>
+
+      {subscriptionPreview && (
+        <PricingPreview
+          subscriptionPreview={subscriptionPreview}
+          onUpdateSubscription={handleUpdateSubscription}
+          open={open}
+          onOpenChange={setOpen}
+        />
+      )}
     </>
   );
 }

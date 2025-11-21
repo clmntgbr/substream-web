@@ -1,4 +1,10 @@
-import { CreateSubscriptionRequestBody, Subscription, UpdateSubscriptionRequestBody } from "./types";
+import {
+  CreateSubscriptionRequestBody,
+  GetSubscriptionPreviewRequestBody,
+  GetSubscriptionUpdatePreviewResponse,
+  Subscription,
+  UpdateSubscriptionRequestBody,
+} from "./types";
 
 export const getSubscription = async (): Promise<Subscription> => {
   const response = await fetch(`/api/subscription`, {
@@ -20,6 +26,19 @@ export const createSubsription = async (data: CreateSubscriptionRequestBody): Pr
 
   if (!response.ok) {
     throw new Error("Failed to fetch subscription create");
+  }
+
+  return response.json();
+};
+
+export const getSubscriptionUpdatePreview = async (data: GetSubscriptionPreviewRequestBody): Promise<GetSubscriptionUpdatePreviewResponse> => {
+  const response = await fetch(`/api/subscription/update/preview`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch subscription preview");
   }
 
   return response.json();

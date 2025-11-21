@@ -1,13 +1,14 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { SubscriptionState } from "./types";
+import { GetSubscriptionUpdatePreviewResponse, SubscriptionState } from "./types";
 
 export interface SubscriptionContextType extends SubscriptionState {
   useGetSubscription: () => Promise<void>;
   useGetSubscriptionManage: () => Promise<{ url: string } | undefined>;
   useCreateSubscription: (planId: string) => Promise<{ url: string } | undefined>;
   useUpdateSubscription: (planId: string) => Promise<void>;
+  useGetSubscriptionUpdatePreview: (planId: string) => Promise<GetSubscriptionUpdatePreviewResponse | undefined>;
 }
 
 export const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);

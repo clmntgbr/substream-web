@@ -23,8 +23,20 @@ export interface CreateSubscriptionRequestBody {
   planId: string;
 }
 
+export interface GetSubscriptionPreviewRequestBody {
+  planId: string;
+}
+
 export interface UpdateSubscriptionRequestBody {
   planId: string;
+}
+
+export interface GetSubscriptionUpdatePreviewResponse {
+  amountDue: number;
+  credit: number;
+  debit: number;
+  currency: string;
+  nextBillingDate: string;
 }
 
 export type SubscriptionAction =
