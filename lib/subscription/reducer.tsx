@@ -1,9 +1,6 @@
 import { SubscriptionAction, SubscriptionState } from "./types";
 
-export const SubscriptionReducer = (
-  state: SubscriptionState,
-  action: SubscriptionAction
-): SubscriptionState => {
+export const SubscriptionReducer = (state: SubscriptionState, action: SubscriptionAction): SubscriptionState => {
   switch (action.type) {
     case "GET_SUBSCRIPTION_SUCCESS":
       return {
@@ -16,6 +13,12 @@ export const SubscriptionReducer = (
       return {
         ...state,
         subscription: null,
+        loading: false,
+        error: action.payload,
+      };
+    case "CREATE_SUBSCRIPTION_ERROR":
+      return {
+        ...state,
         loading: false,
         error: action.payload,
       };

@@ -1,100 +1,136 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePlans } from "@/lib/plan/context";
+import { Plan } from "@/lib/plan/types";
+import { useSubscriptions } from "@/lib/subscription/context";
+import NumberFlow from "@number-flow/react";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AccountPage() {
+  const router = useRouter();
+  const { subscription, useGetSubscriptionManage, useCreateSubscription } = useSubscriptions();
+  const { plans, plan: currentPlan } = usePlans();
+
+  const [frequency, setFrequency] = useState<string>("monthly");
+
+  const filteredPlans = plans.filter((plan) => (frequency === "monthly" ? plan.isMonthly : plan.isYearly));
+
+  const handleCreateSubscription = async (plan: Plan) => {
+    const result = await useCreateSubscription(plan.id);
+    router.push(result.url);
+  };
+
+  const handleGetSubscriptionManage = async () => {
+    const result = await useGetSubscriptionManage();
+    router.push(result.url);
+  };
+
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-          Billing & Subscription
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Manage your subscription and billing information
-        </p>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Subscription</h1>
+        <p className="text-lg text-muted-foreground">Manage your subscription information</p>
       </div>
 
-      {/* {activeSubscription && (
-          <Card className="border-2 border-green-200 dark:border-green-900 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
-                  <CardTitle>Current Plan</CardTitle>
-                </div>
-                <Badge className="bg-green-600">Active</Badge>
-              </div>
+      {currentPlan && (
+        <div className="grid gap-4 lg:grid-cols-2 my-8">
+          <Card className="relative w-full flex flex-col" key={currentPlan.name ?? currentPlan.id}>
+            <CardHeader className="flex flex-col flex-1">
+              <CardTitle className="font-medium text-xl">
+                {currentPlan.name}
+                {currentPlan.price !== undefined && (
+                  <NumberFlow
+                    className="font-medium text-xs text-muted-foreground ml-4"
+                    format={{
+                      style: "currency",
+                      currency: "EUR",
+                      maximumFractionDigits: 2,
+                    }}
+                    suffix={currentPlan.interval === "both" ? "" : currentPlan.interval === "yearly" ? "/billed yearly" : "/billed monthly"}
+                    value={frequency === "yearly" ? currentPlan.price / 12 : currentPlan.price}
+                  />
+                )}
+              </CardTitle>
+
+              <p className="flex-1 text-sm text-muted-foreground text-left">{currentPlan.description}</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{activeSubscription.plan.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{activeSubscription.plan.description}</p>
-                  <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-bold">{formatPrice(activeSubscription.plan.price * 100)}</span>
-                    <span className="text-sm text-muted-foreground">/{activeSubscription.plan.interval}</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-slate-500" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Renews on</p>
-                      <p className="text-sm font-medium">{formatDate(activeSubscription.endDate)}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-slate-500" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Auto-renewal</p>
-                      <p className="text-sm font-medium">{activeSubscription.isAutoRenew ? "Enabled" : "Disabled"}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h4 className="font-semibold text-sm mb-3 text-gray-900 dark:text-white">Plan Limits</h4>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{activeSubscription.plan.maxVideosPerMonth}</p>
-                    <p className="text-xs text-muted-foreground">Videos/Month</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {Math.round(activeSubscription.plan.maxSizeInMegabytes / 1000)}GB
-                    </p>
-                    <p className="text-xs text-muted-foreground">Max Size</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{activeSubscription.plan.maxDurationMinutes}m</p>
-                    <p className="text-xs text-muted-foreground">Max Duration</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 flex gap-3">
-                <Button size="sm" variant="outline">
-                  Upgrade Plan
+            {currentPlan.reference !== "plan_free" && (
+              <CardFooter>
+                <Button className="w-full" variant="default" onClick={handleGetSubscriptionManage}>
+                  Manage your subscription
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button size="sm" variant="ghost">
-                  Manage Subscription
-                </Button>
-              </div>
-            </CardContent>
+              </CardFooter>
+            )}
           </Card>
-        )} */}
+        </div>
+      )}
 
-      <Card>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white my-8">Upgrade to a plan</h3>
+
+      <Tabs defaultValue={frequency} onValueChange={setFrequency} className="mb-2">
+        <TabsList>
+          <TabsTrigger value="monthly">Monthly</TabsTrigger>
+          <TabsTrigger value="yearly">
+            Yearly
+            <Badge variant="secondary">20% off</Badge>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <div className="grid gap-4 lg:grid-cols-4">
+        {filteredPlans.map((plan) => {
+          if (plan.id === currentPlan?.id) return null;
+          if (plan.reference === "plan_free") return null;
+          return (
+            <Card className="relative w-full flex flex-col" key={plan.name ?? plan.id}>
+              <CardHeader className="flex flex-col flex-1">
+                <CardTitle className="font-medium text-xl">
+                  {plan.name}
+                  {plan.price !== undefined && (
+                    <NumberFlow
+                      className="font-medium text-xs text-muted-foreground ml-4"
+                      format={{
+                        style: "currency",
+                        currency: "EUR",
+                        maximumFractionDigits: 2,
+                      }}
+                      suffix={frequency === "yearly" ? "/month, billed yearly" : "/month, billed monthly"}
+                      value={frequency === "yearly" ? plan.price / 12 : plan.price}
+                    />
+                  )}
+                </CardTitle>
+
+                <p className="flex-1 text-sm text-muted-foreground text-left">{plan.description}</p>
+              </CardHeader>
+
+              <CardFooter>
+                <Button
+                  className="w-full"
+                  variant="default"
+                  onClick={() => (subscription?.isFreeSubscription ? handleCreateSubscription(plan) : handleGetSubscriptionManage())}
+                >
+                  Upgrade to {plan.reference}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
+
+      <Card className="mt-8">
         <CardHeader>
           <CardTitle>Need Help?</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="mb-3">
-            If you have any questions about your subscription or billing, our
-            support team is here to help.
-          </p>
+          <p className="mb-3">If you have any questions about your subscription or billing, our support team is here to help.</p>
           <Button variant="outline" size="sm">
             Contact Support
           </Button>

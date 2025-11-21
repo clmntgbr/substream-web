@@ -1,14 +1,8 @@
 "use client";
 import { useAuth } from "@/lib/auth/context";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useStreams } from "../stream/context";
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { usePlans } from "../plan/context";
+import { useSubscriptions } from "../subscription/context";
 import { useUser } from "../user/context";
 
 type EventType = string;
@@ -30,7 +24,8 @@ export function MercureProvider({ children }: MercureProviderProps) {
   const { user } = useAuth();
   const [topic, setTopic] = useState<string | null>(null);
   const { useFetchMe } = useUser();
-  const { useFetchStreams } = useStreams();
+  const { useGetPlan } = usePlans();
+  const { useGetSubscription } = useSubscriptions();
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
@@ -69,6 +64,14 @@ export function MercureProvider({ children }: MercureProviderProps) {
 
   const handleUserRefresh = () => {
     useFetchMe();
+  };
+
+  const handlePlanRefresh = () => {
+    useGetPlan();
+  };
+
+  const handleSubscriptionRefresh = () => {
+    useGetSubscription();
   };
 
   useEffect(() => {
@@ -112,7 +115,15 @@ export function MercureProvider({ children }: MercureProviderProps) {
                 case "user.refresh":
                   handleUserRefresh();
                   break;
+                case "plan.refresh":
+                  handlePlanRefresh();
+                  break;
+                case "subscription.refresh":
+                  handleSubscriptionRefresh();
+                  break;
                 default:
+                  console.warn("unknown message type received:", message.type);
+                  break;
               }
 
               emit(message.type, message.data);
@@ -124,10 +135,7 @@ export function MercureProvider({ children }: MercureProviderProps) {
 
         eventSource.onerror = () => {
           eventSource.close();
-          const delay = Math.min(
-            1000 * Math.pow(2, reconnectAttemptsRef.current),
-            30000,
-          );
+          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
           reconnectAttemptsRef.current++;
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
@@ -151,11 +159,7 @@ export function MercureProvider({ children }: MercureProviderProps) {
     };
   }, [topic]);
 
-  return (
-    <MercureContext.Provider value={{ on, off, emit }}>
-      {children}
-    </MercureContext.Provider>
-  );
+  return <MercureContext.Provider value={{ on, off, emit }}>{children}</MercureContext.Provider>;
 }
 
 export function useMercure() {

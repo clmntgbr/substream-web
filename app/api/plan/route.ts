@@ -24,7 +24,14 @@ export async function GET(request: NextRequest) {
     }
 
     const nextResponse = await response.json();
-    const plan = pick(nextResponse, ["id", "name"]);
+    const plan = pick(nextResponse, [
+      "id",
+      "name",
+      "price",
+      "description",
+      "reference",
+      "interval",
+    ]);
 
     return NextResponse.json(plan);
   } catch {

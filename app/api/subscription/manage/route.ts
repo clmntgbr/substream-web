@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false }, { status: 401 });
     }
 
-    const response = await fetch(`${BACKEND_API_URL}/subscription`, {
+    const response = await fetch(`${BACKEND_API_URL}/subscription/manage`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -24,9 +24,9 @@ export async function GET(request: NextRequest) {
     }
 
     const nextResponse = await response.json();
-    const subscription = pick(nextResponse, ["id", "isPaidSubscription", "isFreeSubscription"]);
+    const subscription = pick(nextResponse, ["data"]);
 
-    return NextResponse.json(subscription);
+    return NextResponse.json(subscription.data);
   } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }
